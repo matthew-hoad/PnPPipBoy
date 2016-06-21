@@ -15,7 +15,7 @@ import os
 class character:
     def __init__(self,characterDetails,level,EXP,
         maxHP,HP,rads,poison,wounds,
-        karma,SPECIAL,perks,notes,gear):
+        karma,SPECIAL,perks,notes,inventory):
         self.name=characterDetails[0]
         self.gender=characterDetails[1]
         self.race=characterDetails[2]
@@ -67,6 +67,8 @@ class character:
 
         self.perks=perks
 
+        self.inventory=inventory
+
 
     def addEXP(exp):
         self.EXP+=exp
@@ -117,6 +119,7 @@ SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
 class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
+        self.SPECIAL=import character
     def writeToPlayer(self,**kwargs):
         with open('character.py', 'w') as player:
             if kwargs['SPECIAL']:
@@ -139,8 +142,8 @@ class RootWidget(FloatLayout):
                 preparedString=preparedString[:-1]
                 preparedString+=']\n'
                 player.write(preparedString)
-    def loadCharacter(self):
-        with open(os.path.join('savedchar','char.py'),'r') as loadChar:
+    def loadCharacter(self,filepath,filename):
+        with open(os.path.join(filepath,filename),'r') as loadChar:
             with open('character.py','w') as currentChar:
                 for line in loadChar.readlines():
                     currentChar.write(line)

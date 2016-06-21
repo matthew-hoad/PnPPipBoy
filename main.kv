@@ -8,7 +8,7 @@
                     Button:
                         text:'Load Character'
                         on_press:
-                            root.loadCharacter()
+                            root.loadCharacter('savedchar','char.py')
                             root.children[0].current='characterCreation'
                 BoxLayout:
                     size_hint:1,0.0714
@@ -227,6 +227,10 @@
                                 root.children[0].current='PipBoy'
         Screen:
             name:'PipBoy'
-            Button:
-                text:'sjdikfjsdf'
-                on_press:root.children[0].current='Intro'
+            TabbedPanel:
+                do_default_tab: False
+
+                TabbedPanelItem:
+                    text:'Status'
+                    ScrollView:
+                        
