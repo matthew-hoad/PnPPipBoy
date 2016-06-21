@@ -10,23 +10,18 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import NumericProperty
 from math import floor
+import os
 
 class character:
     def __init__(self,characterDetails,level,EXP,
         maxHP,HP,rads,poison,wounds,
         karma,SPECIAL,perks,notes,gear):
         self.name=characterDetails[0]
-        self.sex=characterDetails[1]
+        self.gender=characterDetails[1]
         self.race=characterDetails[2]
-        self.height=characterDetails[3]
-        self.weight=characterDetails[4]
-        self.eyes=characterDetails[5]
-        self.hair=characterDetails[6]
-        self.age=characterDetails[7]
-        self.skinColor=characterDetails[8]
-        self.appearanceNotes=characterDetails[9]
+        self.age=characterDetails[3]
+        self.Notes=characterDetails[4]
 
-        self.maxHP=15 + (self.ST + (2*self.EN))
 
         self.level=level
         self.exp=EXP
@@ -38,6 +33,8 @@ class character:
         self.IN=SPECIAL.lst[4]
         self.AG=SPECIAL.lst[5]
         self.LK=SPECIAL.lst[6]
+
+        self.maxHP=15 + (self.ST + (2*self.EN))
 
         self.AP=5+floor(self.AG/2.0)
         self.carryWeight=(25+25*self.ST)
@@ -118,7 +115,35 @@ class SPECIALclass:
 SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
 
 class RootWidget(FloatLayout):
-    pass
+    def __init__(self, **kwargs):
+        super(RootWidget, self).__init__(**kwargs)
+    def writeToPlayer(self,**kwargs):
+        with open('character.py', 'w') as player:
+            if kwargs['SPECIAL']:
+                preparedString='SPECIAL = ['
+                for litem in kwargs['SPECIAL']:
+                    preparedString+=str(litem)+','
+                preparedString=preparedString[:-1]
+                preparedString+=']\n'
+                player.write(preparedString)
+            if kwargs['characterDetails']:
+                preparedString='characterDetails = ['
+                for litem in kwargs['characterDetails']:
+                    try:
+                        litem=int(litem)
+                        preparedString+=str(litem)+','
+                    except:
+                        preparedString+='"'
+                        preparedString+=str(litem)
+                        preparedString+='"'+','
+                preparedString=preparedString[:-1]
+                preparedString+=']\n'
+                player.write(preparedString)
+    def loadCharacter(self):
+        with open(os.path.join('savedchar','char.py'),'r') as loadChar:
+            with open('character.py','w') as currentChar:
+                for line in loadChar.readlines():
+                    currentChar.write(line)
 
 class ArrowButton(Button):
     def __init__(self, **kwargs):
@@ -126,15 +151,6 @@ class ArrowButton(Button):
         self.background_normal=''
         self.background_color=(0.1,0.1,0.1,1)
         #self.on_press=self.writetoplayer(SPECIAL=[SPECIAL.lst[0],SPECIAL.lst[1],SPECIAL.lst[2],SPECIAL.lst[3],SPECIAL.lst[4],SPECIAL.lst[5],SPECIAL.lst[6]])
-
-def writeToPlayer(**kwargs):
-    if kwargs['SPECIAL']:
-        preparedString='SPECIAL = ['
-        for litem in kwargs['SPECIAL']:
-            preparedString+=str(litem)+','
-        preparedString+=']'
-        with open('character.py', 'w') as player:
-            player.write(preparedString)
 
 class StatLabel(Label):
     def __init__(self, **kwargs):
@@ -164,8 +180,6 @@ class numLabel(Label):
             SPECIAL.points-=num
         if self.value<1:
             self.value=1
-
-#numLabels
 class STnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(STnumLabel, self).__init__(**kwargs)
