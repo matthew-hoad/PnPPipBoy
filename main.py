@@ -119,7 +119,6 @@ SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
 class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
-        self.SPECIAL=import character
     def writeToPlayer(self,**kwargs):
         with open('character.py', 'w') as player:
             if kwargs['SPECIAL']:
