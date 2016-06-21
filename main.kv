@@ -1,0 +1,170 @@
+<RootWidget>:
+    TabbedPanel:
+        do_default_tab: False
+
+        TabbedPanelItem:
+            text:'Character'
+            StackLayout:
+                SPECIALrow:
+                    size_hint:1,0.0714
+                    Label:
+                        size:0.333,1
+                        text:'Name'
+                    TextInput:
+                        multiline: False
+                SPECIALrow:
+                    size_hint:1,0.0714
+                    Label:
+                        text:'Gender'
+                    TextInput:
+                        multiline: False
+                SPECIALrow:
+                    size_hint:1,0.0714
+                    Label:
+                        text:'Karma'
+                    TextInput:
+                        hint_text:'-500 to 500'
+                        multiline: False
+                        id:Karma
+                SPECIALrow:
+                    size_hint:1,0.3
+                    Label:
+                        text:'Notes'
+                    TextInput:
+                        hint_text:'Appearance/history...'
+                        multiline:True
+
+
+        TabbedPanelItem:
+            text:'SPECIAL'
+            StackLayout:
+                   
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Strength'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            ST.incrment(-1)
+                    STnumLabel:
+                        text:'{}'.format(self.value)
+                        id: ST
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            ST.incrment(1)
+                
+                
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Perception'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            PE.incrment(-1)
+                    PEnumLabel:
+                        text:'{}'.format(self.value)
+                        id: PE
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            PE.incrment(1)
+
+                
+                
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Endurance'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            EN.incrment(-1)
+                    ENnumLabel:
+                        text:'{}'.format(self.value)
+                        id: EN
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            EN.incrment(1)
+
+                
+                
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Charisma'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            CH.incrment(-1)
+                    CHnumLabel:
+                        text:'{}'.format(self.value)
+                        id: CH
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            CH.incrment(1)
+
+                
+                
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Intelligence'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            IN.incrment(-1)
+                    INnumLabel:
+                        text:'{}'.format(self.value)
+                        id: IN
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            IN.incrment(1)
+
+                
+                    
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Agility'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            AG.incrment(-1)
+                    AGnumLabel:
+                        text:'{}'.format(self.value)
+                        id: AG
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            AG.incrment(1)
+
+                
+                    
+                SPECIALrow:
+                    size_hint:1,0.1428
+                    StatLabel:
+                        text:'Luck'
+                    ArrowButton:
+                        text:'<'
+                        on_press: 
+                            LK.incrment(-1)
+                    LKnumLabel:
+                        text:'{}'.format(self.value)
+                        id: LK
+                    ArrowButton:
+                        text:'>'
+                        on_press: 
+                            LK.incrment(1)
+
+        TabbedPanelItem:
+            text:'Finish'
+            BoxLayout:
+                padding:20,350
+                Button:
+                    text:'Finished Creating Character'
