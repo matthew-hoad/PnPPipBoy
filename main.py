@@ -13,26 +13,32 @@ from math import floor
 import os
 
 class character:
-    def __init__(self,characterDetails,level,EXP,
-        maxHP,HP,rads,poison,wounds,
-        karma,SPECIAL,perks,notes,inventory):
+    def __init__(self,SPECIAL,characterDetails,perks,inventory,EXP):
         self.name=characterDetails[0]
         self.gender=characterDetails[1]
         self.race=characterDetails[2]
         self.age=characterDetails[3]
-        self.Notes=characterDetails[4]
+        self.karma=characterDetails[4]
+        self.notes=characterDetails[5]
 
+        if self.race == 'Human':
+            self.SPECIALpoints=40
+        elif self.race == 'Super Mutant':
+            self.SPECIALpoints=40
+        elif self.race == 'Ghoul':
+            self.SPECIALpoints=42
 
-        self.level=level
         self.exp=EXP
-        self.karma=karma
-        self.ST=SPECIAL.lst[0]
-        self.PE=SPECIAL.lst[1]
-        self.EN=SPECIAL.lst[2]
-        self.CH=SPECIAL.lst[3]
-        self.IN=SPECIAL.lst[4]
-        self.AG=SPECIAL.lst[5]
-        self.LK=SPECIAL.lst[6]
+        self.level=0
+
+        self.special=SPECIAL
+        self.ST=SPECIAL[0]
+        self.PE=SPECIAL[1]
+        self.EN=SPECIAL[2]
+        self.CH=SPECIAL[3]
+        self.IN=SPECIAL[4]
+        self.AG=SPECIAL[5]
+        self.LK=SPECIAL[6]
 
         self.maxHP=15 + (self.ST + (2*self.EN))
 
@@ -50,7 +56,7 @@ class character:
         self.energyWeapons=0+2*self.AG
         self.unarmed=30+2*(self.AG*self.ST)
         self.meleeWeapons=20+2*(self.AG*self.ST)
-        self.throwing=0+4*se;f.AG
+        self.throwing=0+4*self.AG
         self.firstAid=2*(self.PE+self.IN)
         self.doctor=5+(self.PE+self.IN)
         self.sneak=5+3*self.AG
@@ -69,12 +75,11 @@ class character:
 
         self.inventory=inventory
 
-
-    def addEXP(exp):
+    def addEXP(self, exp):
         self.EXP+=exp
         checkLevel()
 
-    def checkLevel():
+    def checkLevel(self):
         oldlevel=self.level
         if self.EXP>0 and self.EXP<1000:
             self.level=1
@@ -106,44 +111,61 @@ class character:
             self.level=14
         if self.level==oldlevel+1:
             self.maxHP+= 3+floor(self.EN/2.0)
+        return self.level
+
+import charac
+pSPECIAL=charac.SPECIAL
+pcharacterDetails=charac.characterDetails
+pperks=charac.perks
+pinventory=charac.inventory
+pEXP=charac.EXP
+player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,perks=pperks,inventory=pinventory,EXP=pEXP)
 
 presentation=Builder.load_file('main.kv')
 
-class SPECIALclass:
-    def __init__(self,points,lst):
-        self.points=points
-        self.lst=lst
+#class SPECIALclass:
+#    def __init__(self,points,lst):
+#        self.points=points
+#        self.lst=lst
 
-SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
+#SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
 
 class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
-    def writeToPlayer(self,**kwargs):
-        with open('character.py', 'w') as player:
-            if kwargs['SPECIAL']:
-                preparedString='SPECIAL = ['
-                for litem in kwargs['SPECIAL']:
-                    preparedString+=str(litem)+','
-                preparedString=preparedString[:-1]
-                preparedString+=']\n'
-                player.write(preparedString)
-            if kwargs['characterDetails']:
-                preparedString='characterDetails = ['
-                for litem in kwargs['characterDetails']:
-                    try:
-                        litem=int(litem)
-                        preparedString+=str(litem)+','
-                    except:
-                        preparedString+='"'
-                        preparedString+=str(litem)
-                        preparedString+='"'+','
-                preparedString=preparedString[:-1]
-                preparedString+=']\n'
-                player.write(preparedString)
+    playerCharacter=player
+    def writeToPlayer(self,**kwargs):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
+        # with open('character.py', 'w') as player:
+        #     if kwargs['SPECIAL']:
+        #         preparedString='SPECIAL = ['
+        #         for litem in kwargs['SPECIAL']:
+        #             preparedString+=str(litem)+','
+        #         preparedString=preparedString[:-1]
+        #         preparedString+=']\n'
+        #         player.write(preparedString)
+        #     if kwargs['characterDetails']:
+        #         preparedString='characterDetails = ['
+        #         for litem in kwargs['characterDetails']:
+        #             try:
+        #                 litem=int(litem)
+        #                 preparedString+=str(litem)+','
+        #             except:
+        #                 preparedString+='"'
+        #                 preparedString+=str(litem)
+        #                 preparedString+='"'+','
+        #         preparedString=preparedString[:-1]
+        #         preparedString+=']\n'
+        #         player.write(preparedString)
+        #     if kwargs['perks']:
+        #         pass#####################################   FILL THIS IN
+        #     if kwargs['inventory']:
+        #         pass#####################################
+        #     if kwargs['EXP']:
+        #         pass#####################################
+        pass
     def loadCharacter(self,filepath,filename):
         with open(os.path.join(filepath,filename),'r') as loadChar:
-            with open('character.py','w') as currentChar:
+            with open('charac.py','w') as currentChar:
                 for line in loadChar.readlines():
                     currentChar.write(line)
 
@@ -152,7 +174,6 @@ class ArrowButton(Button):
         super(ArrowButton, self).__init__(**kwargs)
         self.background_normal=''
         self.background_color=(0.1,0.1,0.1,1)
-        #self.on_press=self.writetoplayer(SPECIAL=[SPECIAL.lst[0],SPECIAL.lst[1],SPECIAL.lst[2],SPECIAL.lst[3],SPECIAL.lst[4],SPECIAL.lst[5],SPECIAL.lst[6]])
 
 class StatLabel(Label):
     def __init__(self, **kwargs):
@@ -165,65 +186,81 @@ class SPECIALrow(BoxLayout):
         super(SPECIALrow, self).__init__(**kwargs)
         self.padding=(5,5)
 
+
 class numLabel(Label):
     def __init__(self, **kwargs):
         super(numLabel, self).__init__(**kwargs)
     value = NumericProperty(1)
 
-    def incrment(self,num):
-        if SPECIAL.points!=0 and self.value<10:
+    def incrment(self,root,num):
+        if root.playerCharacter.SPECIALpoints!=0 and self.value<10:
             self.value+=num
-            SPECIAL.points-=num
+            root.playerCharacter.SPECIALpoints-=num
         if self.value==10 and num<0:
             self.value+=num
-            SPECIAL.points-=num
-        if SPECIAL.points==0 and num<0:
+            root.playerCharacter.SPECIALpoints-=num
+        if root.playerCharacter.SPECIALpoints==0 and num<0:
             self.value+=num
-            SPECIAL.points-=num
+            root.playerCharacter.SPECIALpoints-=num
         if self.value<1:
             self.value=1
+
 class STnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(STnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[0]
-    def updateNum():
-        SPECIAL.lst[0]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[0]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[0]=self.value
 class PEnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(PEnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[1]
-    def updateNum():
-        SPECIAL.lst[1]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[1]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[1]=self.value
 class ENnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(ENnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[2]
-    def updateNum():
-        SPECIAL.lst[2]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[2]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[2]=self.value
 class CHnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(CHnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[3]
-    def updateNum():
-        SPECIAL.lst[3]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[3]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[3]=self.value
 class INnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(INnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[4]
-    def updateNum():
-        SPECIAL.lst[4]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[4]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[4]=self.value
 class AGnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(AGnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[5]
-    def updateNum():
-        SPECIAL.lst[5]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[5]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[5]=self.value
 class LKnumLabel(numLabel):
     def __init__(self, **kwargs):
         super(LKnumLabel, self).__init__(**kwargs)
-        self.value=SPECIAL.lst[6]
-    def updateNum():
-        SPECIAL.lst[6]=self.value
+    def getNum(self,root):
+        self.value=root.playerCharacter.special[6]
+        return self.value
+    def updateNum(self,root):
+        root.playerCharacter.special[6]=self.value
 
 
 class PipBoy(App):

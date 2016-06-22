@@ -9,7 +9,7 @@
                         text:'Load Character'
                         on_press:
                             root.loadCharacter('savedchar','char.py')
-                            root.children[0].current='characterCreation'
+                            root.children[0].current='PipBoy'
                 BoxLayout:
                     size_hint:1,0.0714
                     Button:
@@ -32,6 +32,7 @@
                             TextInput:
                                 id: charName
                                 multiline: False
+                                text:root.playerCharacter.name
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -40,6 +41,7 @@
                             TextInput:
                                 id: charAge
                                 multiline: False
+                                text:root.playerCharacter.age
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -48,6 +50,7 @@
                             TextInput:
                                 id: charRace
                                 multiline: False
+                                text:root.playerCharacter.race
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -55,6 +58,7 @@
                             TextInput:
                                 id: charGender
                                 multiline: False
+                                text:root.playerCharacter.gender
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -63,6 +67,7 @@
                                 id: charKarma
                                 hint_text:'-500 to 500'
                                 multiline: False
+                                text:root.playerCharacter.karma
                         SPECIALrow:
                             size_hint:1,0.3
                             Label:
@@ -71,6 +76,7 @@
                                 id:charNotes
                                 hint_text:'Appearance/history...'
                                 multiline:True
+                                text:root.playerCharacter.notes
 
 
                 TabbedPanelItem:
@@ -84,14 +90,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    ST.incrment(-1)
+                                    ST.incrment(root,-1)
+                                    ST.updateNum(root)
                             STnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: ST
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    ST.incrment(1)
+                                    ST.incrment(root,1)
+                                    ST.updateNum(root)
                         
                         
                         SPECIALrow:
@@ -101,14 +109,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    PE.incrment(-1)
+                                    PE.incrment(root,-1)
+                                    PE.updateNum(root)
                             PEnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: PE
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    PE.incrment(1)
+                                    PE.incrment(root,1)
+                                    PE.updateNum(root)
 
                         SPECIALrow:
                             size_hint:1,0.1428
@@ -117,14 +127,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    EN.incrment(-1)
+                                    EN.incrment(root,-1)
+                                    EN.updateNum(root)
                             ENnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: EN
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    EN.incrment(1)
+                                    EN.incrment(root,1)
+                                    EN.updateNum(root)
 
                         
                         
@@ -135,14 +147,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    CH.incrment(-1)
+                                    CH.incrment(root,-1)
+                                    CH.updateNum(root)
                             CHnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: CH
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    CH.incrment(1)
+                                    CH.incrment(root,1)
+                                    CH.updateNum(root)
 
                         
                         
@@ -153,14 +167,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    IN.incrment(-1)
+                                    IN.incrment(root,-1)
+                                    IN.updateNum(root)
                             INnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: IN
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    IN.incrment(1)
+                                    IN.incrment(root,1)
+                                    IN.updateNum(root)
 
                         
                             
@@ -171,14 +187,16 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    AG.incrment(-1)
+                                    AG.incrment(root,-1)
+                                    AG.updateNum(root)
                             AGnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: AG
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    AG.incrment(1)
+                                    AG.incrment(root,1)
+                                    AG.updateNum(root)
 
                         
                             
@@ -189,14 +207,17 @@
                             ArrowButton:
                                 text:'<'
                                 on_press: 
-                                    LK.incrment(-1)
+                                    LK.incrment(root,-1)
+                                    LK.updateNum(root)
                             LKnumLabel:
-                                text:'{}'.format(self.value)
+                                text:'{}'.format(self.getNum(root))
                                 id: LK
                             ArrowButton:
                                 text:'>'
                                 on_press: 
-                                    LK.incrment(1)
+                                    LK.incrment(root,1)
+                                    LK.updateNum(root)
+
 
                 TabbedPanelItem:
                     text:'Finish'
@@ -233,4 +254,4 @@
                 TabbedPanelItem:
                     text:'Status'
                     ScrollView:
-                        
+
