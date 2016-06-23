@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.dropdown import DropDown
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -29,10 +30,14 @@ class character:
             self.SPECIALpoints=40
         elif self.race == 'Ghoul':
             self.SPECIALpoints=42
+        else:
+            self.SPECIALpoints=40
 
-        self.exp=EXP
-        self.level=0
 
+        self.exp = EXP
+        self.level = 1
+        self.poison = 0
+        self.rads = 0
         self.special=SPECIAL
         self.ST=self.special[0]
         self.PE=self.special[1]
@@ -42,8 +47,10 @@ class character:
         self.AG=self.special[5]
         self.LK=self.special[6]
 
-        self.maxHP=15 + (self.ST + (2*self.EN))
+        self.SPECIALpoints-=int(self.ST)+int(self.PE)+int(self.EN)+int(self.CH)+int(self.IN)+int(self.AG)+int(self.LK)
 
+        self.maxHP=15 + (self.ST + (2*self.EN))
+        self.HP=self.maxHP
         self.AP=5+floor(self.AG/2.0)
         self.carryWeight=(25+25*self.ST)
         self.meleeDamage=[self.ST-5 if self.ST-5>0 else 1]
@@ -122,6 +129,15 @@ class character:
         self.IN=self.special[4]
         self.AG=self.special[5]
         self.LK=self.special[6]
+        if self.race == 'Human':
+            self.SPECIALpoints=40
+        elif self.race == 'Super Mutant':
+            self.SPECIALpoints=40
+        elif self.race == 'Ghoul':
+            self.SPECIALpoints=42
+        else:
+            self.SPECIALpoints=40
+        self.SPECIALpoints-=int(self.ST)+int(self.PE)+int(self.EN)+int(self.CH)+int(self.IN)+int(self.AG)+int(self.LK)
         self.name=self.characterDetails[0]
         self.gender=self.characterDetails[1]
         self.race=self.characterDetails[2]
@@ -143,6 +159,15 @@ class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
     playerCharacter=player
+    def reloadCharacter(self):
+        import charac
+        pSPECIAL=charac.SPECIAL
+        pcharacterDetails=charac.characterDetails
+        pperks=charac.perks
+        pinventory=charac.inventory
+        pEXP=charac.EXP
+        player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,perks=pperks,inventory=pinventory,EXP=pEXP)
+        return player
     def saveCharacter(self):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
         with open('charac.py','w') as savechar:
             print 'Saving Chatacter'
@@ -160,26 +185,68 @@ class RootWidget(FloatLayout):
             preparedString+=str(self.playerCharacter.special[5])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[6])
-            preparedString+="]\ncharacterDetails=['"
+            preparedString+=']\ncharacterDetails=["'
             preparedString+=str(self.playerCharacter.name)
-            preparedString+="','"
+            preparedString+='","'
             preparedString+=str(self.playerCharacter.gender)
-            preparedString+="','"
+            preparedString+='","'
             preparedString+=str(self.playerCharacter.race)
-            preparedString+="','"
+            preparedString+='","'
             preparedString+=str(self.playerCharacter.age)
-            preparedString+="','"
+            preparedString+='","'
             preparedString+=str(self.playerCharacter.karma)
-            preparedString+="','"
+            preparedString+='","'
             preparedString+=str(self.playerCharacter.notes)
-            preparedString+="']\nperks=["
+            preparedString+='"]\nperks=['
             for perk in self.playerCharacter.perks:
                 preparedString+="'"+perk+"',"
-            preparedString=preparedString[:-1]
+            if preparedString[-1]==',':
+                preparedString=preparedString[:-1]
             preparedString+=']\ninventory=['
             for item in self.playerCharacter.inventory:
-                preparedString+="'"+item+"',"
-            preparedString=preparedString[:-1]
+                preparedString+='"'+item+'"'
+            if preparedString[-1]==',':
+                preparedString=preparedString[:-1]
+            preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
+            savechar.write(preparedString)
+        with open(os.path.join('savedchar','char.py'),'w') as savechar:
+            print 'Saving Chatacter'
+            preparedString="SPECIAL=["
+            preparedString+=str(self.playerCharacter.special[0])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[1])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[2])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[3])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[4])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[5])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[6])
+            preparedString+=']\ncharacterDetails=["'
+            preparedString+=str(self.playerCharacter.name)
+            preparedString+='","'
+            preparedString+=str(self.playerCharacter.gender)
+            preparedString+='","'
+            preparedString+=str(self.playerCharacter.race)
+            preparedString+='","'
+            preparedString+=str(self.playerCharacter.age)
+            preparedString+='","'
+            preparedString+=str(self.playerCharacter.karma)
+            preparedString+='","'
+            preparedString+=str(self.playerCharacter.notes)
+            preparedString+='"]\nperks=['
+            for perk in self.playerCharacter.perks:
+                preparedString+="'"+perk+"',"
+            if preparedString[-1]==',':
+                preparedString=preparedString[:-1]
+            preparedString+=']\ninventory=['
+            for item in self.playerCharacter.inventory:
+                preparedString+='"'+item+'"'
+            if preparedString[-1]==',':
+                preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
             savechar.write(preparedString)
 
@@ -188,6 +255,24 @@ class RootWidget(FloatLayout):
             with open('charac.py','w') as currentChar:
                 for line in loadChar.readlines():
                     currentChar.write(line)
+
+class SpecialLabel(Label):
+    def __init__(self, **kwargs):
+        super(SpecialLabel, self).__init__(**kwargs)
+    def updateLabel(self,root, XX, i):
+        self.text='{}: {}'.format(XX, root.playerCharacter.special[i])
+
+class CharDetailLabel(Label):
+    def __init__(self, **kwargs):
+        super(CharDetailLabel, self).__init__(**kwargs)
+    def updateLabel(self,root,idString,proprty):
+        if idString == 'HP':
+            self.text = 'HP: {}/{}'.format(root.playerCharacter.HP,root.playerCharacter.maxHP)
+        elif idString=='Name':
+            self.text='{}'.format(proprty)
+        else:
+            self.text='{}: {}'.format(str(idString), proprty)
+
 
 class ArrowButton(Button):
     def __init__(self, **kwargs):
@@ -214,6 +299,7 @@ class characterDetailsInput(TextInput):
         return str(text)
     def updateText(self,root,i):
         root.playerCharacter.characterDetails[i]=self.text
+        root.playerCharacter.updateSPECIALAndcharacterDetails()
 
 class numLabel(Label):
     def __init__(self, **kwargs):
@@ -221,23 +307,42 @@ class numLabel(Label):
     value = NumericProperty(1)
 
     def incrment(self,root,num):
-        if root.playerCharacter.SPECIALpoints!=0 and int(self.text)<10:
-            self.text=str(int(self.text)+num)
-            root.playerCharacter.SPECIALpoints-=num
-        if int(self.text)==10 and num<0:
-            self.text=str(int(self.text)+num)
-            root.playerCharacter.SPECIALpoints-=num
-        if root.playerCharacter.SPECIALpoints==0 and num<0:
-            self.text=str(int(self.text)+num)
-            root.playerCharacter.SPECIALpoints-=num
-        if int(self.text)<1:
+        if int(self.text)==1 and num<0:
             self.text='1'
+        elif root.playerCharacter.SPECIALpoints==0 and num<0:
+            self.text=str(int(self.text)+num)
+            root.playerCharacter.SPECIALpoints-=num
+        elif int(self.text)==10 and num<0:
+            self.text=str(int(self.text)+num)
+            root.playerCharacter.SPECIALpoints-=num
+        elif root.playerCharacter.SPECIALpoints!=0 and int(self.text)<10:
+            self.text=str(int(self.text)+num)
+            root.playerCharacter.SPECIALpoints-=num
+
     def getNum(self,root,i):
         text=root.playerCharacter.special[i]
         return str(text)
-    def updateNum(self,root,i):
-        root.playerCharacter.special[i]=self.text
 
+    def updateNum(self,root,i):
+        root.playerCharacter.special[i]=int(self.text)
+        root.playerCharacter.updateSPECIALAndcharacterDetails()
+
+class SkillLabel(Label):
+    def __init__(self, **kwargs):
+        super(SkillLabel, self).__init__(**kwargs)
+        self.height=50
+    def updateLabel(self,idString,proprty):
+        self.text='{}: {}'.format(idString,proprty)
+
+class Inventory(ScrollView):
+    def __init__(self, **kwargs):
+        super(SkillLabel, self).__init__(**kwargs)
+
+    def populate(self,root):
+        stack=StackLayout(spacing=[0,10],miminum_height=None)
+        self.add_widget(stack)
+        for item in root.playerCharacter.inventory:
+            stack.add_widget()
 
 class PipBoy(App):
     def build(self):

@@ -1,4 +1,6 @@
 <RootWidget>:
+    on_touch_up:
+        root.playerCharacter.updateSPECIALAndcharacterDetails()
     ScreenManager:
         Screen:
             name:'Intro'
@@ -33,9 +35,7 @@
                                 id: charName
                                 multiline: False
                                 text:self.getText(root,0)
-                                on_text_validate:
-                                    self.updateText(root,0)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
+
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -45,9 +45,7 @@
                                 id: charAge
                                 multiline: False
                                 text:self.getText(root,1)
-                                on_text_validate:
-                                    self.updateText(root,1)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
+
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -57,9 +55,7 @@
                                 id: charRace
                                 multiline: False
                                 text:self.getText(root,2)
-                                on_text_validate:
-                                    self.updateText(root,2)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
+
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -68,9 +64,7 @@
                                 id: charGender
                                 multiline: False
                                 text:self.getText(root,3)
-                                on_text_validate:
-                                    self.updateText(root,3)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
+
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
@@ -80,9 +74,7 @@
                                 hint_text:'-500 to 500'
                                 multiline: False
                                 text:self.getText(root,4)
-                                on_text_validate:
-                                    self.updateText(root,4)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
+
                         SPECIALrow:
                             size_hint:1,0.3
                             Label:
@@ -90,10 +82,20 @@
                             characterDetailsInput:
                                 id:charNotes
                                 hint_text:'Appearance/history...'
-                                multiline:False
+                                multiline:True
                                 text:self.getText(root,5)
-                                on_text_validate:
-                                    self.updateText(root,5)
+
+                        SPECIALrow:
+                            size_hint:1,0.0714
+                            Button:
+                                text:'Save These Details'
+                                on_press:
+                                    charName.updateText(root,0)
+                                    charAge.updateText(root,1)
+                                    charRace.updateText(root,2)
+                                    charGender.updateText(root,3)
+                                    charKarma.updateText(root,4)
+                                    charNotes.updateText(root,5)
                                     root.playerCharacter.updateSPECIALAndcharacterDetails()
 
 
@@ -192,7 +194,9 @@
                                 id: IN
                             ArrowButton:
                                 text:'>'
-                                on_press: 
+                                on_press:
+                                    print root.playerCharacter.special
+                                    print IN.getNum(root,4)
                                     IN.incrment(root,1)
                                     IN.updateNum(root,4)
 
@@ -242,14 +246,138 @@
                         Button:
                             text:'Finished Creating Character'
                             on_press:
+                                root.playerCharacter.updateSPECIALAndcharacterDetails()
                                 root.saveCharacter()
                                 root.children[0].current='PipBoy'
         Screen:
+            on_enter:
+                root.playerCharacter=root.reloadCharacter()
+                STLabel.updateLabel(root, 'ST', 0)
+                PELabel.updateLabel(root, 'PE', 1)
+                ENLabel.updateLabel(root, 'EN', 2)
+                CHLabel.updateLabel(root, 'CH', 3)
+                INLabel.updateLabel(root, 'IN', 4)
+                AGLabel.updateLabel(root, 'AG', 5)
+                LKLabel.updateLabel(root, 'LK', 6)
+                Name.updateLabel(root,'Name',root.playerCharacter.name)
+                HP.updateLabel(root,'HP',root.playerCharacter.HP)
+                Level.updateLabel(root,'Level',root.playerCharacter.level)
+                Rads.updateLabel(root,'Rads',root.playerCharacter.rads)
+                Poison.updateLabel(root,'Poison',root.playerCharacter.poison)
+                smallGuns.updateLabel('smallGuns',root.playerCharacter.smallGuns)
+                bigGuns.updateLabel('bigGuns',root.playerCharacter.bigGuns)
+                energyWeapons.updateLabel('energyWeapons',root.playerCharacter.energyWeapons)
+                unarmed.updateLabel('unarmed',root.playerCharacter.unarmed)
+                meleeWeapons.updateLabel('meleeWeapons',root.playerCharacter.meleeWeapons)
+                throwing.updateLabel('throwing',root.playerCharacter.throwing)
+                firstAid.updateLabel('firstAid',root.playerCharacter.firstAid)
+                doctor.updateLabel('doctor',root.playerCharacter.doctor)
+                sneak.updateLabel('sneak',root.playerCharacter.sneak)
+                lockpick.updateLabel('lockpick',root.playerCharacter.lockpick)
+                steal.updateLabel('steal',root.playerCharacter.steal)
+                traps.updateLabel('traps',root.playerCharacter.traps)
+                science.updateLabel('science',root.playerCharacter.science)
+                repair.updateLabel('repair',root.playerCharacter.repair)
+                pilot.updateLabel('pilot',root.playerCharacter.pilot)
+                speech.updateLabel('speech',root.playerCharacter.speech)
+                barter.updateLabel('barter',root.playerCharacter.barter)
+                gambling.updateLabel('gambling',root.playerCharacter.gambling)
+                outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
             name:'PipBoy'
             TabbedPanel:
                 do_default_tab: False
 
                 TabbedPanelItem:
                     text:'Status'
-                    ScrollView:
+                    FloatLayout:
+                        BoxLayout:
+                            orientation:'vertical'
+                            size_hint:0.3,0.3
+                            pos:(root.x+int(self.width/2.0),root.height-self.height-110)
+                            
+                            Label:
+                                text:'Name:'
+                            CharDetailLabel:
+                                id:Name
+                            Label:
+                                text:''
 
+                            SpecialLabel:
+                                id:STLabel                            
+                            SpecialLabel:
+                                id:PELabel                            
+                            SpecialLabel:
+                                id:ENLabel                            
+                            SpecialLabel:
+                                id:CHLabel                            
+                            SpecialLabel:
+                                id:INLabel                            
+                            SpecialLabel:
+                                id:AGLabel                            
+                            SpecialLabel:
+                                id:LKLabel                        
+                        BoxLayout:
+                            orientation:'vertical'
+                            size_hint:0.3,0.3
+                            pos:(root.width-self.width,root.height-self.height-110)
+                            CharDetailLabel:
+                                id:HP
+                            CharDetailLabel:
+                                id:Level
+                            CharDetailLabel:
+                                id:Rads
+                            CharDetailLabel:
+                                id:Poison
+
+                TabbedPanelItem:
+                    text:'Skills'
+                    BoxLayout:
+                        size_hint:1,1
+                        BoxLayout:
+                            size_hint:1,1
+                            orientation:'vertical'
+                            SkillLabel:
+                                id:smallGuns
+                            SkillLabel:
+                                id:bigGuns
+                            SkillLabel:
+                                id:energyWeapons
+                            SkillLabel:
+                                id:unarmed
+                            SkillLabel:
+                                id:meleeWeapons
+                            SkillLabel:
+                                id:throwing
+                            SkillLabel:
+                                id:firstAid
+                            SkillLabel:
+                                id:doctor
+                            SkillLabel:
+                                id:sneak
+                        BoxLayout:
+                            size_hint:1,1
+                            orientation:'vertical'
+                            SkillLabel:
+                                id:lockpick
+                            SkillLabel:
+                                id:steal
+                            SkillLabel:
+                                id:traps
+                            SkillLabel:
+                                id:science
+                            SkillLabel:
+                                id:repair
+                            SkillLabel:
+                                id:pilot
+                            SkillLabel:
+                                id:speech
+                            SkillLabel:
+                                id:barter
+                            SkillLabel:
+                                id:gambling
+                            SkillLabel:
+                                id:outdoorsman
+
+                TabbedPanelItem:
+                    text:'Inv.'
+                    Inventory:

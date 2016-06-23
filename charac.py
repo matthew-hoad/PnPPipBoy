@@ -1,5 +1,5 @@
-SPECIAL=[9,10,10,10,10,10,10]
-characterDetails=['Urlok The Destroyer','9001','Human','N/A','-1000','Fear him! Run while you can... or not.']
+SPECIAL=[10,9,8,7,4,1,1]
+characterDetails=["Marty Goldman","20","Human","Male","500","Pretty Fucking awesome guy!"]
 perks=[]
 inventory=[]
 EXP=10000
