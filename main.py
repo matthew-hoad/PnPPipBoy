@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.dropdown import DropDown
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import NumericProperty
@@ -14,12 +15,13 @@ import os
 
 class character:
     def __init__(self,SPECIAL,characterDetails,perks,inventory,EXP):
-        self.name=characterDetails[0]
-        self.gender=characterDetails[1]
-        self.race=characterDetails[2]
-        self.age=characterDetails[3]
-        self.karma=characterDetails[4]
-        self.notes=characterDetails[5]
+        self.characterDetails=characterDetails
+        self.name=self.characterDetails[0]
+        self.gender=self.characterDetails[1]
+        self.race=self.characterDetails[2]
+        self.age=self.characterDetails[3]
+        self.karma=self.characterDetails[4]
+        self.notes=self.characterDetails[5]
 
         if self.race == 'Human':
             self.SPECIALpoints=40
@@ -32,13 +34,13 @@ class character:
         self.level=0
 
         self.special=SPECIAL
-        self.ST=SPECIAL[0]
-        self.PE=SPECIAL[1]
-        self.EN=SPECIAL[2]
-        self.CH=SPECIAL[3]
-        self.IN=SPECIAL[4]
-        self.AG=SPECIAL[5]
-        self.LK=SPECIAL[6]
+        self.ST=self.special[0]
+        self.PE=self.special[1]
+        self.EN=self.special[2]
+        self.CH=self.special[3]
+        self.IN=self.special[4]
+        self.AG=self.special[5]
+        self.LK=self.special[6]
 
         self.maxHP=15 + (self.ST + (2*self.EN))
 
@@ -112,6 +114,20 @@ class character:
         if self.level==oldlevel+1:
             self.maxHP+= 3+floor(self.EN/2.0)
         return self.level
+    def updateSPECIALAndcharacterDetails():
+        self.ST=self.special[0]
+        self.PE=self.special[1]
+        self.EN=self.special[2]
+        self.CH=self.special[3]
+        self.IN=self.special[4]
+        self.AG=self.special[5]
+        self.LK=self.special[6]
+        self.name=self.characterDetails[0]
+        self.gender=self.characterDetails[1]
+        self.race=self.characterDetails[2]
+        self.age=self.characterDetails[3]
+        self.karma=self.characterDetails[4]
+        self.notes=self.characterDetails[5]
 
 import charac
 pSPECIAL=charac.SPECIAL
@@ -123,46 +139,50 @@ player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,perks=pperk
 
 presentation=Builder.load_file('main.kv')
 
-#class SPECIALclass:
-#    def __init__(self,points,lst):
-#        self.points=points
-#        self.lst=lst
-
-#SPECIAL=SPECIALclass(33,[1,1,1,1,1,1,1])
-
 class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
     playerCharacter=player
-    def writeToPlayer(self,**kwargs):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
-        # with open('character.py', 'w') as player:
-        #     if kwargs['SPECIAL']:
-        #         preparedString='SPECIAL = ['
-        #         for litem in kwargs['SPECIAL']:
-        #             preparedString+=str(litem)+','
-        #         preparedString=preparedString[:-1]
-        #         preparedString+=']\n'
-        #         player.write(preparedString)
-        #     if kwargs['characterDetails']:
-        #         preparedString='characterDetails = ['
-        #         for litem in kwargs['characterDetails']:
-        #             try:
-        #                 litem=int(litem)
-        #                 preparedString+=str(litem)+','
-        #             except:
-        #                 preparedString+='"'
-        #                 preparedString+=str(litem)
-        #                 preparedString+='"'+','
-        #         preparedString=preparedString[:-1]
-        #         preparedString+=']\n'
-        #         player.write(preparedString)
-        #     if kwargs['perks']:
-        #         pass#####################################   FILL THIS IN
-        #     if kwargs['inventory']:
-        #         pass#####################################
-        #     if kwargs['EXP']:
-        #         pass#####################################
-        pass
+    def saveCharacter(self):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
+        with open('charac.py','w') as savechar:
+            print 'Saving Chatacter'
+            preparedString="SPECIAL=["
+            preparedString+=str(self.playerCharacter.special[0])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[1])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[2])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[3])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[4])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[5])
+            preparedString+=','
+            preparedString+=str(self.playerCharacter.special[6])
+            preparedString+="]\ncharacterDetails=['"
+            preparedString+=str(self.playerCharacter.name)
+            preparedString+="','"
+            preparedString+=str(self.playerCharacter.gender)
+            preparedString+="','"
+            preparedString+=str(self.playerCharacter.race)
+            preparedString+="','"
+            preparedString+=str(self.playerCharacter.age)
+            preparedString+="','"
+            preparedString+=str(self.playerCharacter.karma)
+            preparedString+="','"
+            preparedString+=str(self.playerCharacter.notes)
+            preparedString+="']\nperks=["
+            for perk in self.playerCharacter.perks:
+                preparedString+="'"+perk+"',"
+            preparedString=preparedString[:-1]
+            preparedString+=']\ninventory=['
+            for item in self.playerCharacter.inventory:
+                preparedString+="'"+item+"',"
+            preparedString=preparedString[:-1]
+            preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
+            savechar.write(preparedString)
+
     def loadCharacter(self,filepath,filename):
         with open(os.path.join(filepath,filename),'r') as loadChar:
             with open('charac.py','w') as currentChar:
@@ -186,6 +206,14 @@ class SPECIALrow(BoxLayout):
         super(SPECIALrow, self).__init__(**kwargs)
         self.padding=(5,5)
 
+class characterDetailsInput(TextInput):
+    def __init__(self, **kwargs):
+        super(characterDetailsInput, self).__init__(**kwargs)
+    def getText(self,root,i):
+        text=root.playerCharacter.characterDetails[i]
+        return str(text)
+    def updateText(self,root,i):
+        root.playerCharacter.characterDetails[i]=self.text
 
 class numLabel(Label):
     def __init__(self, **kwargs):
@@ -204,63 +232,11 @@ class numLabel(Label):
             root.playerCharacter.SPECIALpoints-=num
         if self.value<1:
             self.value=1
-
-class STnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(STnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[0]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[0]=self.value
-class PEnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(PEnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[1]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[1]=self.value
-class ENnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(ENnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[2]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[2]=self.value
-class CHnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(CHnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[3]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[3]=self.value
-class INnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(INnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[4]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[4]=self.value
-class AGnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(AGnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[5]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[5]=self.value
-class LKnumLabel(numLabel):
-    def __init__(self, **kwargs):
-        super(LKnumLabel, self).__init__(**kwargs)
-    def getNum(self,root):
-        self.value=root.playerCharacter.special[6]
-        return self.value
-    def updateNum(self,root):
-        root.playerCharacter.special[6]=self.value
+    def getNum(self,root,i):
+        text=root.playerCharacter.special[i]
+        return str(text)
+    def updateNum(self,root,i):
+        root.playerCharacter.special[i]=self.text
 
 
 class PipBoy(App):

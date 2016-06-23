@@ -29,54 +29,72 @@
                             Label:
                                 size:0.333,1
                                 text:'Name'
-                            TextInput:
+                            characterDetailsInput:
                                 id: charName
                                 multiline: False
-                                text:root.playerCharacter.name
+                                text:self.getText(root,0)
+                                on_text_validate:
+                                    self.updateText(root,0)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
                                 size:0.333,1
                                 text:'Age'
-                            TextInput:
+                            characterDetailsInput:
                                 id: charAge
                                 multiline: False
-                                text:root.playerCharacter.age
+                                text:self.getText(root,1)
+                                on_text_validate:
+                                    self.updateText(root,1)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
                                 size:0.333,1
                                 text:'Race'
-                            TextInput:
+                            characterDetailsInput:
                                 id: charRace
                                 multiline: False
-                                text:root.playerCharacter.race
+                                text:self.getText(root,2)
+                                on_text_validate:
+                                    self.updateText(root,2)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
                                 text:'Gender'
-                            TextInput:
+                            characterDetailsInput:
                                 id: charGender
                                 multiline: False
-                                text:root.playerCharacter.gender
+                                text:self.getText(root,3)
+                                on_text_validate:
+                                    self.updateText(root,3)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
                         SPECIALrow:
                             size_hint:1,0.0714
                             Label:
                                 text:'Karma'
-                            TextInput:
+                            characterDetailsInput:
                                 id: charKarma
                                 hint_text:'-500 to 500'
                                 multiline: False
-                                text:root.playerCharacter.karma
+                                text:self.getText(root,4)
+                                on_text_validate:
+                                    self.updateText(root,4)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
                         SPECIALrow:
                             size_hint:1,0.3
                             Label:
                                 text:'Notes'
-                            TextInput:
+                            characterDetailsInput:
                                 id:charNotes
                                 hint_text:'Appearance/history...'
-                                multiline:True
-                                text:root.playerCharacter.notes
+                                multiline:False
+                                text:self.getText(root,5)
+                                on_text_validate:
+                                    self.updateText(root,5)
+                                    root.playerCharacter.updateSPECIALandcharacterDetails()
 
 
                 TabbedPanelItem:
@@ -91,15 +109,15 @@
                                 text:'<'
                                 on_press: 
                                     ST.incrment(root,-1)
-                                    ST.updateNum(root)
-                            STnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    ST.updateNum(root,0)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,0))
                                 id: ST
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     ST.incrment(root,1)
-                                    ST.updateNum(root)
+                                    ST.updateNum(root,0)
                         
                         
                         SPECIALrow:
@@ -110,15 +128,15 @@
                                 text:'<'
                                 on_press: 
                                     PE.incrment(root,-1)
-                                    PE.updateNum(root)
-                            PEnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    PE.updateNum(root,1)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,1))
                                 id: PE
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     PE.incrment(root,1)
-                                    PE.updateNum(root)
+                                    PE.updateNum(root,1)
 
                         SPECIALrow:
                             size_hint:1,0.1428
@@ -128,15 +146,15 @@
                                 text:'<'
                                 on_press: 
                                     EN.incrment(root,-1)
-                                    EN.updateNum(root)
-                            ENnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    EN.updateNum(root,2)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,2))
                                 id: EN
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     EN.incrment(root,1)
-                                    EN.updateNum(root)
+                                    EN.updateNum(root,2)
 
                         
                         
@@ -148,15 +166,15 @@
                                 text:'<'
                                 on_press: 
                                     CH.incrment(root,-1)
-                                    CH.updateNum(root)
-                            CHnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    CH.updateNum(root,3)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,3))
                                 id: CH
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     CH.incrment(root,1)
-                                    CH.updateNum(root)
+                                    CH.updateNum(root,3)
 
                         
                         
@@ -168,15 +186,15 @@
                                 text:'<'
                                 on_press: 
                                     IN.incrment(root,-1)
-                                    IN.updateNum(root)
-                            INnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    IN.updateNum(root,4)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,4))
                                 id: IN
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     IN.incrment(root,1)
-                                    IN.updateNum(root)
+                                    IN.updateNum(root,4)
 
                         
                             
@@ -188,15 +206,15 @@
                                 text:'<'
                                 on_press: 
                                     AG.incrment(root,-1)
-                                    AG.updateNum(root)
-                            AGnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    AG.updateNum(root,5)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,5))
                                 id: AG
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     AG.incrment(root,1)
-                                    AG.updateNum(root)
+                                    AG.updateNum(root,5)
 
                         
                             
@@ -208,17 +226,15 @@
                                 text:'<'
                                 on_press: 
                                     LK.incrment(root,-1)
-                                    LK.updateNum(root)
-                            LKnumLabel:
-                                text:'{}'.format(self.getNum(root))
+                                    LK.updateNum(root,6)
+                            numLabel:
+                                text:'{}'.format(self.getNum(root,6))
                                 id: LK
                             ArrowButton:
                                 text:'>'
                                 on_press: 
                                     LK.incrment(root,1)
-                                    LK.updateNum(root)
-
-
+                                    LK.updateNum(root,6)
                 TabbedPanelItem:
                     text:'Finish'
                     BoxLayout:
@@ -226,25 +242,7 @@
                         Button:
                             text:'Finished Creating Character'
                             on_press:
-                                root.writeToPlayer(
-                                SPECIAL=[
-                                root.ids.ST.value,
-                                root.ids.PE.value,
-                                root.ids.EN.value,
-                                root.ids.CH.value,
-                                root.ids.IN.value,
-                                root.ids.AG.value,
-                                root.ids.LK.value,
-                                ],
-                                characterDetails=[
-                                root.ids.charName.text,
-                                root.ids.charAge.text,
-                                root.ids.charRace.text,
-                                root.ids.charGender.text,
-                                root.ids.charKarma.text,
-                                root.ids.charNotes.text
-                                ]
-                                )
+                                root.saveCharacter()
                                 root.children[0].current='PipBoy'
         Screen:
             name:'PipBoy'
