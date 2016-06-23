@@ -114,7 +114,7 @@ class character:
         if self.level==oldlevel+1:
             self.maxHP+= 3+floor(self.EN/2.0)
         return self.level
-    def updateSPECIALAndcharacterDetails():
+    def updateSPECIALAndcharacterDetails(self):
         self.ST=self.special[0]
         self.PE=self.special[1]
         self.EN=self.special[2]
@@ -221,17 +221,17 @@ class numLabel(Label):
     value = NumericProperty(1)
 
     def incrment(self,root,num):
-        if root.playerCharacter.SPECIALpoints!=0 and self.value<10:
-            self.value+=num
+        if root.playerCharacter.SPECIALpoints!=0 and int(self.text)<10:
+            self.text=str(int(self.text)+num)
             root.playerCharacter.SPECIALpoints-=num
-        if self.value==10 and num<0:
-            self.value+=num
+        if int(self.text)==10 and num<0:
+            self.text=str(int(self.text)+num)
             root.playerCharacter.SPECIALpoints-=num
         if root.playerCharacter.SPECIALpoints==0 and num<0:
-            self.value+=num
+            self.text=str(int(self.text)+num)
             root.playerCharacter.SPECIALpoints-=num
-        if self.value<1:
-            self.value=1
+        if int(self.text)<1:
+            self.text='1'
     def getNum(self,root,i):
         text=root.playerCharacter.special[i]
         return str(text)
