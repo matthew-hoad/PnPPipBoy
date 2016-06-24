@@ -3,14 +3,19 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
 from kivy.uix.dropdown import DropDown
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import NumericProperty
+from kivy.uix.listview import ListItemButton
+from kivy.uix.listview import ListView
+from kivy.adapters.listadapter import ListAdapter
 from math import floor
 import os
 
@@ -63,8 +68,8 @@ class character:
         self.smallGuns=5+4*self.AG
         self.bigGuns=0+2*self.AG
         self.energyWeapons=0+2*self.AG
-        self.unarmed=30+2*(self.AG*self.ST)
-        self.meleeWeapons=20+2*(self.AG*self.ST)
+        self.unarmed=30+2*(self.AG+self.ST)
+        self.meleeWeapons=20+2*(self.AG+self.ST)
         self.throwing=0+4*self.AG
         self.firstAid=2*(self.PE+self.IN)
         self.doctor=5+(self.PE+self.IN)
@@ -121,6 +126,7 @@ class character:
         if self.level==oldlevel+1:
             self.maxHP+= 3+floor(self.EN/2.0)
         return self.level
+
     def updateSPECIALAndcharacterDetails(self):
         self.ST=self.special[0]
         self.PE=self.special[1]
@@ -144,6 +150,55 @@ class character:
         self.age=self.characterDetails[3]
         self.karma=self.characterDetails[4]
         self.notes=self.characterDetails[5]
+    def normaliseItemNames(self):
+        for item in self.inventory:
+            if (len(item.name)%2)!=0:
+                item.name+=' '
+
+class DataItem(object):
+    def __init__(self, text='', is_selected=False):
+        self.text = text
+        self.is_selected = is_selected
+
+class dummyDataItem(object):
+    def __init__(self, text='', is_selected=False):
+        self.text = text
+        self.is_selected = False
+
+class Inventory(ListView):
+    def __init__(self, **kwargs):
+        super(Inventory, self).__init__(**kwargs)
+
+    def populateItems(self,root):
+        data_items = []
+
+
+
+        for item in root.playerCharacter.inventory:
+            itemDescString=''
+            itemDescString+='{:<15}'.format(item.name)
+            for i in range(1,len(item.itemDetails)):
+                itemDescString+='{:>10}'.format(item.itemDetails[i])
+            data_items.append(DataItem(text=itemDescString))
+            print len(itemDescString)
+        data_items.append(dummyDataItem())
+        data_items.append(dummyDataItem())
+        data_items.append(dummyDataItem())
+
+        list_item_args_converter = lambda row_index, obj: {'text': obj.text,
+                                                           'size_hint_y': None,
+                                                           'height': 75,
+                                                           'selected_color':[0,0.5,0,0.4],
+                                                           'deselected_color':[0,0.5,0,0.2]
+                                                           }
+
+        list_adapter = ListAdapter(data=data_items,
+                                   args_converter=list_item_args_converter,
+                                   propagate_selection_to_data=True,
+                                   cls=ListItemButton)
+        self.adapter=list_adapter
+
+
 
 import charac
 pSPECIAL=charac.SPECIAL
@@ -170,8 +225,8 @@ class RootWidget(FloatLayout):
         return player
     def saveCharacter(self):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
         with open('charac.py','w') as savechar:
-            print 'Saving Chatacter'
-            preparedString="SPECIAL=["
+            print 'Saving Character'
+            preparedString="import weapons as w\nSPECIAL=["
             preparedString+=str(self.playerCharacter.special[0])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[1])
@@ -210,8 +265,8 @@ class RootWidget(FloatLayout):
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
             savechar.write(preparedString)
         with open(os.path.join('savedchar','char.py'),'w') as savechar:
-            print 'Saving Chatacter'
-            preparedString="SPECIAL=["
+            print 'Saving Character'
+            preparedString="import weapons as w\nSPECIAL=["
             preparedString+=str(self.playerCharacter.special[0])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[1])
@@ -244,7 +299,7 @@ class RootWidget(FloatLayout):
                 preparedString=preparedString[:-1]
             preparedString+=']\ninventory=['
             for item in self.playerCharacter.inventory:
-                preparedString+='"'+item+'"'
+                preparedString+='"w.'+item.name.replace(' ','')+'"'
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
@@ -269,10 +324,9 @@ class CharDetailLabel(Label):
         if idString == 'HP':
             self.text = 'HP: {}/{}'.format(root.playerCharacter.HP,root.playerCharacter.maxHP)
         elif idString=='Name':
-            self.text='{}'.format(proprty)
+            self.text='{}: {}'.format(idString,proprty)
         else:
             self.text='{}: {}'.format(str(idString), proprty)
-
 
 class ArrowButton(Button):
     def __init__(self, **kwargs):
@@ -334,15 +388,35 @@ class SkillLabel(Label):
     def updateLabel(self,idString,proprty):
         self.text='{}: {}'.format(idString,proprty)
 
-class Inventory(ScrollView):
-    def __init__(self, **kwargs):
-        super(SkillLabel, self).__init__(**kwargs)
+class item:
+    def __init__(self,Name,Weight,Value,Description):
+        self.name=Name
+        self.weight=Weight
+        self.value=Value
+        self.desc=Description
 
-    def populate(self,root):
-        stack=StackLayout(spacing=[0,10],miminum_height=None)
-        self.add_widget(stack)
-        for item in root.playerCharacter.inventory:
-            stack.add_widget()
+class weapon:
+    def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB):
+        self.name=Name
+        self.weight=Weight
+        self.value=Value
+        self.minST=minST
+        self.dmg=Dmg
+        self.range=Range
+        self.APS=APS
+        self.APT=APT
+        self.APB=APB
+        self.itemDetails=[self.name,
+        self.weight,
+        self.value,
+        self.minST,
+        self.dmg,
+        self.range,
+        self.APS,
+        self.APT,
+        self.APB]
+
+'''self,Name,Weight,Value,Description, minST,Dmg,Range,APS,APT,APB'''
 
 class PipBoy(App):
     def build(self):

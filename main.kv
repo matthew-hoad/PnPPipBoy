@@ -1,3 +1,10 @@
+#:import KIVY_DEFAULT_FONT settings.KIVY_DEFAULT_FONT
+
+
+<Label>:  
+    font_name: KIVY_DEFAULT_FONT
+    font_size: 19
+
 <RootWidget>:
     on_touch_up:
         root.playerCharacter.updateSPECIALAndcharacterDetails()
@@ -6,14 +13,14 @@
             name:'Intro'
             StackLayout:
                 BoxLayout:
-                    size_hint:1,0.0714
+                    size_hint:1,0.2
                     Button:
                         text:'Load Character'
                         on_press:
                             root.loadCharacter('savedchar','char.py')
                             root.children[0].current='PipBoy'
                 BoxLayout:
-                    size_hint:1,0.0714
+                    size_hint:1,0.2
                     Button:
                         text:'New Character'
                         on_press:
@@ -195,8 +202,6 @@
                             ArrowButton:
                                 text:'>'
                                 on_press:
-                                    print root.playerCharacter.special
-                                    print IN.getNum(root,4)
                                     IN.incrment(root,1)
                                     IN.updateNum(root,4)
 
@@ -283,25 +288,40 @@
                 barter.updateLabel('barter',root.playerCharacter.barter)
                 gambling.updateLabel('gambling',root.playerCharacter.gambling)
                 outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
+                Inv.populateItems(root)
+                root.playerCharacter.normaliseItemNames()
             name:'PipBoy'
             TabbedPanel:
                 do_default_tab: False
 
                 TabbedPanelItem:
                     text:'Status'
-                    FloatLayout:
+                    StackLayout:
+
                         BoxLayout:
-                            orientation:'vertical'
-                            size_hint:0.3,0.3
-                            pos:(root.x+int(self.width/2.0),root.height-self.height-110)
-                            
-                            Label:
-                                text:'Name:'
+                            size_hint:1,0.15
+
                             CharDetailLabel:
                                 id:Name
-                            Label:
-                                text:''
+                                size_hint:0.4,1
 
+                            CharDetailLabel:
+                                id:HP
+                                size_hint:0.15,1
+                            CharDetailLabel:
+                                id:Level
+                                size_hint:0.15,1
+                            CharDetailLabel:
+                                id:Rads
+                                size_hint:0.15,1
+                            CharDetailLabel:
+                                id:Poison
+                                size_hint:0.15,1
+
+
+
+                        BoxLayout:
+                            size_hint:1,0.1
                             SpecialLabel:
                                 id:STLabel                            
                             SpecialLabel:
@@ -316,18 +336,6 @@
                                 id:AGLabel                            
                             SpecialLabel:
                                 id:LKLabel                        
-                        BoxLayout:
-                            orientation:'vertical'
-                            size_hint:0.3,0.3
-                            pos:(root.width-self.width,root.height-self.height-110)
-                            CharDetailLabel:
-                                id:HP
-                            CharDetailLabel:
-                                id:Level
-                            CharDetailLabel:
-                                id:Rads
-                            CharDetailLabel:
-                                id:Poison
 
                 TabbedPanelItem:
                     text:'Skills'
@@ -380,4 +388,39 @@
 
                 TabbedPanelItem:
                     text:'Inv.'
-                    Inventory:
+                    StackLayout:
+                        BoxLayout:
+                            #spacing:50
+                            size_hint:1,0.15
+                            Label:
+                                text:'Name'
+                                size_hint:0.25,None
+                            Label:
+                                text:'Value'
+                                size_hint:0.09,None
+                            Label:
+                                text:'minST'
+                                size_hint:0.09,None
+                            Label:
+                                text:'Wgt'
+                                size_hint:0.09,None
+                            Label:
+                                text:'Dmg'
+                                size_hint:0.15,None
+                            Label:
+                                text:'Range'
+                                size_hint:0.09,None
+                            Label:
+                                text:'APS'
+                                size_hint:0.09,None
+                            Label:
+                                text:'APT'
+                                size_hint:0.09,None
+                            Label:
+                                text:'APB'
+                                size_hint:0.09,None
+                        BoxLayout:
+                            #size_hint:self.parent.width,self.parent.height
+                            Inventory:
+                                id:Inv
+

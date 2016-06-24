@@ -1,5 +1,6 @@
-SPECIAL=[10,9,8,7,4,1,1]
-characterDetails=["Marty Goldman","20","Human","Male","500","Pretty Fucking awesome guy!"]
+import weapons as w
+SPECIAL = [10,10,10,10,10,10,10]
+characterDetails = ["Urlok The Destroyer","9001","Human","N/A","-1000","Fear him! Run while you can..."]
 perks=[]
-inventory=[]
+inventory=[w.BrassKnuckles,w.TigerClaw,w.Sappers,w.BrassKnuckles,w.BrassKnuckles,w.BrassKnuckles,w.BrassKnuckles,w.BrassKnuckles,w.BrassKnuckles]
 EXP=10000
