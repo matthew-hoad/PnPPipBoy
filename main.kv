@@ -42,8 +42,11 @@
         root.setEquipped(MiscInventory)
         root.saveCharacter()
         root.playerCharacter.update()
+        CarryWeight.updateLabel(root,'CarryWeight',root.playerCharacter.carryWeight)
         #print root.playerCharacter.inventory
         #print root.playerCharacter.traits
+    #on_touch_up:
+        #root.saveCharacter()
 
 
     ScreenManager:
@@ -763,7 +766,6 @@
             name:'PreDefinedWeapon'
             on_enter:
                 PreDefinedWeaponInventory.clear_widgets(children=None)
-                PreDefinedWeaponInventory.populate(root)
             FloatLayout:        
                 GridLayout:
                     pos:root.x,root.top-self.height
@@ -779,6 +781,9 @@
                         size:root.width*0.4,100
                         multiline:False
                         text:''
+                        on_text_validate:
+                            PreDefinedWeaponInventory.clear_widgets(children=None)
+                            PreDefinedWeaponInventory.search(WeaponSearch.text,root)
                     PipButton:
                         text:'Search'
                         size:root.width*0.2,100
@@ -802,7 +807,6 @@
             name:'PreDefinedApparel'
             on_enter:
                 PreDefinedApparelInventory.clear_widgets(children=None)
-                PreDefinedApparelInventory.populate(root)
             FloatLayout:        
                 GridLayout:
                     pos:root.x,root.top-self.height
@@ -817,6 +821,9 @@
                         size:root.width*0.4,100
                         multiline:False
                         text:''
+                        on_text_validate:
+                            PreDefinedApparelInventory.clear_widgets(children=None)
+                            PreDefinedApparelInventory.search(ApparelSearch.text,root)
                     PipButton:
                         text:'Search'
                         size:root.width*0.2,100
@@ -840,7 +847,6 @@
             name:'PreDefinedAid'
             on_enter:
                 PreDefinedAidInventory.clear_widgets(children=None)
-                PreDefinedAidInventory.populate(root)
             FloatLayout:        
                 GridLayout:
                     pos:root.x,root.top-self.height
@@ -856,6 +862,9 @@
                         size:root.width*0.4,100
                         multiline:False
                         text:''
+                        on_text_validate:
+                            PreDefinedAidInventory.clear_widgets(children=None)
+                            PreDefinedAidInventory.search(AidSearch.text,root)
                     PipButton:
                         text:'Search'
                         size:root.width*0.2,100
@@ -878,7 +887,6 @@
             name:'PreDefinedMisc'
             on_enter:
                 PreDefinedMiscInventory.clear_widgets(children=None)
-                PreDefinedMiscInventory.populate(root)
             FloatLayout:        
                 GridLayout:
                     pos:root.x,root.top-self.height
@@ -894,6 +902,9 @@
                         size:root.width*0.4,100
                         multiline:False
                         text:''
+                        on_text_validate:
+                            PreDefinedMiscInventory.clear_widgets(children=None)
+                            PreDefinedMiscInventory.search(MiscSearch.text,root)
                     PipButton:
                         text:'Search'
                         size:root.width*0.2,100

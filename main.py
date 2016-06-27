@@ -34,7 +34,7 @@ Builder.load_string("""
       size: self.size
 """)
 
-class item:
+class misc:
     def __init__(self,Name,Weight,Value,Description):
         self.name=Name
         self.weight=Weight
@@ -180,6 +180,44 @@ class character:
         self.poison = 0
         self.rads = 0
 
+        self.poisonandrads=[self.poison,self.rads]
+
+        self.smallGuns=5+4*self.AG
+        self.bigGuns=0+2*self.AG
+        self.energyWeapons=0+2*self.AG
+        self.unarmed=30+2*(self.AG+self.ST)
+        self.meleeWeapons=20+2*(self.AG+self.ST)
+        self.throwing=0+4*self.AG
+        self.firstAid=2*(self.PE+self.IN)
+        self.doctor=5+(self.PE+self.IN)
+        self.sneak=5+3*self.AG
+        self.lockpick=10 + (self.PE+self.AG)
+        self.steal=0 + 3*self.AG
+        self.traps=0+ (self.PE+self.AG)
+        self.science=0+(4*self.IN)
+        self.repair=0+3*self.IN
+        self.pilot=0+2*(self.AG+self.PE)
+        self.speech=0+5*self.CH
+        self.barter=0+4*self.CH
+        self.gambling=0+5*self.LK
+        self.outdoorsman=0+2*(self.EN+self.IN)
+
+        self.AP=5+floor(self.AG/2.0)
+        self.carryWeight=(25+25*self.ST)
+        self.meleeDamage=[self.ST-5 if self.ST-5>0 else 1]
+        self.poisonRes=5*self.EN
+        self.radRes=2*self.EN
+        self.sequence=2*self.PE
+        self.healingRate=floor(self.EN/3.0)
+        self.criticalChance=self.LK
+        self.electricityres=0
+        self.gasres=0
+        self.implantendurance=(10*(self.IN+self.EN))
+        
+        self.secondaryStats=[self.AP,self.carryWeight,self.meleeDamage,self.poison,self.radRes,self.sequence,self.healingRate,self.criticalChance,self.electricityres,self.gasres,self.implantendurance]
+
+        self.skills=[self.smallGuns,self.bigGuns,self.energyWeapons,self.unarmed,self.meleeWeapons,self.throwing,self.firstAid,self.doctor,self.sneak,self.lockpick,self.steal,self.traps,self.science,self.repair,self.pilot,self.speech,self.barter,self.gambling,self.outdoorsman]
+
         self.currentlyEquipped={'weapon':None,'head':None,'body':None,'aid':None}
 
         self.update()
@@ -285,40 +323,48 @@ class character:
 
         self.maxHP=int(15 + (self.ST + (2*self.EN)))
         self.level = self.checkLevel()
+
         if self.HP>self.maxHP:
             self.HP=int(self.maxHP)
 
-        self.AP=5+floor(self.AG/2.0)
-        self.carryWeight=(25+25*self.ST)
         self.currentEncumbrance=0
         for item in self.inventory:
             self.currentEncumbrance+=int(item.weight)
-        self.meleeDamage=[self.ST-5 if self.ST-5>0 else 1]
-        self.poisonRes=5*self.EN
-        self.radRes=2*self.EN
-        self.sequence=2*self.PE
-        self.healingRate=floor(self.EN/3.0)
-        self.criticalChance=self.LK
+        
+        
+        self.AP=self.secondaryStats[0]
+        self.carryWeight=self.secondaryStats[1]
+        self.meleeDamage=self.secondaryStats[2]
+        self.poisonRes=self.secondaryStats[3]
+        self.radRes=self.secondaryStats[4]
+        self.sequence=self.secondaryStats[5]
+        self.healingRate=self.secondaryStats[6]
+        self.criticalChance=self.secondaryStats[7]
+        self.electricityres=self.secondaryStats[8]
+        self.gasres=self.secondaryStats[9]
+        self.implantendurance=self.secondaryStats[10]
 
-        self.smallGuns=5+4*self.AG
-        self.bigGuns=0+2*self.AG
-        self.energyWeapons=0+2*self.AG
-        self.unarmed=30+2*(self.AG+self.ST)
-        self.meleeWeapons=20+2*(self.AG+self.ST)
-        self.throwing=0+4*self.AG
-        self.firstAid=2*(self.PE+self.IN)
-        self.doctor=5+(self.PE+self.IN)
-        self.sneak=5+3*self.AG
-        self.lockpick=10 + (self.PE+self.AG)
-        self.steal=0 + 3*self.AG
-        self.traps=0+ (self.PE+self.AG)
-        self.science=0+(4*self.IN)
-        self.repair=0+3*self.IN
-        self.pilot=0+2*(self.AG+self.PE)
-        self.speech=0+5*self.CH
-        self.barter=0+4*self.CH
-        self.gambling=0+5*self.LK
-        self.outdoorsman=0+2*(self.EN+self.IN)
+        
+        self.smallGuns=self.skills[0]
+        self.bigGuns=self.skills[1]
+        self.energyWeapons=self.skills[2]
+        self.unarmed=self.skills[3]
+        self.meleeWeapons=self.skills[4]
+        self.throwing=self.skills[5]
+        self.firstAid=self.skills[6]
+        self.doctor=self.skills[7]
+        self.sneak=self.skills[8]
+        self.lockpick=self.skills[9]
+        self.steal=self.skills[10]
+        self.traps=self.skills[11]
+        self.science=self.skills[12]
+        self.repair=self.skills[13]
+        self.pilot=self.skills[14]
+        self.speech=self.skills[15]
+        self.barter=self.skills[16]
+        self.gambling=self.skills[17]
+        self.outdoorsman=self.skills[18]
+
 
         for trait in self.traits:
             if trait[0]=='Bruiser':
@@ -331,6 +377,12 @@ class character:
                 self.IN+=1
                 self.AG+=1
                 self.LK+=1
+
+        self.poisonandrads=[self.poison,self.rads]
+
+        self.secondaryStats=[self.AP,self.carryWeight,self.meleeDamage,self.poison,self.radRes,self.sequence,self.healingRate,self.criticalChance,self.electricityres,self.gasres,self.implantendurance]
+
+        self.skills=[self.smallGuns,self.bigGuns,self.energyWeapons,self.unarmed,self.meleeWeapons,self.throwing,self.firstAid,self.doctor,self.sneak,self.lockpick,self.steal,self.traps,self.science,self.repair,self.pilot,self.speech,self.barter,self.gambling,self.outdoorsman]
         #print 'Finished Updating Character'
 
 class DataItem(object):
@@ -349,8 +401,22 @@ pcharacterDetails=charac.characterDetails
 ptraits=charac.traits
 pinventory=charac.inventory
 pEXP=charac.EXP
+try:
+    psecondaryStats = charac.secondaryStats
+    pskills=charac.skills
+    ppoisonandrads=charac.poisonandrads
+    pHP=charac.HP
+except:
+    pass
 player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,Traits=ptraits,inventory=pinventory,EXP=pEXP)
-
+try:
+    player.poison=charac.poisonandrads[0]
+    player.rads=charac.poisonandrads[1]
+    player.skills=charac.skills
+    player.HP=pHP
+except:
+    pass
+player.update()
 presentation=Builder.load_file('main.kv')
 
 class RootWidget(FloatLayout):
@@ -443,6 +509,17 @@ class RootWidget(FloatLayout):
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.EXP))
+            preparedString+="\npoisonandrads=[{},{}]".format(self.playerCharacter.poison,self.playerCharacter.rads)
+            listofskillnames=['smallGuns', 'bigGuns', 'energyWeapons', 'unarmed', 'meleeWeapons', 'throwing', 'firstAid', 'doctor', 'sneak', 'lockpick', 'steal', 'traps', 'science', 'repair', 'pilot', 'speech', 'barter', 'gambling', 'outdoorsman',]
+            for i in range(len(self.playerCharacter.skills)):
+                preparedString+="\n{}={}".format(listofskillnames[i],self.playerCharacter.skills[i])
+            preparedString+="\nskills=["
+            for skillname in listofskillnames:
+                preparedString+=skillname+','
+            if preparedString[-1]==',':
+                preparedString=preparedString[:-1]
+            preparedString+=']'
+            preparedString+="\nHP={}".format(self.playerCharacter.HP)
             savechar.write(preparedString)
 
 
@@ -561,34 +638,6 @@ class PreDefinedWeaponInventory(GridLayout):
         self.spacing=10
         self.size_hint_y=None
 
-    def populate(self,root):
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
-        import items as i
-        for item in i.weapons:
-            if item.__class__.__name__ == 'weapon':
-                WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
-                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Rng',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.range),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.1))
-                WeaponRow.add_widget(Values)
-                self.add_widget(WeaponRow)
-        self.bind(minimum_height=self.setter('height'))
-
     def search(self,text,root):
         self.add_widget(PipLabel(text='',height=100,width=root.width))
         import items as i
@@ -596,23 +645,23 @@ class PreDefinedWeaponInventory(GridLayout):
             if item.__class__.__name__ == 'weapon' and item.name[:len(text)].lower()==text.lower():
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
+                Values=GridLayout(height=100,size_hint_x=0.8,cols=8,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.14))
                 Values.add_widget(PipLabel(text='Rng',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.09))
                 Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
                 Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.14))
                 Values.add_widget(PipLabel(text=str(item.range),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.09))
                 WeaponRow.add_widget(Values)
                 self.add_widget(WeaponRow)
         self.bind(minimum_height=self.setter('height'))
@@ -624,60 +673,6 @@ class PreDefinedApparelInventory(GridLayout):
         self.cols=1
         self.spacing=10
         self.size_hint_y=None
-
-    def populate(self,root):
-        import items as i
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.apparels:
-            if item.__class__.__name__ == 'apparel':
-                if item.ApparelType=='head':
-                    #self.add_widget(PipLabel(text='Head',halign='left',size_hint_x=1,height=50,width=root.width))
-                    ApparelRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='head'))#,on_press=root.playerCharacter.equipItem(item)))
-                    Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
-                    Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='AC',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='N',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='L',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='F',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='P',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='E',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.AC),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.N),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.L),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.F),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.P),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.E),height=50,width=root.width*0.1))
-                    ApparelRow.add_widget(Values)
-                    self.add_widget(ApparelRow)
-                if item.ApparelType=='body':
-                    #self.add_widget(PipLabel(text='Body',halign='left',size_hint_x=1,height=100))
-                    ApparelRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='body'))#,on_press=root.playerCharacter.equipItem(item)))
-                    Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
-                    Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='AC',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='N',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='L',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='F',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='P',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text='E',height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.AC),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.N),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.L),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.F),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.P),height=50,width=root.width*0.1))
-                    Values.add_widget(PipLabel(text=str(item.E),height=50,width=root.width*0.1))
-                    ApparelRow.add_widget(Values)
-                    self.add_widget(ApparelRow)
-
-        self.bind(minimum_height=self.setter('height'))
 
     def search(self,text,root):
         import items as i
@@ -741,43 +736,6 @@ class PreDefinedAidInventory(GridLayout):
         self.spacing=10
         self.size_hint_y=None
 
-    def populate(self,root):
-        import items as i
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.aids:
-            if item.__class__.__name__ == 'aid':
-                #print item
-                AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='aid',text=item.name,height=100,size_hint_x=0.2,group='aid',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
-                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='HP',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='Rad',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='Poison',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='ST',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='PE',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='EN',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='CH',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='IN',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='AG',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='LK',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.HP),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.rad),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.poison),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.ST),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.PE),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.EN),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.CH),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.IN),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.AG),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.LK),height=50,width=root.width*0.083))
-                AidRow.add_widget(Values)
-                self.add_widget(AidRow)
-        self.bind(minimum_height=self.setter('height'))
-
     def search(self,text,root):
         import items as i
         self.add_widget(PipLabel(text='',height=100,width=root.width))
@@ -823,24 +781,6 @@ class PreDefinedMiscInventory(GridLayout):
         self.spacing=10
         self.size_hint_y=None
 
-    def populate(self,root):
-        import items as i
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.miscs:
-            if item.__class__.__name__ == 'misc':
-                #print item
-                AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
-                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
-                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
-                AidRow.add_widget(Values)
-                self.add_widget(AidRow)
-                '''Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes'''
-        self.bind(minimum_height=self.setter('height'))
-
     def search(self,text,root):
         import items as i
         self.add_widget(PipLabel(text='',height=100,width=root.width))
@@ -873,23 +813,23 @@ class WeaponInventory(GridLayout):
             if item.__class__.__name__ == 'weapon':
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
+                Values=GridLayout(height=100,size_hint_x=0.8,cols=8,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.14))
                 Values.add_widget(PipLabel(text='Rng',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.09))
                 Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
                 Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.14))
                 Values.add_widget(PipLabel(text=str(item.range),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.1))
+                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.09))
+                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.09))
                 WeaponRow.add_widget(Values)
                 self.add_widget(WeaponRow)
         self.bind(minimum_height=self.setter('height'))

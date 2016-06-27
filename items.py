@@ -1,8 +1,9 @@
 class misc:
-    def __init__(self,Name,Weight,Value):
+    def __init__(self,Name,Weight,Value,Description):
         self.name=Name
         self.weight=Weight
         self.value=Value
+        self.description=Description
 
 
 class weapon:
