@@ -396,24 +396,14 @@ class dummyDataItem(object):
         self.is_selected = False
 
 import charac
-pSPECIAL=charac.SPECIAL
-pcharacterDetails=charac.characterDetails
-ptraits=charac.traits
-pinventory=charac.inventory
-pEXP=charac.EXP
-try:
-    psecondaryStats = charac.secondaryStats
-    pskills=charac.skills
-    ppoisonandrads=charac.poisonandrads
-    pHP=charac.HP
-except:
-    pass
-player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,Traits=ptraits,inventory=pinventory,EXP=pEXP)
+
+player=character(SPECIAL=charac.SPECIAL,characterDetails=charac.characterDetails,Traits=charac.traits,inventory=charac.inventory,EXP=charac.EXP)
 try:
     player.poison=charac.poisonandrads[0]
     player.rads=charac.poisonandrads[1]
     player.skills=charac.skills
-    player.HP=pHP
+    player.HP=charac.HP
+    print 'HP updated'
 except:
     pass
 player.update()
