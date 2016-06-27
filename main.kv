@@ -1,262 +1,405 @@
 #:import KIVY_DEFAULT_FONT settings.KIVY_DEFAULT_FONT
 
 
-<Label>:  
+<PipLabel>:  
     font_name: KIVY_DEFAULT_FONT
     font_size: 19
+    color:[0,0,0,1]
+
+
+<PipButton>:  
+    font_name: KIVY_DEFAULT_FONT
+    font_size: 19
+    color:[0,0,0,1]
+    
+
+<PipToggleButton>:  
+    font_name: KIVY_DEFAULT_FONT
+    font_size: 19
+    color:[0,0,0,1]
+
+
+<TabbedPanelHeader>:
+    font_name: KIVY_DEFAULT_FONT
+    font_size: 15
+    color:[0,0,0,1]
+    canvas:
+        Color:
+            rgba: (0, 0.9, 0, 0.4) # green
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<TabbedPanel>:
+    background_normal:''
+    background_color:0.2,0.2,0.2,1
 
 <RootWidget>:
-    on_touch_up:
-        root.playerCharacter.updateSPECIALAndcharacterDetails()
+    on_touch_down:
+        root.setEquipped(WeaponInventory)
+        root.setEquipped(ApparelInventory)
+        root.setEquipped(AidInventory)
+        root.playerCharacter.update()
+        print root.playerCharacter.inventory
+
     ScreenManager:
         Screen:
             name:'Intro'
-            StackLayout:
+            GridLayout:
+                cols:1
+                rows:2
+                row_force_default:True
+                row_default_height:100
+                #pos_hint:{'x':root.x,'y':-(root.height/2.0)-(self.height/2.0)}
+
+                spacing:10
                 BoxLayout:
-                    size_hint:1,0.2
-                    Button:
+                    size:root.width,100
+                    PipButton:
                         text:'Load Character'
-                        on_press:
+                        on_release:
                             root.loadCharacter('savedchar','char.py')
                             root.children[0].current='PipBoy'
                 BoxLayout:
-                    size_hint:1,0.2
-                    Button:
+                    size:root.width,100
+                    PipButton:
                         text:'New Character'
-                        on_press:
+                        on_release:
                             root.children[0].current='characterCreation'
+                            root.playerCharacter.saveCharacter()
         Screen:
             name:'characterCreation'
+            on_enter:
+                PlayerTraits.populate(root)
             TabbedPanel:
                 do_default_tab: False
 
                 TabbedPanelItem:
                     text:'Character'
-                    StackLayout:
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Label:
-                                size:0.333,1
-                                text:'Name'
-                            characterDetailsInput:
-                                id: charName
-                                multiline: False
-                                text:self.getText(root,0)
+                    ScrollView:
+                        size_hint:None,None
+                        size:root.width,root.height*0.9
+                        StackLayout:
+                            size_hint:1,None
+                            height:1500
+                            SPECIALrow:
+                                size_hint:1,0.08
+                                PipLabel:
+                                    size:0.333,1
+                                    text:'Name'
+                                characterDetailsInput:
+                                    id: charName
+                                    multiline: False
+                                    text:self.getText(root,0)
 
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Label:
-                                size:0.333,1
-                                text:'Age'
-                            characterDetailsInput:
-                                id: charAge
-                                multiline: False
-                                text:self.getText(root,1)
+                            SPECIALrow:
+                                size_hint:1,0.08
+                                PipLabel:
+                                    size:0.333,1
+                                    text:'Age'
+                                characterDetailsInput:
+                                    id: charAge
+                                    multiline: False
+                                    text:self.getText(root,1)
 
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Label:
-                                size:0.333,1
-                                text:'Race'
-                            characterDetailsInput:
-                                id: charRace
-                                multiline: False
-                                text:self.getText(root,2)
+                            SPECIALrow:
+                                size_hint:1,0.08
+                                PipLabel:
+                                    size:0.333,1
+                                    text:'Race'
+                                characterDetailsInput:
+                                    id: charRace
+                                    multiline: False
+                                    text:self.getText(root,2)
 
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Label:
-                                text:'Gender'
-                            characterDetailsInput:
-                                id: charGender
-                                multiline: False
-                                text:self.getText(root,3)
+                            SPECIALrow:
+                                size_hint:1,0.08
+                                PipLabel:
+                                    text:'Gender'
+                                characterDetailsInput:
+                                    id: charGender
+                                    multiline: False
+                                    text:self.getText(root,3)
 
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Label:
-                                text:'Karma'
-                            characterDetailsInput:
-                                id: charKarma
-                                hint_text:'-500 to 500'
-                                multiline: False
-                                text:self.getText(root,4)
+                            SPECIALrow:
+                                size_hint:1,0.08
+                                PipLabel:
+                                    text:'Karma'
+                                characterDetailsInput:
+                                    id: charKarma
+                                    hint_text:'-500 to 500'
+                                    multiline: False
+                                    text:self.getText(root,4)
 
-                        SPECIALrow:
-                            size_hint:1,0.3
-                            Label:
-                                text:'Notes'
-                            characterDetailsInput:
-                                id:charNotes
-                                hint_text:'Appearance/history...'
-                                multiline:True
-                                text:self.getText(root,5)
+                            SPECIALrow:
+                                size_hint:1,0.3
+                                PipLabel:
+                                    text:'Notes'
+                                characterDetailsInput:
+                                    id:charNotes
+                                    hint_text:'Appearance/history...'
+                                    multiline:True
+                                    text:self.getText(root,5)
 
-                        SPECIALrow:
-                            size_hint:1,0.0714
-                            Button:
-                                text:'Save These Details'
-                                on_press:
-                                    charName.updateText(root,0)
-                                    charAge.updateText(root,1)
-                                    charRace.updateText(root,2)
-                                    charGender.updateText(root,3)
-                                    charKarma.updateText(root,4)
-                                    charNotes.updateText(root,5)
-                                    root.playerCharacter.updateSPECIALAndcharacterDetails()
-
+                            SPECIALrow:
+                                size_hint:1,0.1
+                                PipButton:
+                                    text:'Save These Details'
+                                    on_press:
+                                        charName.updateText(root,0)
+                                        charAge.updateText(root,1)
+                                        charRace.updateText(root,2)
+                                        charGender.updateText(root,3)
+                                        charKarma.updateText(root,4)
+                                        charNotes.updateText(root,5)
+                                        root.playerCharacter.update()
 
                 TabbedPanelItem:
                     text:'SPECIAL'
                     StackLayout:
-                           
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            PipLabel:
+                                id:SPECIALpoints
+                                text:'Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+                        SPECIALrow:
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Strength'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     ST.incrment(root,-1)
                                     ST.updateNum(root,0)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,0))
                                 id: ST
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     ST.incrment(root,1)
                                     ST.updateNum(root,0)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
                         
                         
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Perception'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     PE.incrment(root,-1)
                                     PE.updateNum(root,1)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,1))
                                 id: PE
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     PE.incrment(root,1)
                                     PE.updateNum(root,1)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
 
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Endurance'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     EN.incrment(root,-1)
                                     EN.updateNum(root,2)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,2))
                                 id: EN
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     EN.incrment(root,1)
                                     EN.updateNum(root,2)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
 
                         
                         
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Charisma'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     CH.incrment(root,-1)
                                     CH.updateNum(root,3)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,3))
                                 id: CH
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     CH.incrment(root,1)
                                     CH.updateNum(root,3)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
 
                         
                         
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Intelligence'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     IN.incrment(root,-1)
                                     IN.updateNum(root,4)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,4))
                                 id: IN
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press:
                                     IN.incrment(root,1)
                                     IN.updateNum(root,4)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
 
                         
                             
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Agility'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     AG.incrment(root,-1)
                                     AG.updateNum(root,5)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,5))
                                 id: AG
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     AG.incrment(root,1)
                                     AG.updateNum(root,5)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
 
                         
                             
                         SPECIALrow:
-                            size_hint:1,0.1428
+                            size_hint:1,0.125
+                            Label:
+                                text:''
                             StatLabel:
                                 text:'Luck'
-                            ArrowButton:
+                            Label:
+                                text:''
+                            PipButton:
                                 text:'<'
                                 on_press: 
                                     LK.incrment(root,-1)
                                     LK.updateNum(root,6)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
                             numLabel:
                                 text:'{}'.format(self.getNum(root,6))
                                 id: LK
-                            ArrowButton:
+                            PipButton:
                                 text:'>'
                                 on_press: 
                                     LK.incrment(root,1)
                                     LK.updateNum(root,6)
+                                    SPECIALpoints.text='Special Points Remaining: {}'.format(root.playerCharacter.SPECIALpoints)
+
+                            Label:
+                                text:''
+
+                TabbedPanelItem:
+                    text:'Traits'
+                    GridLayout:
+                        rows:2
+                        spacing:5
+                        PipButton:
+                            text:'Submit Selected Traits'
+                            size:root.width,root.height*0.15
+                            on_press:
+                                root.updateTraitsAndWeapons(root)
+                                print '"Update" Button Pressed'
+
+                        ScrollView:
+                            size_hint:None,None
+                            size:root.width,root.height*0.75
+                            PlayerTraits:
+                                id:PlayerTraits
+
+
                 TabbedPanelItem:
                     text:'Finish'
                     BoxLayout:
                         padding:20,200
-                        Button:
+                        PipButton:
                             text:'Finished Creating Character'
                             on_press:
-                                root.playerCharacter.updateSPECIALAndcharacterDetails()
+                                root.playerCharacter.update()
                                 root.saveCharacter()
                                 root.children[0].current='PipBoy'
         Screen:
+            name:'PipBoy'
             on_enter:
-                root.playerCharacter=root.reloadCharacter()
+                #root.playerCharacter=root.reloadCharacter()
                 STLabel.updateLabel(root, 'ST', 0)
                 PELabel.updateLabel(root, 'PE', 1)
                 ENLabel.updateLabel(root, 'EN', 2)
@@ -267,6 +410,7 @@
                 Name.updateLabel(root,'Name',root.playerCharacter.name)
                 HP.updateLabel(root,'HP',root.playerCharacter.HP)
                 Level.updateLabel(root,'Level',root.playerCharacter.level)
+                CarryWeight.updateLabel(root,'carryWeight',root.playerCharacter.carryWeight)
                 Rads.updateLabel(root,'Rads',root.playerCharacter.rads)
                 Poison.updateLabel(root,'Poison',root.playerCharacter.poison)
                 smallGuns.updateLabel('smallGuns',root.playerCharacter.smallGuns)
@@ -288,39 +432,99 @@
                 barter.updateLabel('barter',root.playerCharacter.barter)
                 gambling.updateLabel('gambling',root.playerCharacter.gambling)
                 outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
-                Inv.populateItems(root)
-                root.playerCharacter.normaliseItemNames()
-            name:'PipBoy'
+                WeaponInventory.populate(root)
+                ApparelInventory.populate(root)
+                AidInventory.populate(root)
             TabbedPanel:
                 do_default_tab: False
 
                 TabbedPanelItem:
                     text:'Status'
                     StackLayout:
-
-                        BoxLayout:
-                            size_hint:1,0.15
-
+                        GridLayout:
+                            padding:10
+                            spacing:20
+                            size_hint:1,0.1
+                            cols:3
                             CharDetailLabel:
                                 id:Name
-                                size_hint:0.4,1
-
-                            CharDetailLabel:
-                                id:HP
-                                size_hint:0.15,1
+                                size_hint:0.33,1
+                            BoxLayout:
+                                size_hint:0.33,1
+                                spacing:10
+                                PipButton:
+                                    text:'<'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.HP-=1
+                                        root.playerCharacter.update()
+                                        HP.updateLabel(root,'HP',root.playerCharacter.HP)
+                                CharDetailLabel:
+                                    id:HP
+                                    size_hint:0.6,1
+                                PipButton:
+                                    text:'>'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.HP+=1
+                                        root.playerCharacter.update()
+                                        HP.updateLabel(root,'HP',root.playerCharacter.HP)
                             CharDetailLabel:
                                 id:Level
-                                size_hint:0.15,1
+                                size_hint:0.33,1
+                        GridLayout:
+                            padding:10
+                            spacing:20
+                            size_hint:1,0.1
+                            cols:3
                             CharDetailLabel:
-                                id:Rads
-                                size_hint:0.15,1
-                            CharDetailLabel:
-                                id:Poison
-                                size_hint:0.15,1
-
+                                id:CarryWeight
+                                size_hint:0.33,1
+                            BoxLayout
+                                size_hint:0.33,1
+                                spacing:10
+                                PipButton:
+                                    text:'<'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.rads-=1
+                                        root.playerCharacter.update()
+                                        Rads.updateLabel(root,'Rads',root.playerCharacter.rads)
+                                CharDetailLabel:
+                                    id:Rads
+                                    size_hint:0.6,1
+                                PipButton:
+                                    text:'>'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.rads+=1
+                                        root.playerCharacter.update()
+                                        Rads.updateLabel(root,'Rads',root.playerCharacter.rads)
+                            BoxLayout:
+                                size_hint:0.33,1
+                                spacing:10
+                                PipButton:
+                                    text:'<'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.poison-=1
+                                        root.playerCharacter.update()
+                                        Poison.updateLabel(root,'Poison',root.playerCharacter.poison)
+                                CharDetailLabel:
+                                    id:Poison
+                                    size_hint:0.33,1
+                                PipButton:
+                                    text:'>'
+                                    size_hint:0.2,1
+                                    on_release:
+                                        root.playerCharacter.poison+=1
+                                        root.playerCharacter.update()
+                                        Poison.updateLabel(root,'Poison',root.playerCharacter.poison)
 
 
                         BoxLayout:
+                            padding:10
+                            spacing:20
                             size_hint:1,0.1
                             SpecialLabel:
                                 id:STLabel                            
@@ -341,8 +545,12 @@
                     text:'Skills'
                     BoxLayout:
                         size_hint:1,1
+                        padding:5
+                        spacing:10
                         BoxLayout:
                             size_hint:1,1
+                            padding:5
+                            spacing:10
                             orientation:'vertical'
                             SkillLabel:
                                 id:smallGuns
@@ -364,6 +572,8 @@
                                 id:sneak
                         BoxLayout:
                             size_hint:1,1
+                            padding:5
+                            spacing:10
                             orientation:'vertical'
                             SkillLabel:
                                 id:lockpick
@@ -387,40 +597,541 @@
                                 id:outdoorsman
 
                 TabbedPanelItem:
-                    text:'Inv.'
-                    StackLayout:
-                        BoxLayout:
-                            #spacing:50
-                            size_hint:1,0.15
-                            Label:
-                                text:'Name'
-                                size_hint:0.25,None
-                            Label:
-                                text:'Value'
-                                size_hint:0.09,None
-                            Label:
-                                text:'minST'
-                                size_hint:0.09,None
-                            Label:
-                                text:'Wgt'
-                                size_hint:0.09,None
-                            Label:
-                                text:'Dmg'
-                                size_hint:0.15,None
-                            Label:
-                                text:'Range'
-                                size_hint:0.09,None
-                            Label:
-                                text:'APS'
-                                size_hint:0.09,None
-                            Label:
-                                text:'APT'
-                                size_hint:0.09,None
-                            Label:
-                                text:'APB'
-                                size_hint:0.09,None
-                        BoxLayout:
-                            #size_hint:self.parent.width,self.parent.height
-                            Inventory:
-                                id:Inv
+                    text:'Inv'
+                    TabbedPanel:
+                        do_default_tab:False
+                        TabbedPanelItem:
+                            text:'Weapons'
+                            FloatLayout:
+                                
+                                GridLayout:                         
+                                    pos:root.x,root.top-self.height-100
+                                    size_hint_y:None
+                                    height:100
+                                    cols:4
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Add'
+                                        size:root.width*0.2,100
+                                        on_press:
+                                            root.children[0].current='PreDefinedWeapon'
+                                    RemoveItemButton:
+                                        text:'Remove Item'
+                                        size:root.width*0.2,100
+                                        on_release:
+                                            root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['weapon'])
+                                            WeaponInventory.clear_widgets(children=None)
+                                            WeaponInventory.populate(root)
+                                ScrollView:
+                                    pos:root.x,root.top-self.height-100-100
+                                    size_hint:None,None
+                                    size:root.width,root.height*0.75
+                                    WeaponInventory:
+                                        id:WeaponInventory
+                        TabbedPanelItem:
+                            text:'Apparel'
+                            FloatLayout:
+                                
+                                GridLayout:
+                                    pos:root.x,root.top-self.height-100
+                                    size_hint_y:None
+                                    height:100
+                                    cols:4
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Add'
+                                        size:root.width*0.2,100
+                                        on_press:
+                                            root.children[0].current='DefineNewApparel'
+                                    RemoveItemButton:
+                                        text:'Remove Item'
+                                        size:root.width*0.2,100
+                                        on_release:
+                                            root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['body'])
+                                            root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['head'])
+                                            ApparelInventory.clear_widgets(children=None)
+                                            ApparelInventory.populate(root)
+                                ScrollView:
+                                    pos:root.x,root.top-self.height-100-100
+                                    size_hint:None,None
+                                    size:root.width,root.height*0.75
+                                    ApparelInventory:
+                                        id:ApparelInventory
+                        TabbedPanelItem:
+                            text:'Aid'
+                            FloatLayout:
+                                
+                                GridLayout:
+                                    pos:root.x,root.top-self.height-100
+                                    size_hint_y:None
+                                    height:100
+                                    cols:4
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Add'
+                                        size:root.width*0.2,100
+                                        on_press:
+                                            root.children[0].current='DefineNewAid'
+                                    RemoveItemButton:
+                                        text:'Remove Item'
+                                        size:root.width*0.2,100
+                                        on_release:
+                                            root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['aid'])
+                                            AidInventory.clear_widgets(children=None)
+                                            AidInventory.populate(root)
+                                ScrollView:
+                                    pos:root.x,root.top-self.height-100-100
+                                    size_hint:None,None
+                                    size:root.width,root.height*0.75
+                                    AidInventory:
+                                        id:AidInventory
+                        TabbedPanelItem:
+                            text:'Misc'
+                            FloatLayout:
+                                
+                                GridLayout:
+                                    pos:root.x,root.top-self.height-100
+                                    size_hint_y:None
+                                    height:100
+                                    cols:4
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Add'
+                                        size:root.width*0.2,100
+                                        on_press:
+                                            root.addToInventory(PreDefinedMiscInventory)
+                                ScrollView:
+                                    pos:root.x,root.top-self.height-100-100
+                                    size_hint:None,None
+                                    size:root.width,root.height*0.75
+                                    MiscInventory:
+                                        id:MiscInventory
+
+        Screen:
+            name:'PreDefinedWeapon'
+            ScrollView:
+                pos:root.x,root.top-self.height-100-100
+                size_hint:None,None
+                size:root.width,root.height*0.75
+                PreDefinedWeaponInventory:
+                    id:PreDefinedWeaponInventory
+
+        Screen:
+            name:'PreDefinedApparel'
+            ScrollView:
+                pos:root.x,root.top-self.height-100-100
+                size_hint:None,None
+                size:root.width,root.height*0.75
+                PreDefinedApparelInventory:
+                    id:PreDefinedApparelInventory
+
+        Screen:
+            name:'PreDefinedAid'
+            ScrollView:
+                pos:root.x,root.top-self.height-100-100
+                size_hint:None,None
+                size:root.width,root.height*0.75
+                PreDefinedAidInventory:
+                    id:PreDefinedAidInventory
+        Screen:
+            name:'PreDefinedMisc'
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height-100
+                    size_hint_y:None
+                    height:100
+                    cols:4
+                    Label:
+                        text:''
+                        size:root.width*0.2,100
+                    Label:
+                        text:''
+                        size:root.width*0.2,100
+                    Label:
+                        text:''
+                        size:root.width*0.2,100
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.addToInventory(PreDefinedMiscInventory)
+                ScrollView:
+                    pos:root.x,root.top-self.height-100-100
+                    size_hint:None,None
+                    size:root.width,root.height*0.75
+                    PreDefinedMiscInventory:
+                        id:PreDefinedMiscInventory
+
+
+
+
+        # Screen:
+        #     name:'AddWeapon'
+        #     GridLayout:
+        #         cols:1
+        #         rows:2
+        #         spacing:10
+        #         padding:50
+        #         PipButton:
+        #             text:'Pre-Defined'
+        #             on_release:
+        #                 root.children[0].current='PreDefinedWeapon'
+        #         PipButton:
+        #             text:'Define New'
+        # Screen:
+        #     name:'AddApparel'
+        #     GridLayout:
+        #         cols:1
+        #         rows:2
+        #         spacing:10
+        #         padding:50
+        #         PipButton:
+        #             text:'Pre-Defined'
+        #             on_release:
+        #                 root.children[0].current='PreDefinedApparel'
+        #         PipButton:
+        #             text:'Define New'
+        # Screen:
+        #     name:'AddAid'
+        #     GridLayout:
+        #         cols:1
+        #         rows:2
+        #         spacing:10
+        #         padding:50
+        #         PipButton:
+        #             text:'Pre-Defined'
+        #             on_release:
+        #                 root.children[0].current='PreDefinedAid'
+        #         PipButton:
+        #             text:'Define New'
+
+
+
+
+
+
+
+
+
+
+        # Screen:
+        #     name:'DefineNewWeapon'
+        #     GridLayout:
+        #         cols:1
+        #         rows:6
+        #         BoxLayout:
+        #             PipLabel:
+        #                 text:'Name'
+        #             TextInput:
+        #                 id:NewWeaponName
+        #                 multiline:False
+                
+        #         BoxLayout:
+        #             PipLabel:
+        #                 text:'Damage'
+        #             TextInput:
+        #                 id:NewWeaponDamage
+        #                 multiline:False
+
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Weight'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponWeight
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)+1)
+
+        #             PipLabel:
+        #                 text:'Value'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponValue.text=str(int(NewWeaponValue.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponValue
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponValue.text=str(int(NewWeaponValue.text)+1)
+
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'minST'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponminST.text=str(int(NewWeaponminST.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponminST
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponWminST.text=str(int(NewWeaponminST.text)+1)
+
+        #             PipLabel:
+        #                 text:'Range'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponWRange.text=str(int(NewWeaponRange.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponRange
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponRange.text=str(int(NewWeaponRange.text)+1)
+
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'APS'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponAPS.text=str(int(NewWeapoAPS.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponAPS
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponAPS.text=str(int(NewWeapoAPS.text)+1)
+
+
+        #             PipLabel:
+        #                 text:'APB'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponAPB.text=str(int(NewWeapoAPB.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponAPB
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponAPB.text=str(int(NewWeapoAPB.text)+1)
+
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'APT'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewWeaponAPT.text=str(int(NewWeapoAPT.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewWeaponAPT
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewWeaponAPT.text=str(int(NewWeapoAPT.text)+1)
+        #             PipButton:
+        #                 text:'Add'
+        #                 on_press:root.AddWeaponDefinition(NewApparelName,NewWeaponValue,NewWeaponminST,NewWeaponWeight,NewWeaponDamage,NewWeaponRange,NewWeaponAPS,NewWeaponAPT,NewWeaponAPB)
+
+        
+
+
+        # Screen:
+        #     name:'DefineNewApparel'
+        #     GridLayout:
+        #         cols:
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Name'
+        #             TextInput:
+        #                 id:NewApparelName
+        #                 multiline:False
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             TextInput:
+        #                 id:NewApparelType
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Value'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewApparelValue.text=str(int(NeApparelValue.text)-1)
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewApparelValue
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewApparelValue.text=str(int(NeApparelValue.text)+1)
+        #             PipLabel:
+        #                 text:'Weight'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewApparelWeight.text=str(int(NeApparelWeight.text)-1)
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewApparelWeight
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewApparelWeight.text=str(int(NeApparelWeight.text)+1)
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'AC'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewApparelValue.text=str(int(NeApparelValue.text)-1)
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewApparelValue
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewApparelValue.text=str(int(NeApparelValue.text)+1)
+
+
+        # #'''Name,Value, Weight, AC, N, L, F, P, E, ApparelType'''
+        
+
+
+        # Screen:
+        #     name:'DefineNewAid'
+        #     GridLayout:
+        #         cols:3
+        #         BoxLayout:
+        #             PipLabel:
+        #                 text:'Name'
+        #             TextInput:
+        #                 id:NewAidName
+        #                 multiline:False
+        
+
+
+        # Screen:
+        #     name:'DefineNewMisc'
+        #     GridLayout:
+        #         cols:1
+        #         rows:4
+        #         spacing:10
+        #         padding:10
+        #         BoxLayout:
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Name'
+        #             TextInput:
+        #                 id:NewMiscName
+        #                 multiline:False
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Weight'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewMiscWeight
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
+        #         BoxLayout:
+        #             spacing:10
+        #             padding:10
+        #             height:100
+        #             width:root.width
+        #             PipLabel:
+        #                 text:'Value'
+        #             PipButton:
+        #                 text:'<'
+        #                 on_press: 
+        #                     NewMiscValue.text=str(int(NewMiscValue.text)-1)
+
+        #             PipLabel:
+        #                 text:'0'
+        #                 id:NewMiscValue
+        #             PipButton:
+        #                 text:'>'
+        #                 on_press:
+        #                     NewMiscValue.text=str(int(NewMiscValue.text)+1)
+
+        #         BoxLayout:
+        #             PipButton:
+        #                 text:'Add'
+        #                 on_press:
+        #                     root.AddMiscDefinition(NewMiscName,NewMiscWeight,NewMiscValue)
+
 
