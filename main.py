@@ -326,6 +326,8 @@ class character:
 
         if self.HP>self.maxHP:
             self.HP=int(self.maxHP)
+        if self.HP<-5:
+            self.HP=-5
 
         self.currentEncumbrance=0
         for item in self.inventory:
@@ -396,7 +398,6 @@ class dummyDataItem(object):
         self.is_selected = False
 
 import charac
-
 player=character(SPECIAL=charac.SPECIAL,characterDetails=charac.characterDetails,Traits=charac.traits,inventory=charac.inventory,EXP=charac.EXP)
 try:
     player.poison=charac.poisonandrads[0]
@@ -635,23 +636,23 @@ class PreDefinedWeaponInventory(GridLayout):
             if item.__class__.__name__ == 'weapon' and item.name[:len(text)].lower()==text.lower():
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.8,cols=8,rows=2)
-                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.14))
-                Values.add_widget(PipLabel(text='Rng',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.14))
-                Values.add_widget(PipLabel(text=str(item.range),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.09))
+                Values=GridLayout(height=100,cols=8,rows=2)
+                Values.add_widget(PipLabel(text='Val',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='Wgt',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='minST',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='Dmg',height=50,size_hint_x=0.22))
+                Values.add_widget(PipLabel(text='Rng',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APS',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APT',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APB',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.value),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.weight),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.minST),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.dmg),height=50,size_hint_x=0.22))
+                Values.add_widget(PipLabel(text=str(item.range),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APS),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APT),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APB),height=50,size_hint_x=0.11))
                 WeaponRow.add_widget(Values)
                 self.add_widget(WeaponRow)
         self.bind(minimum_height=self.setter('height'))
@@ -803,23 +804,23 @@ class WeaponInventory(GridLayout):
             if item.__class__.__name__ == 'weapon':
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.8,cols=8,rows=2)
-                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='minST',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='Dmg',height=50,width=root.width*0.14))
-                Values.add_widget(PipLabel(text='Rng',height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text='APS',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='APT',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text='APB',height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.minST),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.dmg),height=50,width=root.width*0.14))
-                Values.add_widget(PipLabel(text=str(item.range),height=50,width=root.width*0.1))
-                Values.add_widget(PipLabel(text=str(item.APS),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.APT),height=50,width=root.width*0.09))
-                Values.add_widget(PipLabel(text=str(item.APB),height=50,width=root.width*0.09))
+                Values=GridLayout(height=100,cols=8,rows=2)
+                Values.add_widget(PipLabel(text='Val',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='Wgt',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='minST',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='Dmg',height=50,size_hint_x=0.22))
+                Values.add_widget(PipLabel(text='Rng',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APS',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APT',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text='APB',height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.value),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.weight),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.minST),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.dmg),height=50,size_hint_x=0.22))
+                Values.add_widget(PipLabel(text=str(item.range),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APS),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APT),height=50,size_hint_x=0.11))
+                Values.add_widget(PipLabel(text=str(item.APB),height=50,size_hint_x=0.11))
                 WeaponRow.add_widget(Values)
                 self.add_widget(WeaponRow)
         self.bind(minimum_height=self.setter('height'))

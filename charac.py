@@ -29,7 +29,7 @@ critical failures around the character
 or anyone else in combat.''']]
 inventory=[i.LeatherJacket,i.MegaPowerFist,i.Stimpak,i.Stimpak]
 EXP=0
-poisonandrads=[11,11]
+poisonandrads=[1,3]
 smallGuns=45
 bigGuns=20
 energyWeapons=20
@@ -50,4 +50,4 @@ barter=4
 gambling=5
 outdoorsman=34
 skills=[smallGuns,bigGuns,energyWeapons,unarmed,meleeWeapons,throwing,firstAid,doctor,sneak,lockpick,steal,traps,science,repair,pilot,speech,barter,gambling,outdoorsman]
-HP=11
+HP=53
