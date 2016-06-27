@@ -431,52 +431,8 @@ class RootWidget(FloatLayout):
                 preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.EXP))
             savechar.write(preparedString)
-        with open(os.path.join('savedchar','char.py'),'w') as savechar:
-            print 'Saving Character'
-            preparedString="import weapons as w\nSPECIAL=["
-            preparedString+=str(self.playerCharacter.special[0])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[1])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[2])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[3])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[4])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[5])
-            preparedString+=','
-            preparedString+=str(self.playerCharacter.special[6])
-            preparedString+=']\ncharacterDetails=["'
-            preparedString+=str(self.playerCharacter.name)
-            preparedString+='","'
-            preparedString+=str(self.playerCharacter.gender)
-            preparedString+='","'
-            preparedString+=str(self.playerCharacter.race)
-            preparedString+='","'
-            preparedString+=str(self.playerCharacter.age)
-            preparedString+='","'
-            preparedString+=str(self.playerCharacter.karma)
-            preparedString+='","'
-            preparedString+=str(self.playerCharacter.notes)
-            preparedString+='"]\ntraits=['
-            for trait in self.playerCharacter.traits:
-                preparedString+="['"+trait[0]+"','''"+trait[1]+"'''],"
-            if preparedString[-1]==',':
-                preparedString=preparedString[:-1]
-            preparedString+=']\ninventory=['
-            for item in self.playerCharacter.inventory:
-                preparedString+='w.'+item.name.replace(' ','')+','
-            if preparedString[-1]==',':
-                preparedString=preparedString[:-1]
-            preparedString+="]\nEXP={}".format(str(self.playerCharacter.exp))
-            savechar.write(preparedString)
 
-    def loadCharacter(self,filepath,filename):
-        with open(os.path.join(filepath,filename),'r') as loadChar:
-            with open('charac.py','w') as currentChar:
-                for line in loadChar.readlines():
-                    currentChar.write(line)
+
 
 
 class SpecialLabel(PipLabel):
