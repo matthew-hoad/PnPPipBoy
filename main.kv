@@ -39,8 +39,12 @@
         root.setEquipped(WeaponInventory)
         root.setEquipped(ApparelInventory)
         root.setEquipped(AidInventory)
+        root.setEquipped(MiscInventory)
+        root.saveCharacter()
         root.playerCharacter.update()
-        print root.playerCharacter.inventory
+        #print root.playerCharacter.inventory
+        #print root.playerCharacter.traits
+
 
     ScreenManager:
         Screen:
@@ -65,7 +69,10 @@
                         text:'New Character'
                         on_release:
                             root.children[0].current='characterCreation'
-                            root.playerCharacter.saveCharacter()
+                            root.playerCharacter.traits=[]
+                            root.playerCharacter.inventory=[]
+                            root.playerCharacter.EXP=0
+                            root.saveCharacter()
         Screen:
             name:'characterCreation'
             on_enter:
@@ -376,7 +383,8 @@
                             size:root.width,root.height*0.15
                             on_press:
                                 root.updateTraitsAndWeapons(root)
-                                print '"Update" Button Pressed'
+                                root.saveCharacter()
+                                #print '"Update" Button Pressed'
 
                         ScrollView:
                             size_hint:None,None
@@ -392,8 +400,12 @@
                         PipButton:
                             text:'Finished Creating Character'
                             on_press:
+                                root.playerCharacter.inventory=[]
+                                root.playerCharacter.EXP=0
                                 root.playerCharacter.update()
+                                print root.playerCharacter.inventory
                                 root.saveCharacter()
+                                print root.playerCharacter.inventory
                                 root.children[0].current='PipBoy'
         Screen:
             name:'PipBoy'
@@ -409,7 +421,7 @@
                 Name.updateLabel(root,'Name',root.playerCharacter.name)
                 HP.updateLabel(root,'HP',root.playerCharacter.HP)
                 Level.updateLabel(root,'Level',root.playerCharacter.level)
-                CarryWeight.updateLabel(root,'carryWeight',root.playerCharacter.carryWeight)
+                CarryWeight.updateLabel(root,'CarryWeight',root.playerCharacter.carryWeight)
                 Rads.updateLabel(root,'Rads',root.playerCharacter.rads)
                 Poison.updateLabel(root,'Poison',root.playerCharacter.poison)
                 smallGuns.updateLabel('smallGuns',root.playerCharacter.smallGuns)
@@ -431,8 +443,11 @@
                 barter.updateLabel('barter',root.playerCharacter.barter)
                 gambling.updateLabel('gambling',root.playerCharacter.gambling)
                 outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
+                WeaponInventory.clear_widgets(children=None)
                 WeaponInventory.populate(root)
+                ApparelInventory.clear_widgets(children=None)
                 ApparelInventory.populate(root)
+                AidInventory.clear_widgets(children=None)
                 AidInventory.populate(root)
             TabbedPanel:
                 do_default_tab: False
@@ -602,11 +617,13 @@
                         TabbedPanelItem:
                             text:'Weapons'
                             FloatLayout:
-                                
-                                GridLayout:                         
-                                    pos:root.x,root.top-self.height-100
+                                GridLayout:
+                                    id:OptionButtonsWeapons                         
+                                    pos:root.x,self.parent.parent.top-self.height
                                     size_hint_y:None
                                     height:100
+                                    spacing:10
+                                    padding:10
                                     cols:4
                                     Label:
                                         text:''
@@ -627,9 +644,9 @@
                                             WeaponInventory.clear_widgets(children=None)
                                             WeaponInventory.populate(root)
                                 ScrollView:
-                                    pos:root.x,root.top-self.height-100-100
+                                    pos:root.x,self.parent.parent.top-self.height-OptionButtonsWeapons.height
                                     size_hint:None,None
-                                    size:root.width,root.height*0.75
+                                    size:root.width,self.parent.parent.height-OptionButtonsWeapons.height
                                     WeaponInventory:
                                         id:WeaponInventory
                         TabbedPanelItem:
@@ -637,9 +654,12 @@
                             FloatLayout:
                                 
                                 GridLayout:
-                                    pos:root.x,root.top-self.height-100
+                                    id:OptionButtonsApparel
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height
                                     size_hint_y:None
                                     height:100
+                                    spacing:10
+                                    padding:10
                                     cols:4
                                     Label:
                                         text:''
@@ -651,7 +671,7 @@
                                         text:'Add'
                                         size:root.width*0.2,100
                                         on_press:
-                                            root.children[0].current='DefineNewApparel'
+                                            root.children[0].current='PreDefinedApparel'
                                     RemoveItemButton:
                                         text:'Remove Item'
                                         size:root.width*0.2,100
@@ -661,9 +681,9 @@
                                             ApparelInventory.clear_widgets(children=None)
                                             ApparelInventory.populate(root)
                                 ScrollView:
-                                    pos:root.x,root.top-self.height-100-100
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height-OptionButtonsApparel.height
                                     size_hint:None,None
-                                    size:root.width,root.height*0.75
+                                    size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsApparel.height
                                     ApparelInventory:
                                         id:ApparelInventory
                         TabbedPanelItem:
@@ -671,9 +691,12 @@
                             FloatLayout:
                                 
                                 GridLayout:
-                                    pos:root.x,root.top-self.height-100
+                                    id:OptionButtonsAid
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height
                                     size_hint_y:None
                                     height:100
+                                    spacing:10
+                                    padding:10
                                     cols:4
                                     Label:
                                         text:''
@@ -685,7 +708,7 @@
                                         text:'Add'
                                         size:root.width*0.2,100
                                         on_press:
-                                            root.children[0].current='DefineNewAid'
+                                            root.children[0].current='PreDefinedAid'
                                     RemoveItemButton:
                                         text:'Remove Item'
                                         size:root.width*0.2,100
@@ -694,9 +717,9 @@
                                             AidInventory.clear_widgets(children=None)
                                             AidInventory.populate(root)
                                 ScrollView:
-                                    pos:root.x,root.top-self.height-100-100
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height-OptionButtonsAid.height
                                     size_hint:None,None
-                                    size:root.width,root.height*0.75
+                                    size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsAid.height
                                     AidInventory:
                                         id:AidInventory
                         TabbedPanelItem:
@@ -704,9 +727,12 @@
                             FloatLayout:
                                 
                                 GridLayout:
-                                    pos:root.x,root.top-self.height-100
+                                    id:OptionButtonsMisc
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height
                                     size_hint_y:None
                                     height:100
+                                    spacing:10
+                                    padding:10
                                     cols:4
                                     Label:
                                         text:''
@@ -718,66 +744,172 @@
                                         text:'Add'
                                         size:root.width*0.2,100
                                         on_press:
-                                            root.addToInventory(PreDefinedMiscInventory)
+                                            root.children[0].current='PreDefinedMisc'
+                                    RemoveItemButton:
+                                        text:'Remove Item'
+                                        size:root.width*0.2,100
+                                        on_release:
+                                            root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['misc'])
+                                            MiscInventory.clear_widgets(children=None)
+                                            MiscInventory.populate(root)
                                 ScrollView:
-                                    pos:root.x,root.top-self.height-100-100
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height-OptionButtonsMisc.height
                                     size_hint:None,None
-                                    size:root.width,root.height*0.75
+                                    size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsMisc.height
                                     MiscInventory:
                                         id:MiscInventory
 
         Screen:
             name:'PreDefinedWeapon'
-            ScrollView:
-                pos:root.x,root.top-self.height-100-100
-                size_hint:None,None
-                size:root.width,root.height*0.75
-                PreDefinedWeaponInventory:
-                    id:PreDefinedWeaponInventory
+            on_enter:
+                PreDefinedWeaponInventory.clear_widgets(children=None)
+                PreDefinedWeaponInventory.populate(root)
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    
+                    TextInput:
+                        id:WeaponSearch
+                        hint_text:'Search...'
+                        size:root.width*0.4,100
+                        multiline:False
+                        text:''
+                    PipButton:
+                        text:'Search'
+                        size:root.width*0.2,100
+                        on_press:
+                            PreDefinedWeaponInventory.clear_widgets(children=None)
+                            PreDefinedWeaponInventory.search(WeaponSearch.text,root)
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.addToInventory(PreDefinedWeaponInventory)
+                            root.children[0].current='PipBoy'
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    PreDefinedWeaponInventory:
+                        id:PreDefinedWeaponInventory
 
         Screen:
             name:'PreDefinedApparel'
-            ScrollView:
-                pos:root.x,root.top-self.height-100-100
-                size_hint:None,None
-                size:root.width,root.height*0.75
-                PreDefinedApparelInventory:
-                    id:PreDefinedApparelInventory
+            on_enter:
+                PreDefinedApparelInventory.clear_widgets(children=None)
+                PreDefinedApparelInventory.populate(root)
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    TextInput:
+                        id:ApparelSearch
+                        hint_text:'Search...'
+                        size:root.width*0.4,100
+                        multiline:False
+                        text:''
+                    PipButton:
+                        text:'Search'
+                        size:root.width*0.2,100
+                        on_press:
+                            PreDefinedApparelInventory.clear_widgets(children=None)
+                            PreDefinedApparelInventory.search(ApparelSearch.text,root)
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.addToInventory(PreDefinedApparelInventory)
+                            root.children[0].current='PipBoy'
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    PreDefinedApparelInventory:
+                        id:PreDefinedApparelInventory
 
         Screen:
             name:'PreDefinedAid'
-            ScrollView:
-                pos:root.x,root.top-self.height-100-100
-                size_hint:None,None
-                size:root.width,root.height*0.75
-                PreDefinedAidInventory:
-                    id:PreDefinedAidInventory
-        Screen:
-            name:'PreDefinedMisc'
+            on_enter:
+                PreDefinedAidInventory.clear_widgets(children=None)
+                PreDefinedAidInventory.populate(root)
             FloatLayout:        
                 GridLayout:
-                    pos:root.x,root.top-self.height-100
+                    pos:root.x,root.top-self.height
                     size_hint_y:None
                     height:100
+                    padding:10
+                    spacing:10
                     cols:4
-                    Label:
+                    
+                    TextInput:
+                        id:AidSearch
+                        hint_text:'Search...'
+                        size:root.width*0.4,100
+                        multiline:False
                         text:''
+                    PipButton:
+                        text:'Search'
                         size:root.width*0.2,100
-                    Label:
+                        on_press:
+                            PreDefinedAidInventory.clear_widgets(children=None)
+                            PreDefinedAidInventory.search(AidSearch.text,root)
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.addToInventory(PreDefinedAidInventory)
+                            root.children[0].current='PipBoy'
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    PreDefinedAidInventory:
+                        id:PreDefinedAidInventory
+        Screen:
+            name:'PreDefinedMisc'
+            on_enter:
+                PreDefinedMiscInventory.clear_widgets(children=None)
+                PreDefinedMiscInventory.populate(root)
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+
+                    TextInput:
+                        id:MiscSearch
+                        hint_text:'Search...'
+                        size:root.width*0.4,100
+                        multiline:False
                         text:''
+                    PipButton:
+                        text:'Search'
                         size:root.width*0.2,100
-                    Label:
-                        text:''
-                        size:root.width*0.2,100
+                        on_press:
+                            PreDefinedMiscInventory.clear_widgets(children=None)
+                            PreDefinedMiscInventory.search(MiscSearch.text,root)
                     PipButton:
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
                             root.addToInventory(PreDefinedMiscInventory)
+                            root.children[0].current='PipBoy'
                 ScrollView:
-                    pos:root.x,root.top-self.height-100-100
+                    pos:root.x,root.top-self.height-100
                     size_hint:None,None
-                    size:root.width,root.height*0.75
+                    size:root.width,root.height-100
                     PreDefinedMiscInventory:
                         id:PreDefinedMiscInventory
 

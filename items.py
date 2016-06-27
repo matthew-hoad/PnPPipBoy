@@ -6,7 +6,7 @@ class misc:
 
 
 class weapon:
-    def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB):
+    def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB,**kwargs):
         self.name=Name
         self.value=Value
         self.minST=minST
@@ -17,6 +17,11 @@ class weapon:
         self.APT=APT
         self.APB=APB
         self.itemType='weapon'
+        self.AmmoType=None
+        try:
+            self.AmmoType=kwargs['AmmoType']
+        except:
+            print 'No Ammo Type Given'
         self.itemDetails=[self.name,
         self.value,
         self.minST,
@@ -25,7 +30,8 @@ class weapon:
         self.range,
         self.APS,
         self.APT,
-        self.APB]
+        self.APB,
+        self.AmmoType]
 
 class apparel:
     def __init__(self,Name,Value, Weight, AC, N, L, F, P, E, ApparelType):
@@ -103,14 +109,18 @@ Spear=weapon('Spear',80,4,4,'1d12 + 3 + MD',2,4,5,None)
 Machete=weapon('Machete',100,4,1,'1d10 + 7 + MD',1,4,5,None)
 SledgeHammer=weapon('SledgeHammer',120,6,12,'3d4 + MD',2,4,5,None)
 Scalpel=weapon('Scalpel',140,1,1,'1d8 + 3 + MD',1,3,4,None)
-CombatKnife=weapon('Conbat Knife',165,2,2,'1d12 + 3 + MD',1,3,4,None)
+CombatKnife=weapon('Combat Knife',165,2,2,'1d12 + 3 + MD',1,3,4,None)
 
+weapons=[BrassKnuckles,TigerClaw,Sappers,Shredders,Lacerators,MaceGlove,SpikedGloves,BoxingGloves,PlatedBoxingGloves,PunchGun,AdamantineClaws,PowerFist,MegaPowerFist,Rock,Sap,Shiv,SharpenedPole,MetalPipe,WoodenClub,PoliceBaton,Shovel,Knife,ClawHammer,Axe,SwitchBlade,Wrench,Crowbar,Spear,Machete,SledgeHammer,Scalpel,CombatKnife]
 
 LeatherJacket=apparel('Leather Jacket',10,1,'8','0/20','0/25','0/10','0/10','0/10','body')
-'''                   Name,Value, Weight, Ac, N, L, F, P, E, ApparelType'''
+
+apparels=[LeatherJacket]
 
 Stimpak=aid('Stimpak',100,1,30,0,0,0,0,0,0,0,0,0,0,0)
-'''                    Name,Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes'''
+
+aids=[Stimpak]
 
 # '''self,Name,Weight,Value,Description, minST,Dmg,Range,APS,APT,APB'''
 
+miscs=[]
