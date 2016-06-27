@@ -1,42 +1,78 @@
-# print(BrassKnuckles.name,
-#     BrassKnuckles.weight,
-#     BrassKnuckles.value,
-#     BrassKnuckles.desc,
-#     BrassKnuckles.minST,
-#     BrassKnuckles.dmg,
-#     BrassKnuckles.range,
-#     BrassKnuckles.APS,
-#     BrassKnuckles.APT,
-#     BrassKnuckles.APB)
-class item:
-    def __init__(self,Name,Weight,Value,Description):
+class misc:
+    def __init__(self,Name,Weight,Value):
         self.name=Name
         self.weight=Weight
         self.value=Value
-        self.desc=Description
+
 
 class weapon:
     def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB):
         self.name=Name
-        self.weight=Weight
         self.value=Value
         self.minST=minST
+        self.weight=Weight
         self.dmg=Dmg
         self.range=Range
         self.APS=APS
         self.APT=APT
         self.APB=APB
+        self.itemType='weapon'
         self.itemDetails=[self.name,
-        self.weight,
         self.value,
         self.minST,
+        self.weight,
         self.dmg,
         self.range,
         self.APS,
         self.APT,
         self.APB]
 
-BrassKnuckles=weapon('Brass Knuckles',1,40,1,'1d10 + MD',1,3,4,None)
+class apparel:
+    def __init__(self,Name,Value, Weight, AC, N, L, F, P, E, ApparelType):
+        self.name=Name
+        self.value=Value
+        self.weight=Weight
+        self.AC=AC
+        self.N=N
+        self.L=L
+        self.F=F
+        self.P=P
+        self.E=E
+        self.ApparelType=ApparelType
+        self.itemType=self.ApparelType
+        self.itemDetails=[self.name,
+        self.value,
+        self.weight,
+        self.AC,
+        self.N,
+        self.L,
+        self.F,
+        self.P,
+        self.E,
+        self.ApparelType]
+
+class aid:
+    def __init__(self,Name,Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes):
+        self.name=Name
+        self.value=Value
+        self.weight=Weight
+        self.HP=HP
+        self.rad=Rad
+        self.poison=Poison
+        self.ST=ST
+        self.PE=PE
+        self.EN=EN
+        self.CH=CH
+        self.IN=IN
+        self.AG=AG
+        self.LK=LK
+        self.radRes=radRes
+        self.poisonRes=poisonRes
+        self.itemType='aid'
+
+
+
+BrassKnuckles=weapon('Brass Knuckles',40,1,1,'1d10 + MD',1,3,4,None)
 TigerClaw=weapon('Tiger Claw',70,1,1,'1d2 + MD',1,3,4,None)
 Sappers=weapon('Sappers',80,3,2,'1d4 + MD',1,3,4,None)
 Shredders=weapon('Shredders',90,1,2,'1d4 + MD',1,3,4,None)
@@ -68,141 +104,13 @@ Machete=weapon('Machete',100,4,1,'1d10 + 7 + MD',1,4,5,None)
 SledgeHammer=weapon('SledgeHammer',120,6,12,'3d4 + MD',2,4,5,None)
 Scalpel=weapon('Scalpel',140,1,1,'1d8 + 3 + MD',1,3,4,None)
 CombatKnife=weapon('Conbat Knife',165,2,2,'1d12 + 3 + MD',1,3,4,None)
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
-# =weapon()
 
 
+LeatherJacket=apparel('Leather Jacket',10,1,'8','0/20','0/25','0/10','0/10','0/10','body')
+'''                   Name,Value, Weight, Ac, N, L, F, P, E, ApparelType'''
 
-
-
-
+Stimpak=aid('Stimpak',100,1,30,0,0,0,0,0,0,0,0,0,0,0)
+'''                    Name,Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes'''
 
 # '''self,Name,Weight,Value,Description, minST,Dmg,Range,APS,APT,APB'''
 
-#print Sappers.__class__.__name__
