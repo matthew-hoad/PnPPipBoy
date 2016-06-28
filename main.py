@@ -34,64 +34,6 @@ Builder.load_string("""
       size: self.size
 """)
 
-class misc:
-    def __init__(self,Name,Weight,Value,Description):
-        self.name=Name
-        self.weight=Weight
-        self.value=Value
-        self.desc=Description
-
-class weapon:
-    def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB,**kwargs):
-        self.name=Name
-        self.value=Value
-        self.minST=minST
-        self.weight=Weight
-        self.dmg=Dmg
-        self.range=Range
-        self.APS=APS
-        self.APT=APT
-        self.APB=APB
-        self.itemType='weapon'
-        try:
-            self.AmmoType=kwargs['AmmoType']
-        except:
-            self.AmmoType=None
-        self.itemDetails=[self.name,
-        self.value,
-        self.minST,
-        self.weight,
-        self.dmg,
-        self.range,
-        self.APS,
-        self.APT,
-        self.APB,
-        self.AmmmoType]
-
-class apparel:
-    def __init__(self,Name,Value, Weight, Ac, N, L, F, P, E, ApparelType):
-        self.name=Name
-        self.value=Value
-        self.weight=Weight
-        self.AC=AC
-        self.N=N
-        self.L=L
-        self.F=F
-        self.P=P
-        self.E=E
-        self.ApparelType=ApparelType
-        self.itemType=self.ApparelType
-        self.itemDetails=[self.name,
-        self.value,
-        self.weight,
-        self.AC,
-        self.N,
-        self.L,
-        self.F,
-        self.P,
-        self.E,
-        self.ApparelType]
-
 class PlayerTrait:
     def __init__(self,name,desc):
         self.name=name
@@ -218,7 +160,7 @@ class character:
 
         self.skills=[self.smallGuns,self.bigGuns,self.energyWeapons,self.unarmed,self.meleeWeapons,self.throwing,self.firstAid,self.doctor,self.sneak,self.lockpick,self.steal,self.traps,self.science,self.repair,self.pilot,self.speech,self.barter,self.gambling,self.outdoorsman]
 
-        self.currentlyEquipped={'weapon':None,'head':None,'body':None,'aid':None}
+        self.currentlyEquipped={'weapon':None,'head':None,'body':None,'aid':None,'misc':None}
 
         self.update()
 
@@ -387,16 +329,6 @@ class character:
         self.skills=[self.smallGuns,self.bigGuns,self.energyWeapons,self.unarmed,self.meleeWeapons,self.throwing,self.firstAid,self.doctor,self.sneak,self.lockpick,self.steal,self.traps,self.science,self.repair,self.pilot,self.speech,self.barter,self.gambling,self.outdoorsman]
         #print 'Finished Updating Character'
 
-class DataItem(object):
-    def __init__(self, text='', is_selected=False):
-        self.text = text
-        self.is_selected = is_selected
-
-class dummyDataItem(object):
-    def __init__(self, text='', is_selected=False):
-        self.text = text
-        self.is_selected = False
-
 import charac
 player=character(SPECIAL=charac.SPECIAL,characterDetails=charac.characterDetails,Traits=charac.traits,inventory=charac.inventory,EXP=charac.EXP)
 try:
@@ -443,26 +375,84 @@ class RootWidget(FloatLayout):
         for row in inv.children:
             for child in row.children:
                 #print child.__class__.__name__
-                if child.__class__.__name__=='PipToggleButton':
-                    if child.state=='down' and foundAnAddable==False:
+                if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
+                    if child.state=='down':
                         #print 'Got it'
                         self.playerCharacter.inventory.append(row.boundItem)
                         foundAnAddable=True
 
-    # def reloadCharacter(self):
-    #     import charac
-    #     pSPECIAL=charac.SPECIAL
-    #     pcharacterDetails=charac.characterDetails
-    #     ptraits=charac.traits
-    #     pinventory=charac.inventory
-    #     pEXP=charac.EXP
-    #     player=character(SPECIAL=pSPECIAL,characterDetails=pcharacterDetails,Traits=ptraits,inventory=pinventory,EXP=pEXP)
-    #     return player
+    def createItem(self,ref,**kwargs):
+        NewItemString=''
+        if ref=='misc':
+            NewItemString+="{}=misc('{}',{},{},'{}')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Weight'],kwargs['Value'],kwargs['Description'])
+            with open('miscs.py','r') as miscs:
+                linelist=[]
+                for line in miscs.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            linelist.append(NewItemString)
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+            with open('miscs.py','w') as miscs:
+                preparedString='from itemclasses import misc\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='\nMiscs=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                preparedString=preparedString[:-1]
+                preparedString+=']'
+                miscs.write(preparedString)
+        else:
+            pass
+
+    def deleteItem(self,inv):
+        foundAnAddable=False
+        for row in inv.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
+                    if child.state=='down':
+                        #print 'Got it'
+                        item = row.boundItem
+                        foundAnAddable=True
+
+        if item.itemType=='misc':
+            with open('miscs.py','r') as miscs:
+                linelist=[]
+                for line in miscs.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            print linelist
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+                print decllist
+                try:
+                    decllist.remove('{}'.format(item.name.replace(' ','')))
+                    linelist.remove(line)
+                except:
+                    pass
+            with open('miscs.py','w') as miscs:
+                preparedString='from itemclasses import misc\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='Miscs=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                if preparedString[-1]==',':
+                    preparedString=preparedString[:-1]
+                preparedString+=']'
+                miscs.write(preparedString)
+        else:
+            pass
+
 
     def saveCharacter(self):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
         with open('charac.py','w') as savechar:
             #print 'Saving Character'
-            preparedString="import items as i\nSPECIAL=["
+            preparedString="import weapons as w\nimport apparels as ap\nimport aids as ai\nimport miscs as m\nSPECIAL=["
             preparedString+=str(self.playerCharacter.special[0])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[1])
@@ -495,8 +485,15 @@ class RootWidget(FloatLayout):
                 preparedString=preparedString[:-1]
             preparedString+=']\ninventory=['
             for item in self.playerCharacter.inventory:
-                #print item
-                preparedString+='i.'+item.name.replace(' ','')+','
+                if item.__class__.__name__=='weapon':
+                    preparedString+='w.'
+                elif item.__class__.__name__=='apparel':
+                    preparedString+='ap.'
+                elif item.__class__.__name__=='aid':
+                    preparedString+='ai.'
+                elif item.__class__.__name__=='misc':
+                    preparedString+='m.'
+                preparedString+=item.name.replace(' ','')+','
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.EXP))
@@ -631,8 +628,8 @@ class PreDefinedWeaponInventory(GridLayout):
 
     def search(self,text,root):
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        import items as i
-        for item in i.weapons:
+        import weapons as w
+        for item in w.Weapons:
             if item.__class__.__name__ == 'weapon' and item.name[:len(text)].lower()==text.lower():
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
@@ -666,9 +663,9 @@ class PreDefinedApparelInventory(GridLayout):
         self.size_hint_y=None
 
     def search(self,text,root):
-        import items as i
+        import apparels as ap
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.apparels:
+        for item in ap.Apparels:
             if item.__class__.__name__ == 'apparel' and item.name[:len(text)].lower() == text.lower():
                 if item.ApparelType=='head':
                     #self.add_widget(PipLabel(text='Head',halign='left',size_hint_x=1,height=50,width=root.width))
@@ -728,9 +725,9 @@ class PreDefinedAidInventory(GridLayout):
         self.size_hint_y=None
 
     def search(self,text,root):
-        import items as i
+        import aids as ai
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.aids:
+        for item in ai.Aids:
             if item.__class__.__name__ == 'aid' and item.name[:len(text)].lower() == text.lower():
                 #print item
                 AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
@@ -773,14 +770,20 @@ class PreDefinedMiscInventory(GridLayout):
         self.size_hint_y=None
 
     def search(self,text,root):
-        import items as i
+        with open('miscs.py','r') as miscs:
+            for line in miscs:
+                if line[-1]=='\n':
+                    exec(line[:-1])
+                else:
+                    exec(line)
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in i.miscs:
+        for item in Miscs:
+            print item
             if item.__class__.__name__ == 'misc' and item.name[:len(text)].lower() == text.lower():
                 #print item
                 AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 AidRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
+                Values=GridLayout(height=100,size_hint_x=0.7,cols=2,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
@@ -942,17 +945,16 @@ class MiscInventory(GridLayout):
         self.add_widget(PipLabel(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'misc':
-                #print item
-                AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
-                Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
+                print item
+                MiscRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
+                MiscRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))
+                Values=GridLayout(height=100,size_hint_x=0.7,cols=2,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
-                AidRow.add_widget(Values)
-                self.add_widget(AidRow)
-                '''Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes'''
+                MiscRow.add_widget(Values)
+                self.add_widget(MiscRow)
         self.bind(minimum_height=self.setter('height'))
 
 class PlayerTraits(GridLayout):

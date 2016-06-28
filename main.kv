@@ -76,6 +76,11 @@
                             root.playerCharacter.inventory=[]
                             root.playerCharacter.EXP=0
                             root.saveCharacter()
+                BoxLayout:
+                    size:root.width,100
+                    PipButton:
+                        text:'Open Settings'
+                        on_release:app.open_settings()
         Screen:
             name:'characterCreation'
             on_enter:
@@ -452,6 +457,8 @@
                 ApparelInventory.populate(root)
                 AidInventory.clear_widgets(children=None)
                 AidInventory.populate(root)
+                MiscInventory.clear_widgets(children=None)
+                MiscInventory.populate(root)
             TabbedPanel:
                 do_default_tab: False
 
@@ -631,9 +638,10 @@
                                     Label:
                                         text:''
                                         size:root.width*0.2,100
-                                    Label:
-                                        text:''
-                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Create New'
+                                        on_press:
+                                            root.children[0].current='NewWeapon'
                                     PipButton:
                                         text:'Add'
                                         size:root.width*0.2,100
@@ -667,9 +675,10 @@
                                     Label:
                                         text:''
                                         size:root.width*0.2,100
-                                    Label:
-                                        text:''
-                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Create New'
+                                        on_press:
+                                            root.children[0].current='NewApparel'
                                     PipButton:
                                         text:'Add'
                                         size:root.width*0.2,100
@@ -704,9 +713,10 @@
                                     Label:
                                         text:''
                                         size:root.width*0.2,100
-                                    Label:
-                                        text:''
-                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Create New'
+                                        on_press:
+                                            root.children[0].current='NewAid'
                                     PipButton:
                                         text:'Add'
                                         size:root.width*0.2,100
@@ -740,9 +750,10 @@
                                     Label:
                                         text:''
                                         size:root.width*0.2,100
-                                    Label:
-                                        text:''
-                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Create New'
+                                        on_press:
+                                            root.children[0].current='NewMisc'
                                     PipButton:
                                         text:'Add'
                                         size:root.width*0.2,100
@@ -913,16 +924,135 @@
                             PreDefinedMiscInventory.search(MiscSearch.text,root)
                     PipButton:
                         text:'Add'
-                        size:root.width*0.2,100
+                        size:root.width*0.1,100
                         on_press:
                             root.addToInventory(PreDefinedMiscInventory)
                             root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Delete'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.deleteItem(PreDefinedMiscInventory)
+                            PreDefinedMiscInventory.clear_widgets(children=None)
+                            PreDefinedMiscInventory.search(MiscSearch.text,root)
                 ScrollView:
                     pos:root.x,root.top-self.height-100
                     size_hint:None,None
                     size:root.width,root.height-100
                     PreDefinedMiscInventory:
                         id:PreDefinedMiscInventory
+        Screen:
+            name:'NewWeapon'
+            
+        Screen:
+            name:'NewApparel'
+
+        Screen:
+            name:'NewAid'
+
+        Screen:
+            name:'NewMisc'
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.createItem('misc',Name=NewMiscName.text,Weight=int(NewMiscWeight.text),Value=int(NewMiscValue.text),Description=NewMiscDescription.text)
+                            root.children[0].current='PipBoy'
+
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height*0.6
+                    GridLayout:
+                        cols:2
+                        rows:1
+                        spacing:10
+                        padding:10
+                        BoxLayout:
+                            spacing:10
+                            padding:10
+                            height:100
+                            orientation:'vertical'
+                            BoxLayout:
+                                spacing:10
+                                padding:10
+                                height:100
+                                PipLabel:
+                                    text:'Name'
+                                TextInput:
+                                    id:NewMiscName
+                                    multiline:False
+                                    halign:'center'
+                                    valign:'middle'
+                            BoxLayout:
+                                spacing:10
+                                padding:10
+                                height:100
+                                PipLabel:
+                                    text:'Weight'
+                                PipButton:
+                                    text:'<'
+                                    on_press: 
+                                        NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
+                                TextInput:
+                                    id:NewMiscWeight
+                                    halign:'center'
+                                    valign:'middle'
+                                    text:'0'
+                                PipButton:
+                                    text:'>'
+                                    on_press:
+                                        NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
+                            BoxLayout:
+                                spacing:10
+                                padding:10
+                                height:100
+                                PipLabel:
+                                    text:'Value'
+                                PipButton:
+                                    text:'<'
+                                    on_press: 
+                                        NewMiscValue.text=str(int(NewMiscValue.text)-1)
+                                TextInput:
+                                    id:NewMiscValue
+                                    halign:'center'
+                                    valign:'middle'
+                                    text:'0'
+                                PipButton:
+                                    text:'>'
+                                    on_press:
+                                        NewMiscValue.text=str(int(NewMiscValue.text)+1)
+                        BoxLayout:
+                            height:100
+                            spacing:10
+                            padding:10
+                            PipLabel:
+                                text:'Description'
+                            TextInput:
+                                id:NewMiscDescription
+                                multiline:False
+
+
+
+                        
+
 
 
 
@@ -1219,37 +1349,37 @@
         # Screen:
         #     name:'DefineNewMisc'
         #     GridLayout:
-        #         cols:1
-        #         rows:4
-        #         spacing:10
-        #         padding:10
-        #         BoxLayout:
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Name'
-        #             TextInput:
-        #                 id:NewMiscName
-        #                 multiline:False
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Weight'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
+                # cols:1
+                # rows:4
+                # spacing:10
+                # padding:10
+                # BoxLayout:
+                #     height:100
+                #     width:root.width
+                #     PipLabel:
+                #         text:'Name'
+                #     TextInput:
+                #         id:NewMiscName
+                #         multiline:False
+                # BoxLayout:
+                #     spacing:10
+                #     padding:10
+                #     height:100
+                #     width:root.width
+                #     PipLabel:
+                #         text:'Weight'
+                #     PipButton:
+                #         text:'<'
+                #         on_press: 
+                #             NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
 
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewMiscWeight
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
+                #     PipLabel:
+                #         text:'0'
+                #         id:NewMiscWeight
+                #     PipButton:
+                #         text:'>'
+                #         on_press:
+                #             NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
         #         BoxLayout:
         #             spacing:10
         #             padding:10
