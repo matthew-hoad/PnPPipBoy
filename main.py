@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
 from kivy.uix.dropdown import DropDown
+from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
@@ -99,6 +100,12 @@ class PipToggleButton(ToggleButton):
     def updateAll(self,root):
         if self.purpose=='traits':
             self.updateSelectedTraits(root)
+
+class PipTextInput(TextInput):
+    def __init__(self, **kwargs):
+        super(PipTextInput, self).__init__(**kwargs)
+        #self.background_normal=''
+        self.background_color=(0,0.6,0,0.3)
 
 Factory.register('KivyB', module='PipLabel')
 
@@ -584,34 +591,6 @@ class SkillLabel(PipLabel):
         self.height=50
     def updateLabel(self,idString,proprty):
         self.text='{}: {}'.format(idString,proprty)
-
-class item:
-    def __init__(self,Name,Weight,Value,Description):
-        self.name=Name
-        self.weight=Weight
-        self.value=Value
-        self.desc=Description
-
-class weapon:
-    def __init__(self,Name,Value, minST,Weight,Dmg,Range,APS,APT,APB):
-        self.name=Name
-        self.weight=Weight
-        self.value=Value
-        self.minST=minST
-        self.dmg=Dmg
-        self.range=Range
-        self.APS=APS
-        self.APT=APT
-        self.APB=APB
-        self.itemDetails=[self.name,
-        self.weight,
-        self.value,
-        self.minST,
-        self.dmg,
-        self.range,
-        self.APS,
-        self.APT,
-        self.APB]
 
 class ItemRow(BoxLayout):
     def __init__(self, **kwargs):

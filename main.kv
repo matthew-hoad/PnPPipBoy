@@ -18,6 +18,13 @@
     font_size: 19
     color:[0,0,0,1]
 
+<PipTextInput>:
+    font_name: KIVY_DEFAULT_FONT
+
+<TextInput>:
+    font_name: KIVY_DEFAULT_FONT
+    background_normal:''
+    background_color:0,0.6,0,0.3
 
 <TabbedPanelHeader>:
     font_name: KIVY_DEFAULT_FONT
@@ -949,6 +956,313 @@
 
         Screen:
             name:'NewAid'
+            FloatLayout:
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.createItem('aid',Name=NewAidName.text,Value=int(NewAidValue.text),Weight=int(NewAidWeight.text),HP=int(NewAidHP.text),Rad=int(NewAidRad.text),Poison=int(NewAidPoison.text),ST=int(NewAidST.text),PE=int(NewAidPE.text),EN=int(NewAidEN.text),CH=int(NewAidCH.text),IN=int(NewAidIN.text),AG=int(NewAidAG.text),LK=int(NewAidLK.text),radRes=int(NewAidradRes.text),poisonRes=int(NewAidpoisonRes.text))
+                            root.children[0].current='PipBoy'
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    FloatLayout:
+                        size_hint_y:None
+                        size:root.width,root.height*1.5
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height
+                            #pos_hint:{'x':,'y':}
+                            cols:4
+                            rows:1
+                            spacing:10
+                            padding:10
+                            row_default_height:100
+                            row_force_default:True
+                            Label:
+                                size_hint_x:0.2
+                            PipLabel:
+                                size_hint_x:0.3
+                                text:'Name'
+                            TextInput:
+                                id:NewAidName
+                                multiline:False
+                                size_hint_x:0.3
+                            Label:
+                                size_hint_x:0.2
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-110
+                            cols:7
+                            rows:11
+                            spacing:10
+                            padding:10
+                            height:400
+                            width:root.width
+                            PipLabel:
+                                text:'Value'
+                            PipLabel:
+                                text:'Weight'
+                            PipLabel:
+                                text:'HP'
+                            PipLabel:
+                                text:'Rad'
+                            PipLabel:
+                                text:'Poison'
+                            PipLabel:
+                                text:'rRes'
+                            PipLabel:
+                                text:'pRes'
+                            
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidValue.text=str(int(NewAidValue.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidWeight.text=str(int(NewAidWeight.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidHP.text=str(int(NewAidHP.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidRad.text=str(int(NewAidRad.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidPoison.text=str(int(NewAidPoison.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidradRes.text=str(int(NewAidradRes.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidpoisonRes.text=str(int(NewAidpoisonRes.text)+1)
+                            
+
+
+                            TextInput:
+                                id:NewAidValue
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidWeight
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidHP
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidRad
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidPoison
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidradRes
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            TextInput:
+                                id:NewAidpoisonRes
+                                padding:root.width/14.0-10,30
+                                text:'0'
+                                multiline:False
+                            
+
+
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidValue.text=str(int(NewAidValue.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidWeight.text=str(int(NewAidWeight.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidHP.text=str(int(NewAidHP.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidRad.text=str(int(NewAidRad.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidPoison.text=str(int(NewAidPoison.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidradRes.text=str(int(NewAidradRes.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidpoisonRes.text=str(int(NewAidpoisonRes.text)-1)
+                            
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+
+                            PipLabel:
+                                text:'ST'
+                            PipLabel:
+                                text:'PE'
+                            PipLabel:
+                                text:'EN'
+                            PipLabel:
+                                text:'CH'
+                            PipLabel:
+                                text:'IN'
+                            PipLabel:
+                                text:'AG'
+                            PipLabel:
+                                text:'LK'
+
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidST.text=str(int(NewAidST.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidPE.text=str(int(NewAidPE.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidEN.text=str(int(NewAidEN.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidCH.text=str(int(NewAidCH.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidIN.text=str(int(NewAidIN.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidAG.text=str(int(NewAidAG.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewAidLK.text=str(int(NewAidLK.text)+1)
+                            PipLabel:
+                                id:NewAidST-10,40
+                                text:'0'
+                            PipLabel:
+                                id:NewAidPE
+                                text:'0'
+                            PipLabel:
+                                id:NewAidEN
+                                text:'0'
+                            PipLabel:
+                                id:NewAidCH
+                                text:'0'
+                            PipLabel:
+                                id:NewAidIN
+                                text:'0'
+                            PipLabel:
+                                id:NewAidAG
+                                text:'0'
+                            PipLabel:
+                                id:NewAidLK
+                                text:'0'
+
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidST.text=str(int(NewAidST.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidPE.text=str(int(NewAidPE.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidEN.text=str(int(NewAidEN.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidCH.text=str(int(NewAidCH.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidIN.text=str(int(NewAidIN.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidAG.text=str(int(NewAidAG.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewAidLK.text=str(int(NewAidLK.text)-1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
 
         Screen:
             name:'NewMisc'
@@ -1048,362 +1362,3 @@
                             TextInput:
                                 id:NewMiscDescription
                                 multiline:False
-
-
-
-                        
-
-
-
-
-
-        # Screen:
-        #     name:'AddWeapon'
-        #     GridLayout:
-        #         cols:1
-        #         rows:2
-        #         spacing:10
-        #         padding:50
-        #         PipButton:
-        #             text:'Pre-Defined'
-        #             on_release:
-        #                 root.children[0].current='PreDefinedWeapon'
-        #         PipButton:
-        #             text:'Define New'
-        # Screen:
-        #     name:'AddApparel'
-        #     GridLayout:
-        #         cols:1
-        #         rows:2
-        #         spacing:10
-        #         padding:50
-        #         PipButton:
-        #             text:'Pre-Defined'
-        #             on_release:
-        #                 root.children[0].current='PreDefinedApparel'
-        #         PipButton:
-        #             text:'Define New'
-        # Screen:
-        #     name:'AddAid'
-        #     GridLayout:
-        #         cols:1
-        #         rows:2
-        #         spacing:10
-        #         padding:50
-        #         PipButton:
-        #             text:'Pre-Defined'
-        #             on_release:
-        #                 root.children[0].current='PreDefinedAid'
-        #         PipButton:
-        #             text:'Define New'
-
-
-
-
-
-
-
-
-
-
-        # Screen:
-        #     name:'DefineNewWeapon'
-        #     GridLayout:
-        #         cols:1
-        #         rows:6
-        #         BoxLayout:
-        #             PipLabel:
-        #                 text:'Name'
-        #             TextInput:
-        #                 id:NewWeaponName
-        #                 multiline:False
-                
-        #         BoxLayout:
-        #             PipLabel:
-        #                 text:'Damage'
-        #             TextInput:
-        #                 id:NewWeaponDamage
-        #                 multiline:False
-
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Weight'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponWeight
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)+1)
-
-        #             PipLabel:
-        #                 text:'Value'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponValue.text=str(int(NewWeaponValue.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponValue
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponValue.text=str(int(NewWeaponValue.text)+1)
-
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'minST'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponminST.text=str(int(NewWeaponminST.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponminST
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponWminST.text=str(int(NewWeaponminST.text)+1)
-
-        #             PipLabel:
-        #                 text:'Range'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponWRange.text=str(int(NewWeaponRange.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponRange
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponRange.text=str(int(NewWeaponRange.text)+1)
-
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'APS'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponAPS.text=str(int(NewWeapoAPS.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponAPS
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponAPS.text=str(int(NewWeapoAPS.text)+1)
-
-
-        #             PipLabel:
-        #                 text:'APB'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponAPB.text=str(int(NewWeapoAPB.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponAPB
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponAPB.text=str(int(NewWeapoAPB.text)+1)
-
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'APT'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewWeaponAPT.text=str(int(NewWeapoAPT.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewWeaponAPT
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewWeaponAPT.text=str(int(NewWeapoAPT.text)+1)
-        #             PipButton:
-        #                 text:'Add'
-        #                 on_press:root.AddWeaponDefinition(NewApparelName,NewWeaponValue,NewWeaponminST,NewWeaponWeight,NewWeaponDamage,NewWeaponRange,NewWeaponAPS,NewWeaponAPT,NewWeaponAPB)
-
-        
-
-
-        # Screen:
-        #     name:'DefineNewApparel'
-        #     GridLayout:
-        #         cols:
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Name'
-        #             TextInput:
-        #                 id:NewApparelName
-        #                 multiline:False
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             TextInput:
-        #                 id:NewApparelType
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Value'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewApparelValue.text=str(int(NeApparelValue.text)-1)
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewApparelValue
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewApparelValue.text=str(int(NeApparelValue.text)+1)
-        #             PipLabel:
-        #                 text:'Weight'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewApparelWeight.text=str(int(NeApparelWeight.text)-1)
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewApparelWeight
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewApparelWeight.text=str(int(NeApparelWeight.text)+1)
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'AC'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewApparelValue.text=str(int(NeApparelValue.text)-1)
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewApparelValue
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewApparelValue.text=str(int(NeApparelValue.text)+1)
-
-
-        # #'''Name,Value, Weight, AC, N, L, F, P, E, ApparelType'''
-        
-
-
-        # Screen:
-        #     name:'DefineNewAid'
-        #     GridLayout:
-        #         cols:3
-        #         BoxLayout:
-        #             PipLabel:
-        #                 text:'Name'
-        #             TextInput:
-        #                 id:NewAidName
-        #                 multiline:False
-        
-
-
-        # Screen:
-        #     name:'DefineNewMisc'
-        #     GridLayout:
-                # cols:1
-                # rows:4
-                # spacing:10
-                # padding:10
-                # BoxLayout:
-                #     height:100
-                #     width:root.width
-                #     PipLabel:
-                #         text:'Name'
-                #     TextInput:
-                #         id:NewMiscName
-                #         multiline:False
-                # BoxLayout:
-                #     spacing:10
-                #     padding:10
-                #     height:100
-                #     width:root.width
-                #     PipLabel:
-                #         text:'Weight'
-                #     PipButton:
-                #         text:'<'
-                #         on_press: 
-                #             NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
-
-                #     PipLabel:
-                #         text:'0'
-                #         id:NewMiscWeight
-                #     PipButton:
-                #         text:'>'
-                #         on_press:
-                #             NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
-        #         BoxLayout:
-        #             spacing:10
-        #             padding:10
-        #             height:100
-        #             width:root.width
-        #             PipLabel:
-        #                 text:'Value'
-        #             PipButton:
-        #                 text:'<'
-        #                 on_press: 
-        #                     NewMiscValue.text=str(int(NewMiscValue.text)-1)
-
-        #             PipLabel:
-        #                 text:'0'
-        #                 id:NewMiscValue
-        #             PipButton:
-        #                 text:'>'
-        #                 on_press:
-        #                     NewMiscValue.text=str(int(NewMiscValue.text)+1)
-
-        #         BoxLayout:
-        #             PipButton:
-        #                 text:'Add'
-        #                 on_press:
-        #                     root.AddMiscDefinition(NewMiscName,NewMiscWeight,NewMiscValue)
-
-

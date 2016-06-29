@@ -5,7 +5,7 @@ import miscs as m
 SPECIAL=[10,3,10,1,7,10,1]
 characterDetails=["Dirk Anger","51","Ghoul","Male","0","Would like nothing more than to die quickly and extravagantly"]
 traits=[]
-inventory=[m.Shit]
+inventory=[]
 EXP=0
 poisonandrads=[3,6]
 smallGuns=45
