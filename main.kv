@@ -21,6 +21,10 @@
 <PipTextInput>:
     font_name: KIVY_DEFAULT_FONT
 
+<PipMap>:
+    import os
+    background_normal=os.join('map','map.png')
+
 <TextInput>:
     font_name: KIVY_DEFAULT_FONT
     background_normal:''
@@ -850,10 +854,17 @@
                             PreDefinedApparelInventory.search(ApparelSearch.text,root)
                     PipButton:
                         text:'Add'
-                        size:root.width*0.2,100
+                        size:root.width*0.1,100
                         on_press:
                             root.addToInventory(PreDefinedApparelInventory)
                             root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Delete'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.deleteItem(PreDefinedApparelInventory)
+                            PreDefinedApparelInventory.clear_widgets(children=None)
+                            PreDefinedApparelInventory.search(ApparelSearch.text,root)
                 ScrollView:
                     pos:root.x,root.top-self.height-100
                     size_hint:None,None
@@ -891,10 +902,17 @@
                             PreDefinedAidInventory.search(AidSearch.text,root)
                     PipButton:
                         text:'Add'
-                        size:root.width*0.2,100
+                        size:root.width*0.1,100
                         on_press:
                             root.addToInventory(PreDefinedAidInventory)
                             root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Delete'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.deleteItem(PreDefinedAidInventory)
+                            PreDefinedAidInventory.clear_widgets(children=None)
+                            PreDefinedAidInventory.search(AidSearch.text,root)
                 ScrollView:
                     pos:root.x,root.top-self.height-100
                     size_hint:None,None
@@ -953,6 +971,163 @@
             
         Screen:
             name:'NewApparel'
+            FloatLayout:
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    PipButton:
+                        text:'Cancel'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.createItem(NewApparelType.text,Name=NewApparelName.text,Value=int(NewApparelValue.text),Weight=int(NewApparelWeight.text),AC=int(NewApparelAC.text),N=NewApparelN.text,L=NewApparelL.text,F=NewApparelF.text,P=NewApparelP.text,E=NewApparelE.text)
+                            root.children[0].current='PipBoy'
+                GridLayout:
+                    pos:self.parent.x,self.parent.top-self.height-100
+                    cols:4
+                    rows:1
+                    spacing:10
+                    padding:10
+                    row_default_height:100
+                    row_force_default:True
+                    Label:
+                        size_hint_x:0.2
+                    PipLabel:
+                        size_hint_x:0.3
+                        text:'Name'
+                    TextInput:
+                        id:NewApparelName
+                        multiline:False
+                        size_hint_x:0.3
+                    Label:
+                        size_hint_x:0.2
+
+                GridLayout:
+                    pos:self.parent.x,self.parent.top-self.height-210
+                    cols:9
+                    rows:4
+                    spacing:10
+                    padding:10
+                    row_default_height:50
+                    row_force_default:True
+                    
+                    PipLabel:
+                        text:'Value'
+                    PipLabel:
+                        text:'Weight'
+                    PipLabel:
+                        text:'AC'
+                    PipLabel:
+                        text:'N'
+                    PipLabel:
+                        text:'L'
+                    PipLabel:
+                        text:'F'
+                    PipLabel:
+                        text:'P'
+                    PipLabel:
+                        text:'E'
+                    PipLabel:
+                        text:'Type'
+
+                    PipButton:
+                        text:'^'
+                        on_press:
+                            NewApparelValue.text=str(int(NewApparelValue.text)+1)
+                    PipButton:
+                        text:'^'
+                        on_press:
+                            NewApparelWeight.text=str(int(NewApparelWeight.text)+1)
+                    PipButton:
+                        text:'^'
+                        on_press:
+                            NewApparelAC.text=str(int(NewApparelAC.text)+1)
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    PipButton:
+                        text:'^'
+                        on_press:
+                            NewApparelType.text='head'
+
+                    TextInput:
+                        id:NewApparelValue
+                        text:'0'
+                    TextInput:
+                        id:NewApparelWeight
+                        text:'0'
+                    TextInput:
+                        id:NewApparelAC
+                        text:'0'
+                    TextInput:
+                        id:NewApparelN
+                        text:''
+                    TextInput:
+                        id:NewApparelL
+                        text:''
+                    TextInput:
+                        id:NewApparelF
+                        text:''
+                    TextInput:
+                        id:NewApparelP
+                        text:''
+                    TextInput:
+                        id:NewApparelE
+                        text:''
+                    PipLabel:
+                        text:''
+                        id:NewApparelType
+
+                    PipButton:
+                        text:'v'
+                        on_press:
+                            NewApparelValue.text=str(int(NewApparelValue.text)-1)
+                    PipButton:
+                        text:'v'
+                        on_press:
+                            NewApparelWeight.text=str(int(NewApparelWeight.text)-1)
+                    PipButton:
+                        text:'v'
+                        on_press:
+                            NewApparelAC.text=str(int(NewApparelAC.text)-1)
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    Label:
+                        text:''
+                    PipButton:
+                        text:'v'
+                        on_press:
+                            NewApparelType.text='body'
+                    
+
+
 
         Screen:
             name:'NewAid'
@@ -970,9 +1145,11 @@
                     Label:
                         size:root.width*0.2,100
                         text:''
-                    Label:
+                    PipButton:
+                        text:'Cancel'
                         size:root.width*0.2,100
-                        text:''
+                        on_press:
+                            root.children[0].current='PipBoy'
                     PipButton:
                         text:'Add'
                         size:root.width*0.2,100
@@ -988,7 +1165,6 @@
                         size:root.width,root.height*1.5
                         GridLayout:
                             pos:self.parent.x,self.parent.top-self.height
-                            #pos_hint:{'x':,'y':}
                             cols:4
                             rows:1
                             spacing:10
@@ -1062,37 +1238,30 @@
 
                             TextInput:
                                 id:NewAidValue
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidWeight
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidHP
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidRad
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidPoison
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidradRes
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             TextInput:
                                 id:NewAidpoisonRes
-                                padding:root.width/14.0-10,30
                                 text:'0'
                                 multiline:False
                             
@@ -1186,7 +1355,7 @@
                                 on_press:
                                     NewAidLK.text=str(int(NewAidLK.text)+1)
                             PipLabel:
-                                id:NewAidST-10,40
+                                id:NewAidST
                                 text:'0'
                             PipLabel:
                                 id:NewAidPE
@@ -1280,9 +1449,11 @@
                     Label:
                         size:root.width*0.2,100
                         text:''
-                    Label:
+                    PipButton:
+                        text:'Cancel'
                         size:root.width*0.2,100
-                        text:''
+                        on_press:
+                            root.children[0].current='PipBoy'
                     PipButton:
                         text:'Add'
                         size:root.width*0.2,100

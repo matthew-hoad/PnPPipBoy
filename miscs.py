@@ -1,3 +1,3 @@
 from itemclasses import misc
-Shit=misc('Shit',1,1,'shit')
-Miscs=[Shit]
+MyDignity=misc('My Dignity',1,0,'''A note... it's blank''')
+Miscs=[MyDignity]

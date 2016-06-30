@@ -390,8 +390,50 @@ class RootWidget(FloatLayout):
 
     def createItem(self,ref,**kwargs):
         NewItemString=''
-        if ref=='misc':
-            NewItemString+="{}=misc('{}',{},{},'{}')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Weight'],kwargs['Value'],kwargs['Description'])
+        if ref=='head' or ref=='body':
+            NewItemString+="{}=apparel('{}',{},{},{},'{}','{}','{}','{}','{}','{}')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Value'],kwargs['Weight'],kwargs['AC'],kwargs['N'],kwargs['L'],kwargs['F'],kwargs['P'],kwargs['E'],ref)
+            with open('apparels.py','r') as apparels:
+                linelist=[]
+                for line in apparels.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            linelist.append(NewItemString)
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+            with open('apparels.py','w') as apparels:
+                preparedString='from itemclasses import apparel\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='\nApparels=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                preparedString=preparedString[:-1]
+                preparedString+=']'
+                apparels.write(preparedString)
+        elif ref=='aid':
+            NewItemString+="{}=aid('{}',{},{},{},{},{},{},{},{},{},{},{},{},{},{})".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Value'],kwargs['Weight'],kwargs['HP'],kwargs['Rad'],kwargs['Poison'],kwargs['ST'],kwargs['PE'],kwargs['EN'],kwargs['CH'],kwargs['IN'],kwargs['AG'],kwargs['LK'],kwargs['radRes'],kwargs['poisonRes'])
+            with open('aids.py','r') as aids:
+                linelist=[]
+                for line in aids.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            linelist.append(NewItemString)
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+            with open('aids.py','w') as aids:
+                preparedString='from itemclasses import aid\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='\nAids=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                preparedString=preparedString[:-1]
+                preparedString+=']'
+                aids.write(preparedString)
+        elif ref=='misc':
+            NewItemString+="{}=misc('{}',{},{},'''{}''')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Weight'],kwargs['Value'],kwargs['Description'])
             with open('miscs.py','r') as miscs:
                 linelist=[]
                 for line in miscs.readlines():
@@ -425,7 +467,85 @@ class RootWidget(FloatLayout):
                         item = row.boundItem
                         foundAnAddable=True
 
-        if item.itemType=='misc':
+        if item.itemType=='weapon':
+            with open('weapons.py','r') as weapons:
+                linelist=[]
+                for line in weapons.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+                try:
+                    decllist.remove('{}'.format(item.name.replace(' ','')))
+                    linelist.remove(line)
+                except:
+                    pass
+            with open('weapons.py','w') as weapons:
+                preparedString='from itemclasses import weapon\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='Weapons=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                if preparedString[-1]==',':
+                    preparedString=preparedString[:-1]
+                preparedString+=']'
+                weapons.write(preparedString)
+
+        elif item.itemType=='head' or item.itemType=='body':
+            with open('apparels.py','r') as apparels:
+                linelist=[]
+                for line in apparels.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+                try:
+                    decllist.remove('{}'.format(item.name.replace(' ','')))
+                    linelist.remove(line)
+                except:
+                    pass
+            with open('apparels.py','w') as apparels:
+                preparedString='from itemclasses import apparel\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='Apparels=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                if preparedString[-1]==',':
+                    preparedString=preparedString[:-1]
+                preparedString+=']'
+                apparels.write(preparedString)
+
+        elif item.itemType=='aid':
+            with open('aids.py','r') as aids:
+                linelist=[]
+                for line in aids.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+                try:
+                    decllist.remove('{}'.format(item.name.replace(' ','')))
+                    linelist.remove(line)
+                except:
+                    pass
+            with open('aids.py','w') as aids:
+                preparedString='from itemclasses import aid\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='Aids=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                if preparedString[-1]==',':
+                    preparedString=preparedString[:-1]
+                preparedString+=']'
+                aids.write(preparedString)
+
+        elif item.itemType=='misc':
             with open('miscs.py','r') as miscs:
                 linelist=[]
                 for line in miscs.readlines():
@@ -435,7 +555,6 @@ class RootWidget(FloatLayout):
             decllist=[]
             for line in linelist:
                 decllist.append(line.split('=')[0])
-                print decllist
                 try:
                     decllist.remove('{}'.format(item.name.replace(' ','')))
                     linelist.remove(line)
@@ -607,8 +726,13 @@ class PreDefinedWeaponInventory(GridLayout):
 
     def search(self,text,root):
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        import weapons as w
-        for item in w.Weapons:
+        with open('weapons.py','r') as weapons:
+            for line in weapons:
+                if line[-1]=='\n':
+                    exec(line[:-1])
+                else:
+                    exec(line)
+        for item in Weapons:
             if item.__class__.__name__ == 'weapon' and item.name[:len(text)].lower()==text.lower():
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
                 WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
@@ -642,9 +766,14 @@ class PreDefinedApparelInventory(GridLayout):
         self.size_hint_y=None
 
     def search(self,text,root):
-        import apparels as ap
+        with open('apparels.py','r') as apparels:
+            for line in apparels:
+                if line[-1]=='\n':
+                    exec(line[:-1])
+                else:
+                    exec(line)
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in ap.Apparels:
+        for item in Apparels:
             if item.__class__.__name__ == 'apparel' and item.name[:len(text)].lower() == text.lower():
                 if item.ApparelType=='head':
                     #self.add_widget(PipLabel(text='Head',halign='left',size_hint_x=1,height=50,width=root.width))
@@ -704,9 +833,14 @@ class PreDefinedAidInventory(GridLayout):
         self.size_hint_y=None
 
     def search(self,text,root):
-        import aids as ai
+        with open('aids.py','r') as aids:
+            for line in aids:
+                if line[-1]=='\n':
+                    exec(line[:-1])
+                else:
+                    exec(line)
         self.add_widget(PipLabel(text='',height=100,width=root.width))
-        for item in ai.Aids:
+        for item in Aids:
             if item.__class__.__name__ == 'aid' and item.name[:len(text)].lower() == text.lower():
                 #print item
                 AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
@@ -781,7 +915,7 @@ class WeaponInventory(GridLayout):
         self.size_hint_y=None
 
     def populate(self,root):
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
+        self.add_widget(Label(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'weapon':
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
@@ -816,7 +950,7 @@ class ApparelInventory(GridLayout):
         self.size_hint_y=None
 
     def populate(self,root):
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
+        self.add_widget(Label(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'apparel':
                 if item.ApparelType=='head':
@@ -877,7 +1011,7 @@ class AidInventory(GridLayout):
         self.size_hint_y=None
 
     def populate(self,root):
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
+        self.add_widget(Label(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'aid':
                 #print item
@@ -921,7 +1055,7 @@ class MiscInventory(GridLayout):
         self.size_hint_y=None
 
     def populate(self,root):
-        self.add_widget(PipLabel(text='',height=100,width=root.width))
+        self.add_widget(Label(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'misc':
                 print item
