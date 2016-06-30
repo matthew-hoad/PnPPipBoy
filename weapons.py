@@ -31,4 +31,5 @@ Machete=weapon('Machete',100,4,1,'1d10 + 7 + MD',1,4,5,None)
 SledgeHammer=weapon('SledgeHammer',120,6,12,'3d4 + MD',2,4,5,None)
 Scalpel=weapon('Scalpel',140,1,1,'1d8 + 3 + MD',1,3,4,None)
 CombatKnife=weapon('Combat Knife',165,2,2,'1d12 + 3 + MD',1,3,4,None)
-Weapons=[BrassKnuckles,TigerClaw,Sappers,Shredders,Lacerators,MaceGlove,SpikedGloves,BoxingGloves,PlatedBoxingGloves,PunchGun,AdamantineClaws,PowerFist,MegaPowerFist,Rock,Sap,Shiv,SharpenedPole,MetalPipe,WoodenClub,PoliceBaton,Shovel,Knife,ClawHammer,Axe,SwitchBlade,Wrench,Crowbar,Spear,Machete,SledgeHammer,Scalpel,CombatKnife]
+SpudGun=weapon('Spud Gun',10,1,2,'1d2',5,3,4,'None')
+Weapons=[BrassKnuckles,TigerClaw,Sappers,Shredders,Lacerators,MaceGlove,SpikedGloves,BoxingGloves,PlatedBoxingGloves,PunchGun,AdamantineClaws,PowerFist,MegaPowerFist,Rock,Sap,Shiv,SharpenedPole,MetalPipe,WoodenClub,PoliceBaton,Shovel,Knife,ClawHammer,Axe,SwitchBlade,Wrench,Crowbar,Spear,Machete,SledgeHammer,Scalpel,CombatKnife,SpudGun]

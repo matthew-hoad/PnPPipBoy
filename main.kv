@@ -21,10 +21,6 @@
 <PipTextInput>:
     font_name: KIVY_DEFAULT_FONT
 
-<PipMap>:
-    import os
-    background_normal=os.join('map','map.png')
-
 <TextInput>:
     font_name: KIVY_DEFAULT_FONT
     background_normal:''
@@ -54,6 +50,9 @@
         root.saveCharacter()
         root.playerCharacter.update()
         CarryWeight.updateLabel(root,'CarryWeight',root.playerCharacter.carryWeight)
+        # print MapContainer.pos
+        # print MapScatter.pos
+        # print MapScatter.transform
         #print root.playerCharacter.inventory
         #print root.playerCharacter.traits
     #on_touch_up:
@@ -783,6 +782,80 @@
                                     size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsMisc.height
                                     MiscInventory:
                                         id:MiscInventory
+                TabbedPanelItem:
+                    text:'Map'
+                    FloatLayout:
+                        pos:root.width*0.5,root.height*0.5
+                        id:MapContainer
+                        Scatter:
+                            id:MapScatter
+                            size:self.width,self.width*0.64652
+                            scale:7
+                            center:self.parent.center
+                            size_hint:None,None
+                            size:Map.size
+                            do_rotation:False
+                            do_collide_after_children:True
+                            scale_min:7
+                            scale_max:500.
+                            GridLayout:
+                                id:Map
+                                size:self.width,self.width*0.6455
+                                cols:5
+                                rows:5
+                                size_hint:None,None
+                                #spacing:0,-35.5
+                                padding:0,0
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-0-0.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-0-1.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-0-2.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-0-3.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-0-4.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-1-0.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-1-1.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-1-2.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-1-3.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-1-4.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-2-0.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-2-1.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-2-2.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-2-3.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-2-4.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-3-0.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-3-1.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-3-2.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-3-3.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-3-4.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-4-0.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-4-1.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-4-2.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-4-3.jpeg')
+                                Image:
+                                    source:root.os.path.join('map','map [www.imagesplitter.net]-4-4.jpeg')
 
         Screen:
             name:'PreDefinedWeapon'
@@ -968,7 +1041,196 @@
                         id:PreDefinedMiscInventory
         Screen:
             name:'NewWeapon'
-            
+            FloatLayout:
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    PipButton:
+                        text:'Cancel'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.createItem('weapon',Name=NewWeaponName.text,Value=int(NewWeaponValue.text),minST=int(NewWeaponminST.text),Weight=int(NewWeaponWeight.text),Dmg=NewWeaponDmg.text,Range=int(NewWeaponRange.text),APS=int(NewWeaponAPS.text),APT=int(NewWeaponAPT.text),APB=NewWeaponAPB.text)
+                            root.children[0].current='PipBoy'
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    FloatLayout:
+                        size_hint_y:None
+                        size:root.width,root.height*1.25
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-100
+                            cols:4
+                            rows:1
+                            spacing:10
+                            padding:10
+                            row_default_height:100
+                            row_force_default:True
+                            Label:
+                                size_hint_x:0.2
+                            PipLabel:
+                                size_hint_x:0.3
+                                text:'Name'
+                            TextInput:
+                                id:NewWeaponName
+                                multiline:False
+                                size_hint_x:0.3
+                            Label:
+                                size_hint_x:0.2
+
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-210
+                            cols:8
+                            rows:5
+                            spacing:10
+                            padding:10
+                            row_default_height:50
+                            row_force_default:True
+                            
+                            PipLabel:
+                                text:'Value'
+                            PipLabel:
+                                text:'minST'
+                            PipLabel:
+                                text:'Weight'
+                            PipLabel:
+                                text:'Dmg'
+                            PipLabel:
+                                text:'Range'
+                            PipLabel:
+                                text:'APS'
+                            PipLabel:
+                                text:'APT'
+                            PipLabel:
+                                text:'APB'
+
+
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponValue.text=str(int(NewWeaponValue.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponminST.text=str(int(NewWeaponminST.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponWeight.text=str(int(NewWeaponWeight.text)+1)
+                            Label:
+                                text:''
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponRange.text=str(int(NewWeaponRange.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponAPS.text=str(int(NewWeaponAPS.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponAPT.text=str(int(NewWeaponAPT.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewWeaponAPB.text=str(int(NewWeaponAPB.text)+1)
+
+                            TextInput:
+                                id:NewWeaponValue
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponminST
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponWeight
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponDmg
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewWeaponRange
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponAPS
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponAPT
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewWeaponAPB
+                                multiline:False
+                                text:'0'
+
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponValue.text=str(int(NewWeaponValue.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponminST.text=str(int(NewWeaponminST.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponWeight.text=str(int(NewWeaponWeight.text)-1)
+                            Label:
+                                text:''
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponRange.text=str(int(NewWeaponRange.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponAPS.text=str(int(NewWeaponAPS.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponAPT.text=str(int(NewWeaponAPT.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewWeaponAPB.text=str(int(NewWeaponAPB.text)-1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+
         Screen:
             name:'NewApparel'
             FloatLayout:
@@ -996,138 +1258,168 @@
                         on_press:
                             root.createItem(NewApparelType.text,Name=NewApparelName.text,Value=int(NewApparelValue.text),Weight=int(NewApparelWeight.text),AC=int(NewApparelAC.text),N=NewApparelN.text,L=NewApparelL.text,F=NewApparelF.text,P=NewApparelP.text,E=NewApparelE.text)
                             root.children[0].current='PipBoy'
-                GridLayout:
-                    pos:self.parent.x,self.parent.top-self.height-100
-                    cols:4
-                    rows:1
-                    spacing:10
-                    padding:10
-                    row_default_height:100
-                    row_force_default:True
-                    Label:
-                        size_hint_x:0.2
-                    PipLabel:
-                        size_hint_x:0.3
-                        text:'Name'
-                    TextInput:
-                        id:NewApparelName
-                        multiline:False
-                        size_hint_x:0.3
-                    Label:
-                        size_hint_x:0.2
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    FloatLayout:
+                        size_hint_y:None
+                        size:root.width,root.height*1.25
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-100
+                            cols:4
+                            rows:1
+                            spacing:10
+                            padding:10
+                            row_default_height:100
+                            row_force_default:True
+                            Label:
+                                size_hint_x:0.2
+                            PipLabel:
+                                size_hint_x:0.3
+                                text:'Name'
+                            TextInput:
+                                id:NewApparelName
+                                multiline:False
+                                size_hint_x:0.3
+                            Label:
+                                size_hint_x:0.2
 
-                GridLayout:
-                    pos:self.parent.x,self.parent.top-self.height-210
-                    cols:9
-                    rows:4
-                    spacing:10
-                    padding:10
-                    row_default_height:50
-                    row_force_default:True
-                    
-                    PipLabel:
-                        text:'Value'
-                    PipLabel:
-                        text:'Weight'
-                    PipLabel:
-                        text:'AC'
-                    PipLabel:
-                        text:'N'
-                    PipLabel:
-                        text:'L'
-                    PipLabel:
-                        text:'F'
-                    PipLabel:
-                        text:'P'
-                    PipLabel:
-                        text:'E'
-                    PipLabel:
-                        text:'Type'
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-210
+                            cols:9
+                            rows:5
+                            spacing:10
+                            padding:10
+                            row_default_height:50
+                            row_force_default:True
+                            
+                            PipLabel:
+                                text:'Value'
+                            PipLabel:
+                                text:'Weight'
+                            PipLabel:
+                                text:'AC'
+                            PipLabel:
+                                text:'N'
+                            PipLabel:
+                                text:'L'
+                            PipLabel:
+                                text:'F'
+                            PipLabel:
+                                text:'P'
+                            PipLabel:
+                                text:'E'
+                            PipLabel:
+                                text:'Type'
 
-                    PipButton:
-                        text:'^'
-                        on_press:
-                            NewApparelValue.text=str(int(NewApparelValue.text)+1)
-                    PipButton:
-                        text:'^'
-                        on_press:
-                            NewApparelWeight.text=str(int(NewApparelWeight.text)+1)
-                    PipButton:
-                        text:'^'
-                        on_press:
-                            NewApparelAC.text=str(int(NewApparelAC.text)+1)
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    PipButton:
-                        text:'^'
-                        on_press:
-                            NewApparelType.text='head'
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewApparelValue.text=str(int(NewApparelValue.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewApparelWeight.text=str(int(NewApparelWeight.text)+1)
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewApparelAC.text=str(int(NewApparelAC.text)+1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            PipButton:
+                                text:'^'
+                                on_press:
+                                    NewApparelType.text='head'
 
-                    TextInput:
-                        id:NewApparelValue
-                        text:'0'
-                    TextInput:
-                        id:NewApparelWeight
-                        text:'0'
-                    TextInput:
-                        id:NewApparelAC
-                        text:'0'
-                    TextInput:
-                        id:NewApparelN
-                        text:''
-                    TextInput:
-                        id:NewApparelL
-                        text:''
-                    TextInput:
-                        id:NewApparelF
-                        text:''
-                    TextInput:
-                        id:NewApparelP
-                        text:''
-                    TextInput:
-                        id:NewApparelE
-                        text:''
-                    PipLabel:
-                        text:''
-                        id:NewApparelType
+                            TextInput:
+                                id:NewApparelValue
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewApparelWeight
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewApparelAC
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewApparelN
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewApparelL
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewApparelF
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewApparelP
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewApparelE
+                                multiline:False
+                                text:''
+                            PipLabel:
+                                text:''
+                                id:NewApparelType
 
-                    PipButton:
-                        text:'v'
-                        on_press:
-                            NewApparelValue.text=str(int(NewApparelValue.text)-1)
-                    PipButton:
-                        text:'v'
-                        on_press:
-                            NewApparelWeight.text=str(int(NewApparelWeight.text)-1)
-                    PipButton:
-                        text:'v'
-                        on_press:
-                            NewApparelAC.text=str(int(NewApparelAC.text)-1)
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    Label:
-                        text:''
-                    PipButton:
-                        text:'v'
-                        on_press:
-                            NewApparelType.text='body'
-                    
-
-
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewApparelValue.text=str(int(NewApparelValue.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewApparelWeight.text=str(int(NewApparelWeight.text)-1)
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewApparelAC.text=str(int(NewApparelAC.text)-1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            PipButton:
+                                text:'v'
+                                on_press:
+                                    NewApparelType.text='body'
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
 
         Screen:
             name:'NewAid'

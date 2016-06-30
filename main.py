@@ -353,6 +353,7 @@ class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
     playerCharacter=player
+    os=os
 
     def updateTraitsAndWeapons(self,root):
         for childs in root.ids.PlayerTraits.children:
@@ -390,7 +391,28 @@ class RootWidget(FloatLayout):
 
     def createItem(self,ref,**kwargs):
         NewItemString=''
-        if ref=='head' or ref=='body':
+        if ref=='weapon':
+            NewItemString+="{}=weapon('{}',{},{},{},'{}',{},{},{},'{}')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Value'],kwargs['minST'],kwargs['Weight'],kwargs['Dmg'],kwargs['Range'],kwargs['APS'],kwargs['APT'],kwargs['APB'])
+            with open('weapons.py','r') as weapons:
+                linelist=[]
+                for line in weapons.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            linelist.append(NewItemString)
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+            with open('weapons.py','w') as weapons:
+                preparedString='from itemclasses import weapon\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='\nWeapons=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                preparedString=preparedString[:-1]
+                preparedString+=']'
+                weapons.write(preparedString)
+        elif ref=='head' or ref=='body':
             NewItemString+="{}=apparel('{}',{},{},{},'{}','{}','{}','{}','{}','{}')".format(kwargs['Name'].replace(' ',''),kwargs['Name'],kwargs['Value'],kwargs['Weight'],kwargs['AC'],kwargs['N'],kwargs['L'],kwargs['F'],kwargs['P'],kwargs['E'],ref)
             with open('apparels.py','r') as apparels:
                 linelist=[]
