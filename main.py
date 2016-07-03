@@ -23,6 +23,7 @@ from kivy.factory import Factory
 from math import floor
 import os
 import random as r
+from functools import partial
 
 Builder.load_string("""
 <PipLabel>:
@@ -171,16 +172,6 @@ class character:
 
         self.update()
 
-    def addItem(self,item):
-        with open('items.py','a') as itemsfile:
-            preparedString='{} = {}('.format(item.name.replace(' ',''),item.__class.__name__)
-            if item.__class__.__name__ == 'weapon':
-                preparedString+="'{}',{},{},{},'{}',{},{},{},{}".format(item.name,item.value,item.nimST,item.weight,item.dmg, item.range,item.APS,item.APT,item.APB)
-            elif item.__class__.__name__ == 'apparel':
-                preparedString+="'{}',{},{},'{}','{}','{}','{}','{}','{}','{}'".format(item.name,item.value,item.weight,item.AC, item.N,item.L,item.F,item.P,item.E,item.ApparelType)
-            itemsfile.write(preparedString)
-        self.inventory.append
-
     def equipItem(self,item):
         self.currentlyEquipped['{}'.format(item.itemType)]=item
         #print str(item),'should be equipped now'
@@ -194,6 +185,17 @@ class character:
                     #print self.inventory
                     self.inventory.remove(itemtoberemoved)
                     #print self.inventory
+        except:
+            pass
+
+    def removeAmmo(self, ammotoberemoved):
+        try:
+            # print self.inventory
+            for item in self.inventory:
+                if item.__class__.__name__=='ammo' and item.name==ammotoberemoved.name:
+                    while item in self.inventory:
+                        print 'removing an item'
+                        self.inventory.remove(item)
         except:
             pass
 
@@ -363,7 +365,6 @@ class RootWidget(FloatLayout):
                     #print 'Found one!'
                     child.updateAll(root)
 
-
     def setEquipped(self,inv):
         foundAnEquippable=False
         for row in inv.children:
@@ -378,15 +379,19 @@ class RootWidget(FloatLayout):
                     elif child.state=='normal' and foundAnEquippable==False:
                         self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=None
 
-    def addToInventory(self,inv):
+    def addToInventory(self,inv,**kwargs):
         foundAnAddable=False
         for row in inv.children:
             for child in row.children:
                 #print child.__class__.__name__
                 if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
                     if child.state=='down':
-                        #print 'Got it'
-                        self.playerCharacter.inventory.append(row.boundItem)
+                        try:
+                            print "count in kwargs['count'] from addToInventory = ",kwargs['count']
+                            for i in range(kwargs['count']):
+                                self.playerCharacter.inventory.append(row.boundItem)
+                        except:
+                            self.playerCharacter.inventory.append(row.boundItem)
                         foundAnAddable=True
 
     def createItem(self,ref,**kwargs):
@@ -475,6 +480,27 @@ class RootWidget(FloatLayout):
                 preparedString=preparedString[:-1]
                 preparedString+=']'
                 miscs.write(preparedString)
+        elif ref=='ammo':
+            NewItemString+="ammo{}=ammo('{}',{},{})".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['Weight'])
+            with open('ammos.py','r') as ammos:
+                linelist=[]
+                for line in ammos.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            linelist.append(NewItemString)
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+            with open('ammos.py','w') as ammos:
+                preparedString='from itemclasses import ammo\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='\nAmmos=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                preparedString=preparedString[:-1]
+                preparedString+=']'
+                ammos.write(preparedString)
         else:
             pass
 
@@ -593,14 +619,40 @@ class RootWidget(FloatLayout):
                     preparedString=preparedString[:-1]
                 preparedString+=']'
                 miscs.write(preparedString)
+        elif item.itemType=='ammo':
+            with open('ammos.py','r') as ammos:
+                linelist=[]
+                for line in ammos.readlines():
+                    linelist.append(line)
+            linelist=linelist[1:-1]
+            print linelist
+            decllist=[]
+            for line in linelist:
+                decllist.append(line.split('=')[0])
+                try:
+                    decllist.remove('{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(line)
+                except:
+                    pass
+            with open('ammos.py','w') as ammos:
+                preparedString='from itemclasses import ammo\n'
+                for line in linelist:
+                    preparedString+=line
+                preparedString+='Ammos=['
+                for decl in decllist:
+                    preparedString+=decl+','
+                if preparedString[-1]==',':
+                    preparedString=preparedString[:-1]
+                preparedString+=']'
+                ammos.write(preparedString)
         else:
             pass
 
 
-    def saveCharacter(self):################### EDIT THIS TO JUST TAKE IT ALL FROM THE SELF.PLAYER OBJECT DIRECTLY
+    def saveCharacter(self):
         with open('charac.py','w') as savechar:
             #print 'Saving Character'
-            preparedString="import weapons as w\nimport apparels as ap\nimport aids as ai\nimport miscs as m\nSPECIAL=["
+            preparedString="import weapons as w\nimport apparels as ap\nimport aids as ai\nimport miscs as m\nimport ammos as am\nSPECIAL=["
             preparedString+=str(self.playerCharacter.special[0])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[1])
@@ -635,13 +687,20 @@ class RootWidget(FloatLayout):
             for item in self.playerCharacter.inventory:
                 if item.__class__.__name__=='weapon':
                     preparedString+='w.'
+                    preparedString+=item.name.replace(' ','')+','
                 elif item.__class__.__name__=='apparel':
                     preparedString+='ap.'
+                    preparedString+=item.name.replace(' ','')+','
                 elif item.__class__.__name__=='aid':
                     preparedString+='ai.'
+                    preparedString+=item.name.replace(' ','')+','
                 elif item.__class__.__name__=='misc':
                     preparedString+='m.'
-                preparedString+=item.name.replace(' ','')+','
+                    preparedString+=item.name.replace(' ','')+','
+                elif item.__class__.__name__=='ammo':
+                    preparedString+='am.'
+                    preparedString+='ammo'+item.name.replace(' ','').replace('.','')+','
+                
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.EXP))
@@ -657,6 +716,12 @@ class RootWidget(FloatLayout):
             preparedString+=']'
             preparedString+="\nHP={}".format(self.playerCharacter.HP)
             savechar.write(preparedString)
+    def countAmmo(self, ammoName):
+        itemNames=[]
+        for item in self.playerCharacter.inventory:
+            itemNames.append(item.name)
+        print  'count from countAmmo = ',itemNames.count(ammoName)
+        return itemNames.count(ammoName)
 
 
 class SpecialLabel(PipLabel):
@@ -800,7 +865,7 @@ class PreDefinedApparelInventory(GridLayout):
                 if item.ApparelType=='head':
                     #self.add_widget(PipLabel(text='Head',halign='left',size_hint_x=1,height=50,width=root.width))
                     ApparelRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='head'))#,on_press=root.playerCharacter.equipItem(item)))
+                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='head'))
                     Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
                     Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
                     Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
@@ -866,7 +931,7 @@ class PreDefinedAidInventory(GridLayout):
             if item.__class__.__name__ == 'aid' and item.name[:len(text)].lower() == text.lower():
                 #print item
                 AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='aid',text=item.name,height=100,size_hint_x=0.2,group='aid',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
+                AidRow.add_widget(PipToggleButton(purpose='aid',text=item.name,height=100,size_hint_x=0.2,group='aid'))
                 Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
@@ -913,20 +978,77 @@ class PreDefinedMiscInventory(GridLayout):
                     exec(line)
         self.add_widget(PipLabel(text='',height=100,width=root.width))
         for item in Miscs:
-            print item
+            #print item
             if item.__class__.__name__ == 'misc' and item.name[:len(text)].lower() == text.lower():
                 #print item
-                AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
+                MiscRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
+                MiscRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc'))
                 Values=GridLayout(height=100,size_hint_x=0.7,cols=2,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
-                AidRow.add_widget(Values)
-                self.add_widget(AidRow)
-                '''Value,Weight,HP,Rad,Poison,ST,PE,EN,CH,IN,AG,LK,radRes,poisonRes'''
+                MiscRow.add_widget(Values)
+                self.add_widget(MiscRow)
         self.bind(minimum_height=self.setter('height'))
+
+class PreDefinedAmmoInventory(GridLayout):
+    def __init__(self, **kwargs):
+        super(PreDefinedAmmoInventory, self).__init__(**kwargs)
+        self.bind(minimum_height=self.setter('height'))
+        self.cols=1
+        self.spacing=10
+        self.size_hint_y=None
+
+    def search(self,text,root):
+        with open('ammos.py','r') as ammos:
+            for line in ammos:
+                if line[-1]=='\n':
+                    exec(line[:-1])
+                else:
+                    exec(line)
+        self.add_widget(PipLabel(text='',height=100,width=root.width))
+        for item in Ammos:
+            #print item
+            if item.__class__.__name__ == 'ammo' and item.name[:len(text)].lower() == text.lower():
+                #print item
+                AmmoRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
+                AmmoRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='ammo'))
+                Values=GridLayout(height=100,size_hint_x=0.7,cols=3,rows=2)
+                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text='Count',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
+                Values.add_widget(TextInput(text='0',height=50,width=root.width*0.083))
+                AmmoRow.add_widget(Values)
+                self.add_widget(AmmoRow)
+        paddingrows=GridLayout(rows=4,cols=1,row_default_height=100,row_force_default=True)
+        paddingrows.add_widget(Label(text=''))
+        paddingrows.add_widget(Label(text=''))
+        paddingrows.add_widget(Label(text=''))
+        paddingrows.add_widget(Label(text=''))
+        self.add_widget(paddingrows)
+        self.bind(minimum_height=self.setter('height'))
+
+    def getCount(self):
+        try:
+            foundACountable=False
+            for row in self.children:
+                for child in row.children:
+                    print child.__class__.__name__
+                    if child.__class__.__name__=='PipToggleButton':
+                        if child.state=='down' and foundACountable==False:
+                            #print 'Got it'
+                            count=int(row.children[-2].children[0].text)
+                            foundACountable=True
+                        elif child.state=='normal' and foundACountable==False:
+                            pass
+
+            print 'count from getCount = ',count
+            return count
+        except:
+            return 0
 
 class WeaponInventory(GridLayout):
     def __init__(self, **kwargs):
@@ -941,7 +1063,7 @@ class WeaponInventory(GridLayout):
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'weapon':
                 WeaponRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))#,on_press=root.playerCharacter.equipItem(item)))
+                WeaponRow.add_widget(PipToggleButton(purpose='weapon',text=item.name,height=100,size_hint_x=0.2,group='weapon'))
                 Values=GridLayout(height=100,cols=8,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,size_hint_x=0.11))
                 Values.add_widget(PipLabel(text='Wgt',height=50,size_hint_x=0.11))
@@ -978,7 +1100,7 @@ class ApparelInventory(GridLayout):
                 if item.ApparelType=='head':
                     #self.add_widget(PipLabel(text='Head',halign='left',size_hint_x=1,height=50,width=root.width))
                     ApparelRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='head'))#,on_press=root.playerCharacter.equipItem(item)))
+                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='head'))
                     Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
                     Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
                     Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
@@ -1001,7 +1123,7 @@ class ApparelInventory(GridLayout):
                 if item.ApparelType=='body':
                     #self.add_widget(PipLabel(text='Body',halign='left',size_hint_x=1,height=100))
                     ApparelRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='body'))#,on_press=root.playerCharacter.equipItem(item)))
+                    ApparelRow.add_widget(PipToggleButton(purpose='apparel',text=item.name,height=100,size_hint_x=0.2,group='body'))
                     Values=GridLayout(height=100,size_hint_x=0.7,cols=8,rows=2)
                     Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.1))
                     Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.1))
@@ -1038,7 +1160,7 @@ class AidInventory(GridLayout):
             if item.__class__.__name__ == 'aid':
                 #print item
                 AidRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                AidRow.add_widget(PipToggleButton(purpose='aid',text=item.name,height=100,size_hint_x=0.2,group='aid',))#on_release=))#,on_press=root.playerCharacter.equipItem(item)))
+                AidRow.add_widget(PipToggleButton(purpose='aid',text=item.name,height=100,size_hint_x=0.2,group='aid'))
                 Values=GridLayout(height=100,size_hint_x=0.7,cols=12,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
@@ -1080,9 +1202,9 @@ class MiscInventory(GridLayout):
         self.add_widget(Label(text='',height=100,width=root.width))
         for item in root.playerCharacter.inventory:
             if item.__class__.__name__ == 'misc':
-                print item
+                #print item
                 MiscRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
-                MiscRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc',))
+                MiscRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='misc'))
                 Values=GridLayout(height=100,size_hint_x=0.7,cols=2,rows=2)
                 Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
                 Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
@@ -1091,6 +1213,60 @@ class MiscInventory(GridLayout):
                 MiscRow.add_widget(Values)
                 self.add_widget(MiscRow)
         self.bind(minimum_height=self.setter('height'))
+
+class AmmoInventory(GridLayout):
+    def __init__(self, **kwargs):
+        super(AmmoInventory, self).__init__(**kwargs)
+        self.bind(minimum_height=self.setter('height'))
+        self.cols=1
+        self.spacing=10
+        self.size_hint_y=None
+
+    def populate(self,root):
+        self.add_widget(Label(text='',height=100,width=root.width))
+        alreadyThere=[]
+        for item in root.playerCharacter.inventory:
+            if item.__class__.__name__ == 'ammo' and item.name not in alreadyThere:
+                #print item
+                #print root.playerCharacter.inventory
+                alreadyThere.append(item.name)
+                AmmoRow=ItemRow(height=100,size_hint_x=1,size_hint_y=None,miminum_height=100,spacing=5,boundItem=item)
+                AmmoRow.add_widget(PipToggleButton(purpose='misc',text=item.name,height=100,size_hint_x=0.2,group='ammo'))
+                Values=GridLayout(height=100,size_hint_x=0.7,cols=3,rows=2)
+                Values.add_widget(PipLabel(text='Val',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text='Wgt',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text='Count',height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text=str(item.value),height=50,width=root.width*0.083))
+                Values.add_widget(PipLabel(text=str(item.weight),height=50,width=root.width*0.083))
+                CountBox=BoxLayout(spacing=5)
+                RemoveBullet=PipButton(text='[-]')
+                def remI(self):
+                    return root.playerCharacter.removeItem(item)
+                def addI(self):
+                    return root.playerCharacter.inventory.append(item)
+                def upd8PL(self):
+                    print self.parent
+                    print self.parent.children
+                    for child in self.parent.children:
+                        if child.__class__.__name__=='PipLabel':
+                            child.text=str(root.countAmmo(item.name))
+                    # self..clear_widgets(children=None)
+                    # self..populate(root)
+                RemoveBullet.bind(on_press=remI,on_release=upd8PL)
+                #removepartial=partial(root.playerCharacter.removeItem)
+                #RemoveBullet.bind(on_release=removepartial(item))
+                CountBox.add_widget(RemoveBullet)
+                CountBox.add_widget(PipLabel(text=str(root.countAmmo(item.name))))
+                AddBullet=PipButton(text='[+]')
+                AddBullet.bind(on_press=addI,on_release=upd8PL)
+                CountBox.add_widget(AddBullet)
+                Values.add_widget(CountBox)
+                AmmoRow.add_widget(Values)
+                self.add_widget(AmmoRow)
+        self.bind(minimum_height=self.setter('height'))
+
+    
+
 
 class PlayerTraits(GridLayout):
     def __init__(self, **kwargs):

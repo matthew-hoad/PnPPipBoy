@@ -21,6 +21,14 @@
 <PipTextInput>:
     font_name: KIVY_DEFAULT_FONT
 
+# <RemoveBullet>:
+#     on_release:
+#         root.playerCharacter.removeItem(self.parent.parent.parent.boundItem)
+
+# <AddBullet>:
+#     on_release:
+#         root.playerCharacter.inventory.append(self.parent.parent.parent.boundItem)
+
 <TextInput>:
     font_name: KIVY_DEFAULT_FONT
     background_normal:''
@@ -47,17 +55,10 @@
         root.setEquipped(ApparelInventory)
         root.setEquipped(AidInventory)
         root.setEquipped(MiscInventory)
+        root.setEquipped(AmmoInventory)
         root.saveCharacter()
         root.playerCharacter.update()
         CarryWeight.updateLabel(root,'CarryWeight',root.playerCharacter.carryWeight)
-        # print MapContainer.pos
-        # print MapScatter.pos
-        # print MapScatter.transform
-        #print root.playerCharacter.inventory
-        #print root.playerCharacter.traits
-    #on_touch_up:
-        #root.saveCharacter()
-
 
     ScreenManager:
         Screen:
@@ -67,8 +68,6 @@
                 rows:2
                 row_force_default:True
                 row_default_height:100
-                #pos_hint:{'x':root.x,'y':-(root.height/2.0)-(self.height/2.0)}
-
                 spacing:10
                 BoxLayout:
                     size:root.width,100
@@ -469,6 +468,8 @@
                 AidInventory.populate(root)
                 MiscInventory.clear_widgets(children=None)
                 MiscInventory.populate(root)
+                AmmoInventory.clear_widgets(children=None)
+                AmmoInventory.populate(root)
             TabbedPanel:
                 do_default_tab: False
 
@@ -782,6 +783,43 @@
                                     size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsMisc.height
                                     MiscInventory:
                                         id:MiscInventory
+                        TabbedPanelItem:
+                            text:'Ammo'
+                            FloatLayout:
+                                GridLayout:
+                                    id:OptionButtonsAmmo
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height
+                                    size_hint_y:None
+                                    height:100
+                                    spacing:10
+                                    padding:10
+                                    cols:4
+                                    Label:
+                                        text:''
+                                        size:root.width*0.2,100
+                                    PipButton:
+                                        text:'Create New'
+                                        on_press:
+                                            root.children[0].current='NewAmmo'
+                                    PipButton:
+                                        text:'Add'
+                                        size:root.width*0.2,100
+                                        on_press:
+                                            root.children[0].current='PreDefinedAmmo'
+                                    RemoveItemButton:
+                                        text:'Remove Item'
+                                        size:root.width*0.2,100
+                                        on_release:
+                                            #print root.playerCharacter.currentlyEquipped, 'name = ', root.playerCharacter.currentlyEquipped['ammo'].name
+                                            root.playerCharacter.removeAmmo(root.playerCharacter.currentlyEquipped['ammo'])
+                                            AmmoInventory.clear_widgets(children=None)
+                                            AmmoInventory.populate(root)
+                                ScrollView:
+                                    pos:root.x,WeaponInventory.parent.parent.parent.top-self.height-OptionButtonsAmmo.height
+                                    size_hint:None,None
+                                    size:root.width,WeaponInventory.parent.parent.parent.height-OptionButtonsAmmo.height
+                                    AmmoInventory:
+                                        id:AmmoInventory
                 TabbedPanelItem:
                     text:'Map'
                     FloatLayout:
@@ -1040,6 +1078,53 @@
                     PreDefinedMiscInventory:
                         id:PreDefinedMiscInventory
         Screen:
+            name:'PreDefinedAmmo'
+            on_enter:
+                PreDefinedAmmoInventory.clear_widgets(children=None)
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+
+                    TextInput:
+                        id:AmmoSearch
+                        hint_text:'Search...'
+                        size:root.width*0.4,100
+                        multiline:False
+                        text:''
+                        on_text_validate:
+                            PreDefinedAmmoInventory.clear_widgets(children=None)
+                            PreDefinedAmmoInventory.search(AmmoSearch.text,root)
+                    PipButton:
+                        text:'Search'
+                        size:root.width*0.2,100
+                        on_press:
+                            PreDefinedAmmoInventory.clear_widgets(children=None)
+                            PreDefinedAmmoInventory.search(AmmoSearch.text,root)
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.addToInventory(PreDefinedAmmoInventory,count=PreDefinedAmmoInventory.getCount())
+                            root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Delete'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.deleteItem(PreDefinedAmmoInventory)
+                            PreDefinedAmmoInventory.clear_widgets(children=None)
+                            PreDefinedAmmoInventory.search(AmmoSearch.text,root)
+                ScrollView:
+                    pos:root.x,root.top-self.height-100
+                    size_hint:None,None
+                    size:root.width,root.height-100
+                    PreDefinedAmmoInventory:
+                        id:PreDefinedAmmoInventory
+        Screen:
             name:'NewWeapon'
             FloatLayout:
                 GridLayout:
@@ -1121,33 +1206,33 @@
 
 
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponValue.text=str(int(NewWeaponValue.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponminST.text=str(int(NewWeaponminST.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)+1)
                             Label:
                                 text:''
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponRange.text=str(int(NewWeaponRange.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponAPS.text=str(int(NewWeaponAPS.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponAPT.text=str(int(NewWeaponAPT.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewWeaponAPB.text=str(int(NewWeaponAPB.text)+1)
 
@@ -1185,33 +1270,33 @@
                                 text:'0'
 
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponValue.text=str(int(NewWeaponValue.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponminST.text=str(int(NewWeaponminST.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponWeight.text=str(int(NewWeaponWeight.text)-1)
                             Label:
                                 text:''
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponRange.text=str(int(NewWeaponRange.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponAPS.text=str(int(NewWeaponAPS.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponAPT.text=str(int(NewWeaponAPT.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewWeaponAPB.text=str(int(NewWeaponAPB.text)-1)
                             Label:
@@ -1314,15 +1399,15 @@
                                 text:'Type'
 
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewApparelValue.text=str(int(NewApparelValue.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewApparelWeight.text=str(int(NewApparelWeight.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewApparelAC.text=str(int(NewApparelAC.text)+1)
                             Label:
@@ -1336,7 +1421,7 @@
                             Label:
                                 text:''
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewApparelType.text='head'
 
@@ -1377,15 +1462,15 @@
                                 id:NewApparelType
 
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewApparelValue.text=str(int(NewApparelValue.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewApparelWeight.text=str(int(NewApparelWeight.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewApparelAC.text=str(int(NewApparelAC.text)-1)
                             Label:
@@ -1399,7 +1484,7 @@
                             Label:
                                 text:''
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewApparelType.text='body'
                             Label:
@@ -1498,31 +1583,31 @@
                                 text:'pRes'
                             
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidValue.text=str(int(NewAidValue.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidWeight.text=str(int(NewAidWeight.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidHP.text=str(int(NewAidHP.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidRad.text=str(int(NewAidRad.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidPoison.text=str(int(NewAidPoison.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidradRes.text=str(int(NewAidradRes.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidpoisonRes.text=str(int(NewAidpoisonRes.text)+1)
                             
@@ -1560,31 +1645,31 @@
 
 
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidValue.text=str(int(NewAidValue.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidWeight.text=str(int(NewAidWeight.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidHP.text=str(int(NewAidHP.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidRad.text=str(int(NewAidRad.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidPoison.text=str(int(NewAidPoison.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidradRes.text=str(int(NewAidradRes.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidpoisonRes.text=str(int(NewAidpoisonRes.text)-1)
                             
@@ -1619,31 +1704,31 @@
                                 text:'LK'
 
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidST.text=str(int(NewAidST.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidPE.text=str(int(NewAidPE.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidEN.text=str(int(NewAidEN.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidCH.text=str(int(NewAidCH.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidIN.text=str(int(NewAidIN.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidAG.text=str(int(NewAidAG.text)+1)
                             PipButton:
-                                text:'^'
+                                text:'[+]'
                                 on_press:
                                     NewAidLK.text=str(int(NewAidLK.text)+1)
                             PipLabel:
@@ -1669,31 +1754,31 @@
                                 text:'0'
 
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidST.text=str(int(NewAidST.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidPE.text=str(int(NewAidPE.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidEN.text=str(int(NewAidEN.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidCH.text=str(int(NewAidCH.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidIN.text=str(int(NewAidIN.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidAG.text=str(int(NewAidAG.text)-1)
                             PipButton:
-                                text:'v'
+                                text:'[-]'
                                 on_press:
                                     NewAidLK.text=str(int(NewAidLK.text)-1)
                             Label:
@@ -1825,3 +1910,91 @@
                             TextInput:
                                 id:NewMiscDescription
                                 multiline:False
+        Screen:
+            name:'NewAmmo'
+            FloatLayout:        
+                GridLayout:
+                    pos:root.x,root.top-self.height
+                    size_hint_y:None
+                    height:100
+                    padding:10
+                    spacing:10
+                    cols:4
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    Label:
+                        size:root.width*0.2,100
+                        text:''
+                    PipButton:
+                        text:'Cancel'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Add'
+                        size:root.width*0.2,100
+                        on_press:
+                            root.createItem('ammo',Name=NewAmmoName.text,Value=int(NewAmmoValue.text),Weight=int(NewAmmoWeight.text))
+                            root.children[0].current='PipBoy'
+                GridLayout:
+                    pos:root.x,root.top-self.height-100
+                    height:100
+                    padding:10
+                    cols:1
+                    rows:2
+                    row_default_height:100
+                    row_force_default:True
+                    BoxLayout:
+                        height:100
+                        orientation:'vertical'
+                        BoxLayout:
+                            spacing:10
+                            padding:10
+                            height:100
+                            Label:
+                                text:''
+                            PipLabel:
+                                text:'Name'
+                            TextInput:
+                                id:NewAmmoName
+                                multiline:False
+                                halign:'center'
+                                valign:'middle'
+                            Label:
+                                text:''
+                    GridLayout:
+                        pos:root.x,root.top-self.height-200
+                        height:100
+                        spacing:10
+                        padding:10
+                        cols:4
+                        rows:2
+                        PipLabel:
+                            text:'Value'
+                        BoxLayout:
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoValue.text=str(int(NewAmmoValue.text)-1)
+                            PipLabel:
+                                id:NewAmmoValue
+                                text:'0'
+                            PipButton:
+                                text:'[+]'
+                                on_press:
+                                    NewAmmoValue.text=str(int(NewAmmoValue.text)+1)
+                        PipLabel:
+                            text:'Weight'
+                        BoxLayout:
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoWeight.text=str(int(NewAmmoWeight.text)-1)
+                            PipLabel:
+                                id:NewAmmoWeight
+                                text:'0'
+                            PipButton:
+                                text:'[+]'
+                                on_press:
+                                    NewAmmoWeight.text=str(int(NewAmmoWeight.text)+1)

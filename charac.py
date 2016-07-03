@@ -2,6 +2,7 @@ import weapons as w
 import apparels as ap
 import aids as ai
 import miscs as m
+import ammos as am
 SPECIAL=[5,3,1,10,1,10,10]
 characterDetails=["Pink Guy","69","Human","Male","500","Ey b0ss? Cannahabadapuuusi pleeze?"]
 traits=[]

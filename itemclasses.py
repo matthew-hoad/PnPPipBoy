@@ -22,7 +22,7 @@ class weapon:
         try:
             self.ammoType=kwargs['ammoType']
         except:
-            self.ammoType=None#print 'No Ammo Type Given'
+            self.ammoType=None
         self.itemDetails=[self.name,
         self.value,
         self.minST,
@@ -76,3 +76,10 @@ class aid:
         self.radRes=radRes
         self.poisonRes=poisonRes
         self.itemType='aid'
+
+class ammo:
+    def __init__(self, Name, Value, Weight):
+        self.itemType='ammo'
+        self.name=Name
+        self.value=Value
+        self.weight=Weight
