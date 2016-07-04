@@ -9,12 +9,7 @@ traits=[['Chem Reliant','''You are more easily addicted to chems.
 Your chance to be addicted is twice
 normal, but you recover in half the time
 from their ill effects. Robots cannot
-choose this trait.
-Chem Resistant
-Chems only effect you half as long as
-normal, but your chance to be addicted
-is only 50% the normal amount. Robots
-cannot choose this trait.'''],['Jinxed','''The good thing is that everyone around
+choose this trait.'''],['Jinxed','''The good thing is that everyone around
 you has more critical
 failures in combat. The bad
 thing is: so do you! If you,
@@ -31,7 +26,7 @@ your turn, or any number of bad things.
 Failures are 50% more likely to become
 critical failures around the character
 or anyone else in combat.''']]
-inventory=[w.CombatKnife,w.MegaPowerFist,ai.Stimpak,ai.Stimpak,ai.Stimpak,w.M16,ap.Stetson,ap.LeatherDuster,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm]
+inventory=[w.weaponM16,w.weaponpoint38SnubnoseSpecial,ap.apparelLeatherDuster,ap.apparelStetson,m.miscDignity,w.weaponBrassKnuckles,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm]
 EXP=0
 poisonandrads=[0,0]
 smallGuns=45
@@ -54,5 +49,5 @@ barter=40
 gambling=50
 outdoorsman=4
 skills=[smallGuns,bigGuns,energyWeapons,unarmed,meleeWeapons,throwing,firstAid,doctor,sneak,lockpick,steal,traps,science,repair,pilot,speech,barter,gambling,outdoorsman]
-currentlyEquipped={'weapon':'M16','head':'Stetson','body':'Leather Duster','aid':'None','misc':'None','ammo':'None'}
-HP=50
+currentlyEquipped={'weapon':'.38 Snubnose Special','head':'Stetson','body':'Leather Duster','aid':'None','misc':'None','ammo':'.38 Caliber'}
+HP=1

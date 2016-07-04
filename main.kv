@@ -5,18 +5,26 @@
     font_name: KIVY_DEFAULT_FONT
     font_size: 19
     color:[0,0,0,1]
+    text_size: self.size
+    halign:'center'
+    valign:'middle'
 
 
 <PipButton>:  
     font_name: KIVY_DEFAULT_FONT
     font_size: 19
     color:[0,0,0,1]
-    
+    text_size: self.size
+    halign:'center'
+    valign:'middle'
 
 <PipToggleButton>:  
     font_name: KIVY_DEFAULT_FONT
     font_size: 19
     color:[0,0,0,1]
+    text_size: self.size
+    halign:'center'
+    valign:'middle'
 
 <PipTextInput>:
     font_name: KIVY_DEFAULT_FONT
@@ -52,7 +60,7 @@
     background_color:0.2,0.2,0.2,1
 
 <RootWidget>:
-    on_touch_up:
+    on_touch_down:
         root.setEquipped(WeaponInventory)
         root.setEquipped(ApparelInventory)
         root.setEquipped(AidInventory)
@@ -429,7 +437,6 @@
         Screen:
             name:'PipBoy'
             on_enter:
-                #root.playerCharacter=root.reloadCharacter()
                 STLabel.updateLabel(root, 'ST', 0)
                 PELabel.updateLabel(root, 'PE', 1)
                 ENLabel.updateLabel(root, 'EN', 2)
@@ -462,6 +469,13 @@
                 barter.updateLabel('barter',root.playerCharacter.barter)
                 gambling.updateLabel('gambling',root.playerCharacter.gambling)
                 outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
+                root.setEquipped(WeaponInventory)
+                root.setEquipped(ApparelInventory)
+                root.setEquipped(AidInventory)
+                root.setEquipped(MiscInventory)
+                root.setEquipped(AmmoInventory)
+                root.saveCharacter()
+                root.playerCharacter.update()
                 WeaponInventory.clear_widgets(children=None)
                 WeaponInventory.populate(root)
                 WeaponInventory.pressEquipped(root)
