@@ -20,6 +20,7 @@
 
 <PipTextInput>:
     font_name: KIVY_DEFAULT_FONT
+    multiline:False
 
 # <RemoveBullet>:
 #     on_release:
@@ -33,6 +34,7 @@
     font_name: KIVY_DEFAULT_FONT
     background_normal:''
     background_color:0,0.6,0,0.3
+    multiline:False
 
 <TabbedPanelHeader>:
     font_name: KIVY_DEFAULT_FONT
@@ -50,7 +52,7 @@
     background_color:0.2,0.2,0.2,1
 
 <RootWidget>:
-    on_touch_down:
+    on_touch_up:
         root.setEquipped(WeaponInventory)
         root.setEquipped(ApparelInventory)
         root.setEquipped(AidInventory)
@@ -420,9 +422,9 @@
                                 root.playerCharacter.inventory=[]
                                 root.playerCharacter.EXP=0
                                 root.playerCharacter.update()
-                                print root.playerCharacter.inventory
+                                #print root.playerCharacter.inventory
                                 root.saveCharacter()
-                                print root.playerCharacter.inventory
+                                #print root.playerCharacter.inventory
                                 root.children[0].current='PipBoy'
         Screen:
             name:'PipBoy'
@@ -462,14 +464,19 @@
                 outdoorsman.updateLabel('outdoorsman',root.playerCharacter.outdoorsman)
                 WeaponInventory.clear_widgets(children=None)
                 WeaponInventory.populate(root)
+                WeaponInventory.pressEquipped(root)
                 ApparelInventory.clear_widgets(children=None)
                 ApparelInventory.populate(root)
+                ApparelInventory.pressEquipped(root)
                 AidInventory.clear_widgets(children=None)
                 AidInventory.populate(root)
+                AidInventory.pressEquipped(root)
                 MiscInventory.clear_widgets(children=None)
                 MiscInventory.populate(root)
+                MiscInventory.pressEquipped(root)
                 AmmoInventory.clear_widgets(children=None)
                 AmmoInventory.populate(root)
+                AmmoInventory.pressEquipped(root)
             TabbedPanel:
                 do_default_tab: False
 
@@ -665,6 +672,7 @@
                                             root.playerCharacter.removeItem(root.playerCharacter.currentlyEquipped['weapon'])
                                             WeaponInventory.clear_widgets(children=None)
                                             WeaponInventory.populate(root)
+                                            WeaponInventory.pressEquipped(root)
                                 ScrollView:
                                     pos:root.x,self.parent.parent.top-self.height-OptionButtonsWeapons.height
                                     size_hint:None,None
@@ -925,10 +933,17 @@
                             PreDefinedWeaponInventory.search(WeaponSearch.text,root)
                     PipButton:
                         text:'Add'
-                        size:root.width*0.2,100
+                        size:root.width*0.1,100
                         on_press:
                             root.addToInventory(PreDefinedWeaponInventory)
                             root.children[0].current='PipBoy'
+                    PipButton:
+                        text:'Delete'
+                        size:root.width*0.1,100
+                        on_press:
+                            root.deleteItem(PreDefinedWeaponInventory)
+                            PreDefinedWeaponInventory.clear_widgets(children=None)
+                            PreDefinedWeaponInventory.search(WeaponSearch.text,root)
                 ScrollView:
                     pos:root.x,root.top-self.height-100
                     size_hint:None,None
@@ -1149,7 +1164,7 @@
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
-                            root.createItem('weapon',Name=NewWeaponName.text,Value=int(NewWeaponValue.text),minST=int(NewWeaponminST.text),Weight=int(NewWeaponWeight.text),Dmg=NewWeaponDmg.text,Range=int(NewWeaponRange.text),APS=int(NewWeaponAPS.text),APT=int(NewWeaponAPT.text),APB=NewWeaponAPB.text)
+                            root.createItem('weapon',Name=NewWeaponName.text,Value=int(NewWeaponValue.text),minST=int(NewWeaponminST.text),Weight=float(NewWeaponWeight.text),Dmg=NewWeaponDmg.text,Range=int(NewWeaponRange.text),APS=int(NewWeaponAPS.text),APT=int(NewWeaponAPT.text),APB=NewWeaponAPB.text)
                             root.children[0].current='PipBoy'
                 ScrollView:
                     pos:root.x,root.top-self.height-100
@@ -1180,7 +1195,7 @@
 
                         GridLayout:
                             pos:self.parent.x,self.parent.top-self.height-210
-                            cols:8
+                            cols:10
                             rows:5
                             spacing:10
                             padding:10
@@ -1203,6 +1218,10 @@
                                 text:'APT'
                             PipLabel:
                                 text:'APB'
+                            PipLabel:
+                                text:'Ammo\nType'
+                            PipLabel:
+                                text:'Mag\nSize'
 
 
                             PipButton:
@@ -1216,7 +1235,7 @@
                             PipButton:
                                 text:'[+]'
                                 on_press:
-                                    NewWeaponWeight.text=str(int(NewWeaponWeight.text)+1)
+                                    NewWeaponWeight.text=str(float(NewWeaponWeight.text)+1)
                             Label:
                                 text:''
                             PipButton:
@@ -1235,6 +1254,10 @@
                                 text:'[+]'
                                 on_press:
                                     NewWeaponAPB.text=str(int(NewWeaponAPB.text)+1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
 
                             TextInput:
                                 id:NewWeaponValue
@@ -1268,6 +1291,14 @@
                                 id:NewWeaponAPB
                                 multiline:False
                                 text:'0'
+                            TextInput:
+                                id:NewWeaponAmmoType
+                                multiline:False
+                                text:''
+                            TextInput:
+                                id:NewWeaponMagSize
+                                multiline:False
+                                text:''
 
                             PipButton:
                                 text:'[-]'
@@ -1280,7 +1311,7 @@
                             PipButton:
                                 text:'[-]'
                                 on_press:
-                                    NewWeaponWeight.text=str(int(NewWeaponWeight.text)-1)
+                                    NewWeaponWeight.text=str(float(NewWeaponWeight.text)-1)
                             Label:
                                 text:''
                             PipButton:
@@ -1299,6 +1330,15 @@
                                 text:'[-]'
                                 on_press:
                                     NewWeaponAPB.text=str(int(NewWeaponAPB.text)-1)
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+
+                            Label:
+                                text:''
+                            Label:
+                                text:''
                             Label:
                                 text:''
                             Label:
@@ -1341,7 +1381,7 @@
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
-                            root.createItem(NewApparelType.text,Name=NewApparelName.text,Value=int(NewApparelValue.text),Weight=int(NewApparelWeight.text),AC=int(NewApparelAC.text),N=NewApparelN.text,L=NewApparelL.text,F=NewApparelF.text,P=NewApparelP.text,E=NewApparelE.text)
+                            root.createItem(NewApparelType.text,Name=NewApparelName.text,Value=int(NewApparelValue.text),Weight=float(NewApparelWeight.text),AC=int(NewApparelAC.text),N=NewApparelN.text,L=NewApparelL.text,F=NewApparelF.text,P=NewApparelP.text,E=NewApparelE.text)
                             root.children[0].current='PipBoy'
                 ScrollView:
                     pos:root.x,root.top-self.height-100
@@ -1405,7 +1445,7 @@
                             PipButton:
                                 text:'[+]'
                                 on_press:
-                                    NewApparelWeight.text=str(int(NewApparelWeight.text)+1)
+                                    NewApparelWeight.text=str(float(NewApparelWeight.text)+1)
                             PipButton:
                                 text:'[+]'
                                 on_press:
@@ -1468,7 +1508,7 @@
                             PipButton:
                                 text:'[-]'
                                 on_press:
-                                    NewApparelWeight.text=str(int(NewApparelWeight.text)-1)
+                                    NewApparelWeight.text=str(float(NewApparelWeight.text)-1)
                             PipButton:
                                 text:'[-]'
                                 on_press:
@@ -1531,7 +1571,7 @@
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
-                            root.createItem('aid',Name=NewAidName.text,Value=int(NewAidValue.text),Weight=int(NewAidWeight.text),HP=int(NewAidHP.text),Rad=int(NewAidRad.text),Poison=int(NewAidPoison.text),ST=int(NewAidST.text),PE=int(NewAidPE.text),EN=int(NewAidEN.text),CH=int(NewAidCH.text),IN=int(NewAidIN.text),AG=int(NewAidAG.text),LK=int(NewAidLK.text),radRes=int(NewAidradRes.text),poisonRes=int(NewAidpoisonRes.text))
+                            root.createItem('aid',Name=NewAidName.text,Value=int(NewAidValue.text),Weight=float(NewAidWeight.text),HP=int(NewAidHP.text),Rad=int(NewAidRad.text),Poison=int(NewAidPoison.text),ST=int(NewAidST.text),PE=int(NewAidPE.text),EN=int(NewAidEN.text),CH=int(NewAidCH.text),IN=int(NewAidIN.text),AG=int(NewAidAG.text),LK=int(NewAidLK.text),radRes=int(NewAidradRes.text),poisonRes=int(NewAidpoisonRes.text))
                             root.children[0].current='PipBoy'
                 ScrollView:
                     pos:root.x,root.top-self.height-100
@@ -1589,7 +1629,7 @@
                             PipButton:
                                 text:'[+]'
                                 on_press:
-                                    NewAidWeight.text=str(int(NewAidWeight.text)+1)
+                                    NewAidWeight.text=str(float(NewAidWeight.text)+1)
                             PipButton:
                                 text:'[+]'
                                 on_press:
@@ -1651,7 +1691,7 @@
                             PipButton:
                                 text:'[-]'
                                 on_press:
-                                    NewAidWeight.text=str(int(NewAidWeight.text)-1)
+                                    NewAidWeight.text=str(float(NewAidWeight.text)-1)
                             PipButton:
                                 text:'[-]'
                                 on_press:
@@ -1835,7 +1875,7 @@
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
-                            root.createItem('misc',Name=NewMiscName.text,Weight=int(NewMiscWeight.text),Value=int(NewMiscValue.text),Description=NewMiscDescription.text)
+                            root.createItem('misc',Name=NewMiscName.text,Weight=float(NewMiscWeight.text),Value=int(NewMiscValue.text),Description=NewMiscDescription.text)
                             root.children[0].current='PipBoy'
 
                 ScrollView:
@@ -1872,16 +1912,17 @@
                                 PipButton:
                                     text:'<'
                                     on_press: 
-                                        NewMiscWeight.text=str(int(NewMiscWeight.text)-1)
+                                        NewMiscWeight.text=str(float(NewMiscWeight.text)-1)
                                 TextInput:
                                     id:NewMiscWeight
+                                    multiline:False
                                     halign:'center'
                                     valign:'middle'
                                     text:'0'
                                 PipButton:
                                     text:'>'
                                     on_press:
-                                        NewMiscWeight.text=str(int(NewMiscWeight.text)+1)
+                                        NewMiscWeight.text=str(float(NewMiscWeight.text)+1)
                             BoxLayout:
                                 spacing:10
                                 padding:10
@@ -1894,6 +1935,7 @@
                                         NewMiscValue.text=str(int(NewMiscValue.text)-1)
                                 TextInput:
                                     id:NewMiscValue
+                                    multiline:False
                                     halign:'center'
                                     valign:'middle'
                                     text:'0'
@@ -1935,22 +1977,23 @@
                         text:'Add'
                         size:root.width*0.2,100
                         on_press:
-                            root.createItem('ammo',Name=NewAmmoName.text,Value=int(NewAmmoValue.text),Weight=int(NewAmmoWeight.text))
+                            root.createItem('ammo',Name=NewAmmoName.text,Value=int(NewAmmoValue.text),Weight=float(NewAmmoWeight.text),AC=int(NewAmmoAC.text),DR=int(NewAmmoDR.text))
                             root.children[0].current='PipBoy'
-                GridLayout:
+                ScrollView:
                     pos:root.x,root.top-self.height-100
-                    height:100
-                    padding:10
-                    cols:1
-                    rows:2
-                    row_default_height:100
-                    row_force_default:True
-                    BoxLayout:
-                        height:100
-                        orientation:'vertical'
-                        BoxLayout:
+                    size_hint:None,None
+                    size:root.width,root.height*0.8
+                    FloatLayout:
+                        size_hint_y:None
+                        size:root.width,root.height*1.5                        
+                        GridLayout:
+                            rows:1
+                            cols:4
+                            pos:self.parent.x,self.parent.top-self.height
                             spacing:10
                             padding:10
+                            row_default_height:100
+                            row_force_default:True
                             height:100
                             Label:
                                 text:''
@@ -1963,38 +2006,91 @@
                                 valign:'middle'
                             Label:
                                 text:''
-                    GridLayout:
-                        pos:root.x,root.top-self.height-200
-                        height:100
-                        spacing:10
-                        padding:10
-                        cols:4
-                        rows:2
-                        PipLabel:
-                            text:'Value'
-                        BoxLayout:
-                            PipButton:
-                                text:'[-]'
-                                on_press:
-                                    NewAmmoValue.text=str(int(NewAmmoValue.text)-1)
+                        GridLayout:
+                            pos:self.parent.x,self.parent.top-self.height-110
+                            spacing:10
+                            padding:10
+                            cols:4
+                            rows:6
+                            row_default_height:100
+                            row_force_default:True
                             PipLabel:
-                                id:NewAmmoValue
-                                text:'0'
+                                text:'Value'
+                            PipLabel:
+                                text:'Weight'
+                            PipLabel:
+                                text:'AC'
+                            PipLabel:
+                                text:'DR'
+
+                            
                             PipButton:
                                 text:'[+]'
                                 on_press:
                                     NewAmmoValue.text=str(int(NewAmmoValue.text)+1)
-                        PipLabel:
-                            text:'Weight'
-                        BoxLayout:
-                            PipButton:
-                                text:'[-]'
-                                on_press:
-                                    NewAmmoWeight.text=str(int(NewAmmoWeight.text)-1)
-                            PipLabel:
-                                id:NewAmmoWeight
-                                text:'0'
+                            
                             PipButton:
                                 text:'[+]'
                                 on_press:
-                                    NewAmmoWeight.text=str(int(NewAmmoWeight.text)+1)
+                                    NewAmmoWeight.text=str(float(NewAmmoWeight.text)+1)
+
+                            PipButton:
+                                text:'[+]'
+                                on_press:
+                                    NewAmmoAC.text=str(int(NewAmmoAC.text)+1)
+
+                            PipButton:
+                                text:'[+]'
+                                on_press:
+                                    NewAmmoDR.text=str(int(NewAmmoDR.text)+1)
+
+                            TextInput:
+                                id:NewAmmoValue
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewAmmoWeight
+                                multiline:False
+                                text:'0.0'
+                            TextInput:
+                                id:NewAmmoAC
+                                multiline:False
+                                text:'0'
+                            TextInput:
+                                id:NewAmmoDR
+                                multiline:False
+                                text:'0'
+
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoValue.text=str(int(NewAmmoValue.text)-1)
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoWeight.text=str(float(NewAmmoWeight.text)-1.0)
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoAC.text=str(int(NewAmmoAC.text)-1)
+                            PipButton:
+                                text:'[-]'
+                                on_press:
+                                    NewAmmoDR.text=str(int(NewAmmoDR.text)-1)
+
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''
+                            Label:
+                                text:''

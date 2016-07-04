@@ -3,10 +3,35 @@ import apparels as ap
 import aids as ai
 import miscs as m
 import ammos as am
-SPECIAL=[5,3,1,10,1,10,10]
-characterDetails=["Pink Guy","69","Human","Male","500","Ey b0ss? Cannahabadapuuusi pleeze?"]
-traits=[]
-inventory=[m.MyDignity,w.SpudGun,ap.PinkLycraBodysuit,w.Shiv,ai.DaPusib0ss]
+SPECIAL=[7,3,10,1,5,4,10]
+characterDetails=["Dirk Anger","55","Human","Male","-50","Wants nothing more than the sweet embrace of death from a gian gun filled with drugs."]
+traits=[['Chem Reliant','''You are more easily addicted to chems.
+Your chance to be addicted is twice
+normal, but you recover in half the time
+from their ill effects. Robots cannot
+choose this trait.
+Chem Resistant
+Chems only effect you half as long as
+normal, but your chance to be addicted
+is only 50% the normal amount. Robots
+cannot choose this trait.'''],['Jinxed','''The good thing is that everyone around
+you has more critical
+failures in combat. The bad
+thing is: so do you! If you,
+a member of your party, or a
+non-player character have a
+failure in combat, there is a
+greater likelihood the
+failure will be upgraded
+(downgraded?) to a critical
+failure. Critical failures
+are bad: weapons explode, you may hit
+the wrong target, you could lose part of
+your turn, or any number of bad things.
+Failures are 50% more likely to become
+critical failures around the character
+or anyone else in combat.''']]
+inventory=[w.CombatKnife,w.MegaPowerFist,ai.Stimpak,ai.Stimpak,ai.Stimpak,w.M16,ap.Stetson,ap.LeatherDuster,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm]
 EXP=0
 poisonandrads=[0,0]
 smallGuns=45
@@ -29,4 +54,5 @@ barter=40
 gambling=50
 outdoorsman=4
 skills=[smallGuns,bigGuns,energyWeapons,unarmed,meleeWeapons,throwing,firstAid,doctor,sneak,lockpick,steal,traps,science,repair,pilot,speech,barter,gambling,outdoorsman]
-HP=25
+currentlyEquipped={'weapon':'M16','head':'Stetson','body':'Leather Duster','aid':'None','misc':'None','ammo':'None'}
+HP=50

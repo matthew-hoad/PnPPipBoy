@@ -168,22 +168,26 @@ class character:
 
         self.skills=[self.smallGuns,self.bigGuns,self.energyWeapons,self.unarmed,self.meleeWeapons,self.throwing,self.firstAid,self.doctor,self.sneak,self.lockpick,self.steal,self.traps,self.science,self.repair,self.pilot,self.speech,self.barter,self.gambling,self.outdoorsman]
 
-        self.currentlyEquipped={'weapon':None,'head':None,'body':None,'aid':None,'misc':None}
+        self.currentlyEquipped={'weapon':'None','head':'None','body':'None','aid':'None','misc':'None','ammo':'None'}
 
         self.update()
 
     def equipItem(self,item):
-        self.currentlyEquipped['{}'.format(item.itemType)]=item
-        #print str(item),'should be equipped now'
+        self.currentlyEquipped['{}'.format(item.itemType)]=item.name
+        #print self.currentlyEquipped
 
     def removeItem(self,itemtoberemoved):
         try:
             counter=0
             for item in self.inventory:
-                if counter==0 and item.name==itemtoberemoved.name:
+                if counter==0 and item.name==itemtoberemoved:
                     counter+=1
                     #print self.inventory
-                    self.inventory.remove(itemtoberemoved)
+                    self.inventory.remove(item)
+                    if item.itemType!='ammo':
+                        for key, value in self.currentlyEquipped.iteritems():
+                            if value==itemtoberemoved:
+                                self.currentlyEquipped[key]='None'
                     #print self.inventory
         except:
             pass
@@ -192,9 +196,9 @@ class character:
         try:
             # print self.inventory
             for item in self.inventory:
-                if item.__class__.__name__=='ammo' and item.name==ammotoberemoved.name:
+                if item.__class__.__name__=='ammo' and item.name==ammotoberemoved:
                     while item in self.inventory:
-                        print 'removing an item'
+                        #print 'removing an item'
                         self.inventory.remove(item)
         except:
             pass
@@ -280,9 +284,10 @@ class character:
         if self.HP<-5:
             self.HP=-5
 
-        self.currentEncumbrance=0
+        self.currentEncumbrance=0.0
         for item in self.inventory:
-            self.currentEncumbrance+=int(item.weight)
+            self.currentEncumbrance+=item.weight
+        self.currentEncumbrance=int(self.currentEncumbrance)
         
         
         self.AP=self.secondaryStats[0]
@@ -344,8 +349,9 @@ try:
     player.poison=charac.poisonandrads[0]
     player.rads=charac.poisonandrads[1]
     player.skills=charac.skills
+    player.currentlyEquipped=charac.currentlyEquipped
     player.HP=charac.HP
-    print 'HP updated'
+    #print 'HP updated'
 except:
     pass
 player.update()
@@ -367,17 +373,39 @@ class RootWidget(FloatLayout):
 
     def setEquipped(self,inv):
         foundAnEquippable=False
+        foundAnEquippableHead=False
+        foundAnEquippableBody=False
         for row in inv.children:
             for child in row.children:
-                #print child.__class__.__name__
-                if child.__class__.__name__=='PipToggleButton':
+                if child.__class__.__name__=='PipToggleButton' and (child.group not in ['head','body']):
                     if child.state=='down' and foundAnEquippable==False:
                         #print 'Got it'
-                        self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=row.boundItem
+                        #self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=row.boundItem.name
                         self.playerCharacter.equipItem(row.boundItem)
                         foundAnEquippable=True
                     elif child.state=='normal' and foundAnEquippable==False:
-                        self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=None
+                        self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]='None'
+
+
+                elif child.__class__.__name__=='PipToggleButton' and child.group=='head':
+                    if child.state=='down' and foundAnEquippableHead==False:
+                        #print 'Got it'
+                        #self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=row.boundItem.name
+                        self.playerCharacter.equipItem(row.boundItem)
+                        foundAnEquippableHead=True
+                    elif child.state=='normal' and foundAnEquippableHead==False:
+                        self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]='None'
+
+
+                elif child.__class__.__name__=='PipToggleButton' and child.group=='body':
+                    if child.state=='down' and foundAnEquippableBody==False:
+                        #print 'Got it'
+                        #self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]=row.boundItem.name
+                        self.playerCharacter.equipItem(row.boundItem)
+                        foundAnEquippableBody=True
+                    elif child.state=='normal' and foundAnEquippableBody==False:
+                        self.playerCharacter.currentlyEquipped['{}'.format(row.boundItem.itemType)]='None'
+        #print self.playerCharacter.currentlyEquipped
 
     def addToInventory(self,inv,**kwargs):
         foundAnAddable=False
@@ -387,7 +415,7 @@ class RootWidget(FloatLayout):
                 if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
                     if child.state=='down':
                         try:
-                            print "count in kwargs['count'] from addToInventory = ",kwargs['count']
+                            #print "count in kwargs['count'] from addToInventory = ",kwargs['count']
                             for i in range(kwargs['count']):
                                 self.playerCharacter.inventory.append(row.boundItem)
                         except:
@@ -481,7 +509,7 @@ class RootWidget(FloatLayout):
                 preparedString+=']'
                 miscs.write(preparedString)
         elif ref=='ammo':
-            NewItemString+="ammo{}=ammo('{}',{},{})".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['Weight'])
+            NewItemString+="ammo{}=ammo('{}',{},{},{},{})".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['Weight'],kwargs['AC'],kwargs['DR'])
             with open('ammos.py','r') as ammos:
                 linelist=[]
                 for line in ammos.readlines():
@@ -511,141 +539,144 @@ class RootWidget(FloatLayout):
                 #print child.__class__.__name__
                 if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
                     if child.state=='down':
-                        #print 'Got it'
+                        #print 'Got ',child.text
                         item = row.boundItem
                         foundAnAddable=True
+        try:
+            if item.itemType=='weapon':
+                with open('weapons.py','r') as weapons:
+                    linelist=[]
+                    for line in weapons.readlines():
+                        linelist.append(line)
+                linelist=linelist[1:-1]
+                decllist=[]
+                for line in linelist:
+                    decllist.append(line.split('=')[0])
+                    try:
+                        decllist.remove('{}'.format(item.name.replace(' ','')))
+                        linelist.remove(line)
+                    except:
+                        pass
+                with open('weapons.py','w') as weapons:
+                    preparedString='from itemclasses import weapon\n'
+                    for line in linelist:
+                        preparedString+=line
+                    preparedString+='Weapons=['
+                    for decl in decllist:
+                        preparedString+=decl+','
+                    if preparedString[-1]==',':
+                        preparedString=preparedString[:-1]
+                    preparedString+=']'
+                    weapons.write(preparedString)
 
-        if item.itemType=='weapon':
-            with open('weapons.py','r') as weapons:
-                linelist=[]
-                for line in weapons.readlines():
-                    linelist.append(line)
-            linelist=linelist[1:-1]
-            decllist=[]
-            for line in linelist:
-                decllist.append(line.split('=')[0])
-                try:
-                    decllist.remove('{}'.format(item.name.replace(' ','')))
-                    linelist.remove(line)
-                except:
-                    pass
-            with open('weapons.py','w') as weapons:
-                preparedString='from itemclasses import weapon\n'
+            elif item.itemType=='head' or item.itemType=='body':
+                with open('apparels.py','r') as apparels:
+                    linelist=[]
+                    for line in apparels.readlines():
+                        linelist.append(line)
+                linelist=linelist[1:-1]
+                decllist=[]
                 for line in linelist:
-                    preparedString+=line
-                preparedString+='Weapons=['
-                for decl in decllist:
-                    preparedString+=decl+','
-                if preparedString[-1]==',':
-                    preparedString=preparedString[:-1]
-                preparedString+=']'
-                weapons.write(preparedString)
+                    decllist.append(line.split('=')[0])
+                    try:
+                        decllist.remove('{}'.format(item.name.replace(' ','')))
+                        linelist.remove(line)
+                    except:
+                        pass
+                with open('apparels.py','w') as apparels:
+                    preparedString='from itemclasses import apparel\n'
+                    for line in linelist:
+                        preparedString+=line
+                    preparedString+='Apparels=['
+                    for decl in decllist:
+                        preparedString+=decl+','
+                    if preparedString[-1]==',':
+                        preparedString=preparedString[:-1]
+                    preparedString+=']'
+                    apparels.write(preparedString)
 
-        elif item.itemType=='head' or item.itemType=='body':
-            with open('apparels.py','r') as apparels:
-                linelist=[]
-                for line in apparels.readlines():
-                    linelist.append(line)
-            linelist=linelist[1:-1]
-            decllist=[]
-            for line in linelist:
-                decllist.append(line.split('=')[0])
-                try:
-                    decllist.remove('{}'.format(item.name.replace(' ','')))
-                    linelist.remove(line)
-                except:
-                    pass
-            with open('apparels.py','w') as apparels:
-                preparedString='from itemclasses import apparel\n'
+            elif item.itemType=='aid':
+                with open('aids.py','r') as aids:
+                    linelist=[]
+                    for line in aids.readlines():
+                        linelist.append(line)
+                linelist=linelist[1:-1]
+                decllist=[]
                 for line in linelist:
-                    preparedString+=line
-                preparedString+='Apparels=['
-                for decl in decllist:
-                    preparedString+=decl+','
-                if preparedString[-1]==',':
-                    preparedString=preparedString[:-1]
-                preparedString+=']'
-                apparels.write(preparedString)
+                    decllist.append(line.split('=')[0])
+                    try:
+                        decllist.remove('{}'.format(item.name.replace(' ','')))
+                        linelist.remove(line)
+                    except:
+                        pass
+                with open('aids.py','w') as aids:
+                    preparedString='from itemclasses import aid\n'
+                    for line in linelist:
+                        preparedString+=line
+                    preparedString+='Aids=['
+                    for decl in decllist:
+                        preparedString+=decl+','
+                    if preparedString[-1]==',':
+                        preparedString=preparedString[:-1]
+                    preparedString+=']'
+                    aids.write(preparedString)
 
-        elif item.itemType=='aid':
-            with open('aids.py','r') as aids:
-                linelist=[]
-                for line in aids.readlines():
-                    linelist.append(line)
-            linelist=linelist[1:-1]
-            decllist=[]
-            for line in linelist:
-                decllist.append(line.split('=')[0])
-                try:
-                    decllist.remove('{}'.format(item.name.replace(' ','')))
-                    linelist.remove(line)
-                except:
-                    pass
-            with open('aids.py','w') as aids:
-                preparedString='from itemclasses import aid\n'
+            elif item.itemType=='misc':
+                with open('miscs.py','r') as miscs:
+                    linelist=[]
+                    for line in miscs.readlines():
+                        linelist.append(line)
+                linelist=linelist[1:-1]
+                #print linelist
+                decllist=[]
                 for line in linelist:
-                    preparedString+=line
-                preparedString+='Aids=['
-                for decl in decllist:
-                    preparedString+=decl+','
-                if preparedString[-1]==',':
-                    preparedString=preparedString[:-1]
-                preparedString+=']'
-                aids.write(preparedString)
-
-        elif item.itemType=='misc':
-            with open('miscs.py','r') as miscs:
-                linelist=[]
-                for line in miscs.readlines():
-                    linelist.append(line)
-            linelist=linelist[1:-1]
-            print linelist
-            decllist=[]
-            for line in linelist:
-                decllist.append(line.split('=')[0])
-                try:
-                    decllist.remove('{}'.format(item.name.replace(' ','')))
-                    linelist.remove(line)
-                except:
-                    pass
-            with open('miscs.py','w') as miscs:
-                preparedString='from itemclasses import misc\n'
+                    decllist.append(line.split('=')[0])
+                    try:
+                        decllist.remove('{}'.format(item.name.replace(' ','')))
+                        linelist.remove(line)
+                    except:
+                        pass
+                with open('miscs.py','w') as miscs:
+                    preparedString='from itemclasses import misc\n'
+                    for line in linelist:
+                        preparedString+=line
+                    preparedString+='Miscs=['
+                    for decl in decllist:
+                        preparedString+=decl+','
+                    if preparedString[-1]==',':
+                        preparedString=preparedString[:-1]
+                    preparedString+=']'
+                    miscs.write(preparedString)
+            elif item.itemType=='ammo':
+                with open('ammos.py','r') as ammos:
+                    linelist=[]
+                    for line in ammos.readlines():
+                        linelist.append(line)
+                linelist=linelist[1:-1]
+                #print linelist
+                decllist=[]
                 for line in linelist:
-                    preparedString+=line
-                preparedString+='Miscs=['
-                for decl in decllist:
-                    preparedString+=decl+','
-                if preparedString[-1]==',':
-                    preparedString=preparedString[:-1]
-                preparedString+=']'
-                miscs.write(preparedString)
-        elif item.itemType=='ammo':
-            with open('ammos.py','r') as ammos:
-                linelist=[]
-                for line in ammos.readlines():
-                    linelist.append(line)
-            linelist=linelist[1:-1]
-            print linelist
-            decllist=[]
-            for line in linelist:
-                decllist.append(line.split('=')[0])
-                try:
-                    decllist.remove('{}'.format(item.name.replace(' ','').replace('.','point')))
-                    linelist.remove(line)
-                except:
-                    pass
-            with open('ammos.py','w') as ammos:
-                preparedString='from itemclasses import ammo\n'
-                for line in linelist:
-                    preparedString+=line
-                preparedString+='Ammos=['
-                for decl in decllist:
-                    preparedString+=decl+','
-                if preparedString[-1]==',':
-                    preparedString=preparedString[:-1]
-                preparedString+=']'
-                ammos.write(preparedString)
-        else:
+                    decllist.append(line.split('=')[0])
+                    try:
+                        decllist.remove('ammo{}'.format(item.name.replace(' ','').replace('.','point')))
+                        linelist.remove(line)
+                        #print 'should be removed'
+                    except:
+                        pass
+                with open('ammos.py','w') as ammos:
+                    preparedString='from itemclasses import ammo\n'
+                    for line in linelist:
+                        preparedString+=line
+                    preparedString+='Ammos=['
+                    for decl in decllist:
+                        preparedString+=decl+','
+                    if preparedString[-1]==',':
+                        preparedString=preparedString[:-1]
+                    preparedString+=']'
+                    ammos.write(preparedString)
+            else:
+                pass
+        except:
             pass
 
 
@@ -666,6 +697,7 @@ class RootWidget(FloatLayout):
             preparedString+=str(self.playerCharacter.special[5])
             preparedString+=','
             preparedString+=str(self.playerCharacter.special[6])
+
             preparedString+=']\ncharacterDetails=["'
             preparedString+=str(self.playerCharacter.name)
             preparedString+='","'
@@ -678,11 +710,13 @@ class RootWidget(FloatLayout):
             preparedString+=str(self.playerCharacter.karma)
             preparedString+='","'
             preparedString+=str(self.playerCharacter.notes)
+
             preparedString+='"]\ntraits=['
             for trait in self.playerCharacter.traits:
                 preparedString+="['"+trait[0]+"','''"+trait[1]+"'''],"
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
+
             preparedString+=']\ninventory=['
             for item in self.playerCharacter.inventory:
                 if item.__class__.__name__=='weapon':
@@ -699,12 +733,14 @@ class RootWidget(FloatLayout):
                     preparedString+=item.name.replace(' ','')+','
                 elif item.__class__.__name__=='ammo':
                     preparedString+='am.'
-                    preparedString+='ammo'+item.name.replace(' ','').replace('.','')+','
-                
+                    preparedString+='ammo'+item.name.replace(' ','').replace('.','point')+','
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
+
             preparedString+="]\nEXP={}".format(str(self.playerCharacter.EXP))
+
             preparedString+="\npoisonandrads=[{},{}]".format(self.playerCharacter.poison,self.playerCharacter.rads)
+
             listofskillnames=['smallGuns', 'bigGuns', 'energyWeapons', 'unarmed', 'meleeWeapons', 'throwing', 'firstAid', 'doctor', 'sneak', 'lockpick', 'steal', 'traps', 'science', 'repair', 'pilot', 'speech', 'barter', 'gambling', 'outdoorsman',]
             for i in range(len(self.playerCharacter.skills)):
                 preparedString+="\n{}={}".format(listofskillnames[i],self.playerCharacter.skills[i])
@@ -714,15 +750,15 @@ class RootWidget(FloatLayout):
             if preparedString[-1]==',':
                 preparedString=preparedString[:-1]
             preparedString+=']'
+            preparedString+='\ncurrentlyEquipped={'+"'weapon':'{}','head':'{}','body':'{}','aid':'{}','misc':'{}','ammo':'{}'".format(self.playerCharacter.currentlyEquipped['weapon'],self.playerCharacter.currentlyEquipped['head'],self.playerCharacter.currentlyEquipped['body'],self.playerCharacter.currentlyEquipped['aid'],self.playerCharacter.currentlyEquipped['misc'],self.playerCharacter.currentlyEquipped['ammo'])+'}'
             preparedString+="\nHP={}".format(self.playerCharacter.HP)
             savechar.write(preparedString)
     def countAmmo(self, ammoName):
         itemNames=[]
         for item in self.playerCharacter.inventory:
             itemNames.append(item.name)
-        print  'count from countAmmo = ',itemNames.count(ammoName)
+        #print  'count from countAmmo = ',itemNames.count(ammoName)
         return itemNames.count(ammoName)
-
 
 class SpecialLabel(PipLabel):
     def __init__(self, **kwargs):
@@ -1036,7 +1072,7 @@ class PreDefinedAmmoInventory(GridLayout):
             foundACountable=False
             for row in self.children:
                 for child in row.children:
-                    print child.__class__.__name__
+                    #print child.__class__.__name__
                     if child.__class__.__name__=='PipToggleButton':
                         if child.state=='down' and foundACountable==False:
                             #print 'Got it'
@@ -1045,7 +1081,7 @@ class PreDefinedAmmoInventory(GridLayout):
                         elif child.state=='normal' and foundACountable==False:
                             pass
 
-            print 'count from getCount = ',count
+            #print 'count from getCount = ',count
             return count
         except:
             return 0
@@ -1084,6 +1120,15 @@ class WeaponInventory(GridLayout):
                 WeaponRow.add_widget(Values)
                 self.add_widget(WeaponRow)
         self.bind(minimum_height=self.setter('height'))
+
+    def pressEquipped(self,root):
+        foundEquipped=False
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['weapon'] and foundEquipped==False:
+                    foundEquipped=True
+                    child.state='down'
 
 class ApparelInventory(GridLayout):
     def __init__(self, **kwargs):
@@ -1145,6 +1190,22 @@ class ApparelInventory(GridLayout):
                     self.add_widget(ApparelRow)
 
         self.bind(minimum_height=self.setter('height'))
+    def pressEquipped(self,root):
+        foundEquippedHead=False
+        foundEquippedBody=False
+        print root.playerCharacter.currentlyEquipped
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['head'] and foundEquippedHead==False:
+                    foundEquippedHead=True
+                    child.state='down'
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['body'] and foundEquippedBody==False:
+                    foundEquippedBody=True
+                    child.state='down'
 
 class AidInventory(GridLayout):
     def __init__(self, **kwargs):
@@ -1189,6 +1250,15 @@ class AidInventory(GridLayout):
                 AidRow.add_widget(Values)
                 self.add_widget(AidRow)
         self.bind(minimum_height=self.setter('height'))
+    
+    def pressEquipped(self,root):
+        foundEquipped=False
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['aid'] and foundEquipped==False:
+                    foundEquipped=True
+                    child.state='down'
 
 class MiscInventory(GridLayout):
     def __init__(self, **kwargs):
@@ -1213,6 +1283,15 @@ class MiscInventory(GridLayout):
                 MiscRow.add_widget(Values)
                 self.add_widget(MiscRow)
         self.bind(minimum_height=self.setter('height'))
+
+    def pressEquipped(self,root):
+        foundEquipped=False
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['misc'] and foundEquipped==False:
+                    foundEquipped=True
+                    child.state='down'
 
 class AmmoInventory(GridLayout):
     def __init__(self, **kwargs):
@@ -1241,12 +1320,12 @@ class AmmoInventory(GridLayout):
                 CountBox=BoxLayout(spacing=5)
                 RemoveBullet=PipButton(text='[-]')
                 def remI(self):
-                    return root.playerCharacter.removeItem(item)
+                    return root.playerCharacter.removeItem(item.name)
                 def addI(self):
                     return root.playerCharacter.inventory.append(item)
                 def upd8PL(self):
-                    print self.parent
-                    print self.parent.children
+                    #print self.parent
+                    #print self.parent.children
                     for child in self.parent.children:
                         if child.__class__.__name__=='PipLabel':
                             child.text=str(root.countAmmo(item.name))
@@ -1265,8 +1344,14 @@ class AmmoInventory(GridLayout):
                 self.add_widget(AmmoRow)
         self.bind(minimum_height=self.setter('height'))
 
-    
-
+    def pressEquipped(self,root):
+        foundEquipped=False
+        for row in self.children:
+            for child in row.children:
+                #print child.__class__.__name__
+                if child.__class__.__name__=='PipToggleButton' and child.text==root.playerCharacter.currentlyEquipped['ammo'] and foundEquipped==False:
+                    foundEquipped=True
+                    child.state='down'
 
 class PlayerTraits(GridLayout):
     def __init__(self, **kwargs):

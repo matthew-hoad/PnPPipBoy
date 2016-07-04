@@ -23,6 +23,10 @@ class weapon:
             self.ammoType=kwargs['ammoType']
         except:
             self.ammoType=None
+        try:
+            self.magSize=kwargs['magSize']
+        except:
+            self.magSize=None
         self.itemDetails=[self.name,
         self.value,
         self.minST,
@@ -32,7 +36,8 @@ class weapon:
         self.APS,
         self.APT,
         self.APB,
-        self.ammoType]
+        self.ammoType,
+        self.magSize]
 
 class apparel:
     def __init__(self,Name,Value, Weight, AC, N, L, F, P, E, ApparelType):
@@ -78,8 +83,10 @@ class aid:
         self.itemType='aid'
 
 class ammo:
-    def __init__(self, Name, Value, Weight):
+    def __init__(self, Name, Value, Weight, AC, DR):
         self.itemType='ammo'
         self.name=Name
         self.value=Value
         self.weight=Weight
+        self.AC=AC
+        self.DR=DR
