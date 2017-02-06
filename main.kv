@@ -17,6 +17,10 @@
             size: self.size
     #background_color:1,1,1,1
 
+<MyEffect>:
+    width: root.width
+    height: root.height
+
 # <Label>:
 #     font_name: KIVY_DEFAULT_FONT
 #     font_size: 24
@@ -1992,6 +1996,8 @@
                                     multiline:False
             Screen:
                 name:'NewAmmo'
+                MyEffect:
+                    disabled: True
                 FloatLayout:        
                     GridLayout:
                         pos:root.x,root.top-self.height
@@ -2132,3 +2138,4 @@
                                     text:''
                                 Label:
                                     text:''
+                

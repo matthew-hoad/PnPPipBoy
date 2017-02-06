@@ -343,6 +343,10 @@ player.update()
 resource_add_path('data/images/defaulttheme-0.png')
 presentation=Builder.load_file('main.kv')
 
+class MyEffect(EffectWidget):
+    def __init__(self, **kwargs):
+        super(MyEffect, self).__init__(**kwargs)
+
 class RootWidget(BoxLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
