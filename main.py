@@ -24,17 +24,9 @@ from math import floor
 import os
 import random as r
 from functools import partial
-
-Builder.load_string("""
-<PipLabel>:
-  bcolor: 0, 0.8, 0, 0.4
-  canvas.before:
-    Color:
-      rgba: self.bcolor
-    Rectangle:
-      pos: self.pos
-      size: self.size
-""")
+from kivy.resources import resource_add_path
+from kivy.uix.effectwidget import EffectWidget
+from effectwidget import EffectWidget
 
 class PlayerTrait:
     def __init__(self,name,desc):
@@ -45,32 +37,26 @@ class PipLabel(Label):
     def __init__(self, **kwargs):
         super(PipLabel, self).__init__(**kwargs)
         #self.canvas.add(Color(0,0.5,0,0.5))
-        bcolor = ListProperty([1,1,1,1])
+        #bcolor = ListProperty([0,0,0,0])
 
 class PipLabel2(PipLabel):
     def __init__(self, **kwargs):
         super(PipLabel, self).__init__(**kwargs)
         #self.canvas.add(Color(0,0.5,0,0.5))
-        bcolor = ListProperty([1,1,1,1])
+        #bcolor = ListProperty([0,0,0,0])
         self.size=self.texture_size
 
 class PipButton(Button):
     def __init__(self, **kwargs):
         super(PipButton, self).__init__(**kwargs)
-        self.background_normal=''
-        self.background_color=(0,0.8,0,0.4)
 
 class RemoveItemButton(PipButton):
     def __init__(self, **kwargs):
         super(RemoveItemButton, self).__init__(**kwargs)
-        self.background_normal=''
-        self.background_color=(0.8,0,0,0.4)
 
 class PipToggleButton(ToggleButton):
     def __init__(self, **kwargs):
         super(PipToggleButton, self).__init__(**kwargs)
-        self.background_normal=''
-        self.background_color=(0,0.8,0,0.4)
         self.purpose=kwargs['purpose']
     def updateEquippedWeapon(self,root):
         pass
@@ -106,9 +92,7 @@ class PipTextInput(TextInput):
     def __init__(self, **kwargs):
         super(PipTextInput, self).__init__(**kwargs)
         #self.background_normal=''
-        self.background_color=(0,0.6,0,0.3)
-
-Factory.register('KivyB', module='PipLabel')
+        #self.background_color=(0,0.1,0,1)
 
 class character:
     def __init__(self,SPECIAL,characterDetails,Traits,inventory,EXP):
@@ -355,9 +339,11 @@ try:
 except:
     pass
 player.update()
+
+resource_add_path('data/images/defaulttheme-0.png')
 presentation=Builder.load_file('main.kv')
 
-class RootWidget(FloatLayout):
+class RootWidget(BoxLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
     playerCharacter=player
@@ -425,7 +411,10 @@ class RootWidget(FloatLayout):
     def createItem(self,ref,**kwargs):
         NewItemString=''
         if ref=='weapon':
-            NewItemString+="weapon{}=weapon('{}',{},{},{},'{}',{},{},{},'{}')".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['minST'],kwargs['Weight'],kwargs['Dmg'],kwargs['Range'],kwargs['APS'],kwargs['APT'],kwargs['APB'])
+            try:
+                NewItemString+="weapon{}=weapon('{}',{},{},{},'{}',{},{},{},'{}',ammoType='{}',magSize={})".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['minST'],kwargs['Weight'],kwargs['Dmg'],kwargs['Range'],kwargs['APS'],kwargs['APT'],kwargs['APB'],kwargs['ammoType'],kwargs['magSize'])
+            except:
+                NewItemString+="weapon{}=weapon('{}',{},{},{},'{}',{},{},{},'{}')".format(kwargs['Name'].replace(' ','').replace('.','point'),kwargs['Name'],kwargs['Value'],kwargs['minST'],kwargs['Weight'],kwargs['Dmg'],kwargs['Range'],kwargs['APS'],kwargs['APT'],kwargs['APB'])
             with open('weapons.py','r') as weapons:
                 linelist=[]
                 for line in weapons.readlines():
@@ -539,7 +528,7 @@ class RootWidget(FloatLayout):
                 #print child.__class__.__name__
                 if child.__class__.__name__=='PipToggleButton' and foundAnAddable==False:
                     if child.state=='down':
-                        #print 'Got ',child.text
+                        print 'Got ',child.text
                         item = row.boundItem
                         foundAnAddable=True
         try:
@@ -550,13 +539,13 @@ class RootWidget(FloatLayout):
                         linelist.append(line)
                 linelist=linelist[1:-1]
                 decllist=[]
-                for line in linelist:
-                    decllist.append(line.split('=')[0])
-                    try:
-                        decllist.remove('weapon{}'.format(item.name.replace(' ','').replace('.','point')))
-                        linelist.remove(line)
-                    except:
-                        pass
+                [decllist.append(line.split('=')[0]) for line in linelist]
+                try:
+                    removeIndex=decllist.index('weapon{}'.format(item.name.replace(' ','').replace('.','point')))
+                    decllist.remove('weapon{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(linelist[removeIndex])
+                except:
+                    pass
                 with open('weapons.py','w') as weapons:
                     preparedString='from itemclasses import weapon\n'
                     for line in linelist:
@@ -576,13 +565,13 @@ class RootWidget(FloatLayout):
                         linelist.append(line)
                 linelist=linelist[1:-1]
                 decllist=[]
-                for line in linelist:
-                    decllist.append(line.split('=')[0])
-                    try:
-                        decllist.remove('apparel{}'.format(item.name.replace(' ','').replace('.','point')))
-                        linelist.remove(line)
-                    except:
-                        pass
+                [decllist.append(line.split('=')[0]) for line in linelist]
+                try:
+                    removeIndex=decllist.index('apparel{}'.format(item.name.replace(' ','').replace('.','point')))
+                    decllist.remove('apparel{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(linelist[removeIndex])
+                except:
+                    pass
                 with open('apparels.py','w') as apparels:
                     preparedString='from itemclasses import apparel\n'
                     for line in linelist:
@@ -602,13 +591,13 @@ class RootWidget(FloatLayout):
                         linelist.append(line)
                 linelist=linelist[1:-1]
                 decllist=[]
-                for line in linelist:
-                    decllist.append(line.split('=')[0])
-                    try:
-                        decllist.remove('aid{}'.format(item.name.replace(' ','').replace('.','point')))
-                        linelist.remove(line)
-                    except:
-                        pass
+                [decllist.append(line.split('=')[0]) for line in linelist]
+                try:
+                    removeIndex=decllist.index('aid{}'.format(item.name.replace(' ','').replace('.','point')))
+                    decllist.remove('aid{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(linelist[removeIndex])
+                except:
+                    pass
                 with open('aids.py','w') as aids:
                     preparedString='from itemclasses import aid\n'
                     for line in linelist:
@@ -629,13 +618,13 @@ class RootWidget(FloatLayout):
                 linelist=linelist[1:-1]
                 #print linelist
                 decllist=[]
-                for line in linelist:
-                    decllist.append(line.split('=')[0])
-                    try:
-                        decllist.remove('misc{}'.format(item.name.replace(' ','').replace('.','point')))
-                        linelist.remove(line)
-                    except:
-                        pass
+                [decllist.append(line.split('=')[0]) for line in linelist]
+                try:
+                    removeIndex=decllist.index('misc{}'.format(item.name.replace(' ','').replace('.','point')))
+                    decllist.remove('misc{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(linelist[removeIndex])
+                except:
+                    pass
                 with open('miscs.py','w') as miscs:
                     preparedString='from itemclasses import misc\n'
                     for line in linelist:
@@ -655,14 +644,13 @@ class RootWidget(FloatLayout):
                 linelist=linelist[1:-1]
                 #print linelist
                 decllist=[]
-                for line in linelist:
-                    decllist.append(line.split('=')[0])
-                    try:
-                        decllist.remove('ammo{}'.format(item.name.replace(' ','').replace('.','point')))
-                        linelist.remove(line)
-                        #print 'should be removed'
-                    except:
-                        pass
+                [decllist.append(line.split('=')[0]) for line in linelist]
+                try:
+                    removeIndex=decllist.index('ammo{}'.format(item.name.replace(' ','').replace('.','point')))
+                    decllist.remove('ammo{}'.format(item.name.replace(' ','').replace('.','point')))
+                    linelist.remove(linelist[removeIndex])
+                except:
+                    pass
                 with open('ammos.py','w') as ammos:
                     preparedString='from itemclasses import ammo\n'
                     for line in linelist:
@@ -782,8 +770,6 @@ class CharDetailLabel(PipLabel):
 class StatLabel(PipLabel):
     def __init__(self, **kwargs):
         super(StatLabel, self).__init__(**kwargs)
-        self.background_normal=''
-        self.background_color=(0.1,0.1,0.1,1)
 
 class SPECIALrow(BoxLayout):
     def __init__(self, **kwargs):

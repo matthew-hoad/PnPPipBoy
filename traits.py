@@ -105,9 +105,8 @@ ChemReliant=PlayerTrait('Chem Reliant','''You are more easily addicted to chems.
 Your chance to be addicted is twice
 normal, but you recover in half the time
 from their ill effects. Robots cannot
-choose this trait.
-Chem Resistant
-Chems only effect you half as long as
+choose this trait.''')
+ChemResistant=('Chem Resistant','''Chems only effect you half as long as
 normal, but your chance to be addicted
 is only 50% the normal amount. Robots
 cannot choose this trait.''')
