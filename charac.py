@@ -4,7 +4,7 @@ import aids as ai
 import miscs as m
 import ammos as am
 SPECIAL=[7,3,10,1,5,4,10]
-characterDetails=["Dirk Anger","55","Human","Male","-50","Wants nothing more than the sweet embrace of death from a gian gun filled with drugs."]
+characterDetails=["Dirk Anger","55","Human","Male","-50","Wants nothing more than the sweet embrace of death from a giant gun filled with drugs."]
 traits=[['Chem Reliant','''You are more easily addicted to chems.
 Your chance to be addicted is twice
 normal, but you recover in half the time
@@ -26,7 +26,7 @@ your turn, or any number of bad things.
 Failures are 50% more likely to become
 critical failures around the character
 or anyone else in combat.''']]
-inventory=[w.weaponM16,w.weaponpoint38SnubnoseSpecial,ap.apparelLeatherDuster,ap.apparelStetson,m.miscDignity,w.weaponBrassKnuckles,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammopoint38Caliber,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm]
+inventory=[ap.apparelLeatherDuster,ap.apparelStetson,m.miscDignity,w.weaponBrassKnuckles,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,am.ammo5point56mm,w.weaponBrassKnuckles,w.weaponBrassKnuckles,w.weaponBrassKnuckles,w.weaponBrassKnuckles,w.weaponBrassKnuckles,w.weaponBrassKnuckles,w.weaponBrassKnuckles]
 EXP=0
 poisonandrads=[0,0]
 smallGuns=45
@@ -49,5 +49,5 @@ barter=40
 gambling=50
 outdoorsman=4
 skills=[smallGuns,bigGuns,energyWeapons,unarmed,meleeWeapons,throwing,firstAid,doctor,sneak,lockpick,steal,traps,science,repair,pilot,speech,barter,gambling,outdoorsman]
-currentlyEquipped={'weapon':'.38 Snubnose Special','head':'Stetson','body':'Leather Duster','aid':'None','misc':'None','ammo':'.38 Caliber'}
+currentlyEquipped={'weapon':'Brass Knuckles','head':'Stetson','body':'Leather Duster','aid':'None','misc':'Dignity','ammo':'5.56mm'}
 HP=1
