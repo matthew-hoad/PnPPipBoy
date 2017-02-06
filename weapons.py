@@ -31,4 +31,8 @@ weaponMachete=weapon('Machete',100,4,1,'1d10 + 7 + MD',1,4,5,None)
 weaponSledgeHammer=weapon('SledgeHammer',120,6,12,'3d4 + MD',2,4,5,None)
 weaponScalpel=weapon('Scalpel',140,1,1,'1d8 + 3 + MD',1,3,4,None)
 weaponCombatKnife=weapon('Combat Knife',165,2,2,'1d12 + 3 + MD',1,3,4,None)
-Weapons=[weaponBrassKnuckles,weaponTigerClaw,weaponSappers,weaponShredders,weaponLacerators,weaponMaceGlove,weaponSpikedGloves,weaponBoxingGloves,weaponPlatedBoxingGloves,weaponPunchGun,weaponAdamantineClaws,weaponPowerFist,weaponMegaPowerFist,weaponRock,weaponSap,weaponShiv,weaponSharpenedPole,weaponMetalPipe,weaponWoodenClub,weaponPoliceBaton,weaponShovel,weaponKnife,weaponClawHammer,weaponAxe,weaponSwitchBlade,weaponWrench,weaponCrowbar,weaponSpear,weaponMachete,weaponSledgeHammer,weaponScalpel,weaponCombatKnife]
+weaponSpudGun=weapon('Spud Gun',10,1,2,'1d2',5,3,4,'None',ammoType='Spud',magSize=1)
+weaponM16=weapon('M16',2500,3,15.0,'2d8 + 4',40,4,5,'5')
+weaponpoint38SnubnoseSpecial=weapon('.38 Snubnose Special',250,3,2.0,'1d4 + 4',10,3,4,'None')
+weaponpointBreak=weapon('.Break',-3,3,400.0,'11d100 + 100',9001,10,11,'12')
+Weapons=[weaponBrassKnuckles,weaponTigerClaw,weaponSappers,weaponShredders,weaponLacerators,weaponMaceGlove,weaponSpikedGloves,weaponBoxingGloves,weaponPlatedBoxingGloves,weaponPunchGun,weaponAdamantineClaws,weaponPowerFist,weaponMegaPowerFist,weaponRock,weaponSap,weaponShiv,weaponSharpenedPole,weaponMetalPipe,weaponWoodenClub,weaponPoliceBaton,weaponShovel,weaponKnife,weaponClawHammer,weaponAxe,weaponSwitchBlade,weaponWrench,weaponCrowbar,weaponSpear,weaponMachete,weaponSledgeHammer,weaponScalpel,weaponCombatKnife,weaponSpudGun,weaponM16,weaponpoint38SnubnoseSpecial,weaponpointBreak]
